@@ -1,5 +1,8 @@
 import { Application, Text, TextStyle } from 'pixi.js'
 
+/**
+ * Tworzy aplikację we wskazanym kontenerze i określa dodatkowe parametry aplikacji.
+ */
 const app = new Application({
     view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
     resolution: window.devicePixelRatio || 1,
@@ -9,11 +12,17 @@ const app = new Application({
     height: 500
 })
 
+/**
+ * Definiuje styl tekstu który zostanie użyty na stronie.
+ */
 const styly: TextStyle = new TextStyle({
     align: "center",
     fill: 0x00ff00,
     fontSize: 42
 })
-const texty: Text = new Text('motorola science cup, yay!', styly)
 
+/**
+ * Tworzy tekst i wyświetla go na ekranie.
+ */
+const texty: Text = new Text('motorola science cup, yay!', styly)
 app.stage.addChild(texty)
