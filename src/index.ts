@@ -1,4 +1,6 @@
-import { Application, Text, TextStyle } from 'pixi.js'
+import { AnimatedSprite, Application } from 'pixi.js'
+import { ImagesProvider } from './assets-provider'
+import Loading from './views/loading'
 
 /**
  * Tworzy aplikację we wskazanym kontenerze i określa dodatkowe parametry aplikacji.
@@ -13,16 +15,28 @@ const app = new Application({
 })
 
 /**
- * Definiuje styl tekstu który zostanie użyty na stronie.
+ * Wczytuje domyślny zestaw zasobów.
  */
-const styly: TextStyle = new TextStyle({
-    align: "center",
-    fill: 0x00ff00,
-    fontSize: 42
-})
+const imagesProvider: ImagesProvider = new ImagesProvider('programmer-art')
 
 /**
- * Tworzy tekst i wyświetla go na ekranie.
+ * Funkcja która zostanie wykonana po wczytaniu danych o zestawie zasobów.
  */
-const texty: Text = new Text('motorola science cup, yay!', styly)
-app.stage.addChild(texty)
+const resources: Array<{ path: string, name?: string }> = [ { path: imagesProvider.path } ]
+
+/**
+ * Pokazuje postęp ładowania domyślnego zestawu zasobów.
+ */
+const assetsLoader: Loading = new Loading(resources, onComplete, '')
+assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
+app.stage.addChild(assetsLoader)
+
+/**
+ * Funkcja która zostanie wykonana po załadowaniu zasobów.
+ */
+function onComplete() {
+    const loading = new AnimatedSprite(imagesProvider.getAnimation(imagesProvider.animation.LOADING))
+    loading.animationSpeed = 0.2; 
+    loading.play()
+    app.stage.addChild(loading)
+}
