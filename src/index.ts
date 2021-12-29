@@ -20,14 +20,9 @@ const app = new Application({
 const imagesProvider: ImagesProvider = ImagesProvider.Instance('programmer-art')
 
 /**
- * Funkcja która zostanie wykonana po wczytaniu danych o zestawie zasobów.
- */
-const resources: Array<{ path: string, name?: string }> = [ { path: imagesProvider.path } ]
-
-/**
  * Pokazuje postęp ładowania domyślnego zestawu zasobów.
  */
-const assetsLoader: Loading = new Loading(resources, onComplete, '')
+const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '')
 assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
 app.stage.addChild(assetsLoader)
 
@@ -35,7 +30,7 @@ app.stage.addChild(assetsLoader)
  * Funkcja która zostanie wykonana po załadowaniu zasobów.
  */
 function onComplete() {
-    const loading = new AnimatedSprite(imagesProvider.getAnimation(ImagesProvider.animation.LOADING))
+    const loading = new AnimatedSprite(imagesProvider.getAnimation(ImagesProvider.animation.LOADING)!!)
     loading.animationSpeed = 0.2; 
     loading.play()
     app.stage.addChild(loading)

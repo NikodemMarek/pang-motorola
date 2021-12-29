@@ -31,7 +31,7 @@ export class ImagesProvider {
     public static animation = {
         LOADING: 'lo'
     }
-    
+
     /**
      * Obieket tej klasy który służy jako singleton.
      */
@@ -40,7 +40,7 @@ export class ImagesProvider {
     /**
      * Ścieżka do spritesheetu z wczytanym zestawem grafik.
      */
-    public path: string = ''
+    public path?: string = undefined
 
     /**
      * Ładuje zestaw jeśli nazwa zestawu została podana.
@@ -85,12 +85,12 @@ export class ImagesProvider {
      * @param name - Nazwa grafiki
      * @returns Tesktura lub undefined, jeżeli nie istnieje tekstura dla podanej grafiki
      */
-    public getTexture(name: string) { return Loader.shared.resources[this.path].textures!![name] }
+    public getTexture(name: string) { return this.path == undefined? undefined: Loader.shared.resources[this.path].textures!![name] }
     /**
      * Zwraca animację, do objektu AnimatedSprite.
      * 
      * @param name - Nazwa animacji
      * @returns Animacja lub undefined, jeżeli nie istnieje podana animacja
      */
-    public getAnimation(name: string) { return Loader.shared.resources[this.path].spritesheet!!.animations[name] }
+    public getAnimation(name: string) { return this.path == undefined? undefined: Loader.shared.resources[this.path].spritesheet!!.animations[name] }
 }
