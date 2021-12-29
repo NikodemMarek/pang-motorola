@@ -17,7 +17,7 @@ const app = new Application({
 /**
  * Wczytuje domyślny zestaw zasobów.
  */
-const imagesProvider: ImagesProvider = new ImagesProvider('programmer-art')
+const imagesProvider: ImagesProvider = ImagesProvider.Instance('programmer-art')
 
 /**
  * Funkcja która zostanie wykonana po wczytaniu danych o zestawie zasobów.
@@ -35,7 +35,7 @@ app.stage.addChild(assetsLoader)
  * Funkcja która zostanie wykonana po załadowaniu zasobów.
  */
 function onComplete() {
-    const loading = new AnimatedSprite(imagesProvider.getAnimation(imagesProvider.animation.LOADING))
+    const loading = new AnimatedSprite(imagesProvider.getAnimation(ImagesProvider.animation.LOADING))
     loading.animationSpeed = 0.2; 
     loading.play()
     app.stage.addChild(loading)
