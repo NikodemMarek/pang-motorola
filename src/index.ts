@@ -1,5 +1,6 @@
-import { AnimatedSprite, Application } from 'pixi.js'
+import { Application } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
+import MainMenu from './views/game-menus'
 import Loading from './views/loading'
 
 /**
@@ -30,8 +31,7 @@ app.stage.addChild(assetsLoader)
  * Funkcja która zostanie wykonana po załadowaniu zasobów.
  */
 function onComplete() {
-    const loading = new AnimatedSprite(imagesProvider.getAnimation(ImagesProvider.animation.LOADING)!!)
-    loading.animationSpeed = 0.2; 
-    loading.play()
-    app.stage.addChild(loading)
+    const menu = new MainMenu()
+    menu.position.set(app.view.width / 2, app.view.height / 2)
+    app.stage.addChild(menu)
 }

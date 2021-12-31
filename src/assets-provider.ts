@@ -23,13 +23,15 @@ export class ImagesProvider {
      * Nazwy grafik w formie enuma, dla poprawy czytelności.
      */
     public static image = {
-        PINE: 'pineapple.png'
+        PINE: 'pineapple.png',
+        MENU_BUTTON: 'button-texture.png',
+        MENU_BUTTON_HOVER: 'button-texture-hover.png'
     }
     /**
      * Nazwy animacji w formie enuma, dla poprawy czytelności.
      */
     public static animation = {
-        LOADING: 'lo'
+        LOADING: 'loading/lo'
     }
 
     /**
