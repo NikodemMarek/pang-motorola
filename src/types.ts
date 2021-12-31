@@ -5,6 +5,10 @@ import { Texture } from 'pixi.js'
  */
 export interface ButtonProperties {
     /**
+     * Napis na przycisku.
+     */
+    label?: string,
+    /**
      * Szerokość przycisku.
      */
     width?: number,
@@ -13,7 +17,7 @@ export interface ButtonProperties {
      */
     height?: number,
     /**
-     * Grafika przysisku widoczna za napisem.
+     * Grafika przysisku widoczna za {@link label | napisem}.
      */
     texture?: Texture,
     /**
@@ -21,11 +25,11 @@ export interface ButtonProperties {
      */
     hoverTexture?: Texture,
     /**
-     * Kolor napisu.
+     * Kolor {@link label | napisu}.
      */
     labelColor?: number,
     /**
-     * Kolor napisu po najechaniu na przycisk.
+     * Kolor {@link label | napisu} po najechaniu na przycisk.
      */
     labelHoverColor?: number
 }

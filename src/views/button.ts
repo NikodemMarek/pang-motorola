@@ -9,12 +9,10 @@ export default class Button extends Sprite {
      * Przygotowuje przycisk do umieszczenia na ekranie.
      * Nadaje wielkość przyciskowi, pozycjonuje go, dodaje napis i wydarzenia po kliknięciu oraz najechaniu.
      * 
-     * @param label - Napis na przycisku
      * @param onClick - Funkcja która wykona się po naciśnięciu przycisku
      * @param properties - Właściwości przycisku
      */
     public constructor(
-        label: string,
         onClick: Function,
         properties: ButtonProperties
     ) {
@@ -30,9 +28,8 @@ export default class Button extends Sprite {
             fontSize: 30
         })
 
-        const buttonLabel: BitmapText = new BitmapText(label, {
+        const buttonLabel: BitmapText = new BitmapText(properties.label || '', {
             fontName: 'buttonLabelFont',
-
             tint: properties.labelColor || 0xffffff
         })
         buttonLabel.anchor.set(0.5, 0.5)

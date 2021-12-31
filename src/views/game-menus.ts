@@ -13,16 +13,22 @@ export default class MainMenu extends Menu {
     constructor() {
         const buttons = [
             {
-                label: 'Play',
-                onClick: () => console.log('play')
+                onClick: () => console.log('play'),
+                properties: {
+                    label: 'Play',
+                }
             },
             {
-                label: 'Options',
-                onClick: () => console.log('options')
+                onClick: () => console.log('options'),
+                properties: {
+                    label: 'Options',
+                }
             },
             {
-                label: 'Exit',
-                onClick: () => console.log('exit')
+                onClick: () => console.log('exit'),
+                properties: {
+                    label: 'Exit',
+                }
             }
         ]
         const properties: ButtonProperties = {
