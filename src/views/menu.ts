@@ -2,7 +2,22 @@ import { Container } from 'pixi.js'
 import { ButtonProperties } from '../types'
 import Button from './button'
 
+/**
+ * Menu składające się z {@link views/button.default | przycisków}.
+ */
 export default class Menu extends Container {
+    /**
+     * Przyciski w menu są generowane na podstawie tablicy options, która określa napis na przycisku, oraz reakcję na kliknięcie.
+     * Dodatkowo każdy przycisk może posiadać properties, które nadpisują domyślne właściwości dla każdego przycisku.
+     * 
+     * Menu może być wyświetlane horyzontalnie lub wertykalnie (domyślnie wertykalnie).
+     * Przerwy między przyciskami również są horyzontalne lub wertykalne w zależności od orientacji menu.
+     * 
+     * @param options - Tablica obiektów opisująca przyciski na menu
+     * @param properties - Domyślne właściwości przycisków
+     * @param isHorizontal - Określa czy menu ma byc horyzontalne, czy wertykalne
+     * @param space - Wielkość przerw między przyciskami
+     */
     public constructor(
         options: Array<{
             label: string,

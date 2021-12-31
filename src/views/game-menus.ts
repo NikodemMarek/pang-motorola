@@ -2,7 +2,14 @@ import { ImagesProvider } from '../assets-provider'
 import { ButtonProperties } from '../types'
 import Menu from './menu'
 
+/**
+ * Główne menu gry.
+ */
 export default class MainMenu extends Menu {
+    /**
+     * Tworzy główne menu gry wykorzystujące klasę {@link views/menu.default | Menu}.
+     * Menu zawiera 3 przyciski: Graj, Opcje, Wyjdź.
+     */
     constructor() {
         const buttons = [
             {

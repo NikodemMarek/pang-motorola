@@ -1,7 +1,18 @@
 import { BitmapFont, BitmapText, Sprite } from 'pixi.js'
 import { ButtonProperties } from '../types'
 
+/**
+ * Przycisk składający się z grafiki i/lub napisu.
+ */
 export default class Button extends Sprite {
+    /**
+     * Przygotowuje przycisk do umieszczenia na ekranie.
+     * Nadaje wielkość przyciskowi, pozycjonuje go, dodaje napis i wydarzenia po kliknięciu oraz najechaniu.
+     * 
+     * @param label - Napis na przycisku
+     * @param onClick - Funkcja która wykona się po naciśnięciu przycisku
+     * @param properties - Właściwości przycisku
+     */
     public constructor(
         label: string,
         onClick: Function,
