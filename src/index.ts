@@ -15,6 +15,8 @@ const app = new Application({
     height: 500
 })
 
+const _this = app.stage
+
 /**
  * Wczytuje domyślny zestaw zasobów.
  */
@@ -25,7 +27,7 @@ const imagesProvider: ImagesProvider = ImagesProvider.Instance('programmer-art')
  */
 const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '')
 assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
-app.stage.addChild(assetsLoader)
+_this.addChild(assetsLoader)
 
 /**
  * Funkcja która zostanie wykonana po załadowaniu zasobów.
@@ -33,5 +35,5 @@ app.stage.addChild(assetsLoader)
 function onComplete() {
     const menu = new MainMenu()
     menu.position.set(app.view.width / 2, app.view.height / 2)
-    app.stage.addChild(menu)
+    _this.addChild(menu)
 }
