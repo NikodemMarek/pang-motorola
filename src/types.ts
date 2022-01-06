@@ -33,3 +33,11 @@ export interface ButtonProperties {
      */
     labelHoverColor?: number
 }
+
+/**
+ * Typ opisujący pozycję/rozmiar w 2 wymiarach.
+ */
+export interface XYVar {
+    x: number,
+    y: number
+}
