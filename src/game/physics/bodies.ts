@@ -6,15 +6,36 @@ import { distanceAB } from './utils'
  * Odpowiada za pamiętanie pozycji obiektu graficznego na ekranie, oraz za wykrywanie kolizji z innymi ciałami.
  */
 export interface Body {
+    /**
+     * Pozycja ciała w układzie współrzędnych.
+     */
     position: XYVar,
-    isColliding: (body: Body) => boolean
+    /**
+     * Sprawdza czy ciała ze sobą kolidują.
+     * 
+     * @param body - Ciało z którym sprawdzana jest kolizja
+     * @returns Czy ciała ze sobą kolidują
+     */
+    isColliding: (body: Body) => boolean,
+    /**
+     * Przesuwa ciało o daną odległość.
+     * 
+     * @param by - Odległość o jaką ciało ma być przesunięte
+     */
+    moveBy: (by: XYVar) => void
 }
 
 /**
  * Klasa opisująca zachowanie dla {@link Body | ciała} w kształcie prostokąta.
  */
 export class RectangularBody implements Body {
+    /**
+     * Pozycja ciała w układzie współrzędnych.
+     */
     position: XYVar
+    /**
+     * Wymiary ciała, nie mogą być negatywne.
+     */
     size: XYVar
 
     /**
@@ -35,7 +56,7 @@ export class RectangularBody implements Body {
     /**
      * Sprawdza czy ciała ze sobą kolidują.
      * Jeśli drugie ciało jest prostokątne, sprawdza kolizję dla pozycji w pionie oraz poziomie.
-     * Jeśli drugie ciało jest {@link CircularBody | okrągłe}, zleca sprawdzenie funkcji {@link isRectAndCircleColliding}.
+     * Jeśli drugie ciało jest {@link CircularBody | okrągłe}, zleca sprawdzenie funkcji isRectAndCircleColliding().
      * 
      * @param body - Ciało z którym sprawdzana jest kolizja
      * @returns Czy ciała ze sobą kolidują
@@ -48,12 +69,25 @@ export class RectangularBody implements Body {
             return isRectAndCircleColliding(this, body)
         } else return false
     }
+
+    /**
+     * Przesuwa ciało o daną odległość.
+     * 
+     * @param by - Odległość o jaką ciało ma być przesunięte
+     */
+    moveBy(by: XYVar) { this.position = { x: this.position.x + by.x, y: this.position.y + by.y } }
 }
 /**
  * Klasa opisująca zachowanie dla {@link Body | ciała} w kształcie okręgu.
  */
 export class CircularBody implements Body {
+    /**
+     * Pozycja ciała w układzie współrzędnych.
+     */
     position: XYVar
+    /**
+     * promień ciała, nie może być negatywny
+     */
     radius: number
 
     /**
@@ -74,7 +108,7 @@ export class CircularBody implements Body {
     /**
      * Sprawdza czy ciała ze sobą kolidują.
      * Jeśli drugie ciało jest okrągłe, sprawdza czy odległość między ich środkami jest mniejsza niż suma ich promieni.
-     * Jeśli drugie ciało jest {@link RectangularBody | prostokątne}, zleca sprawdzenie funkcji {@link isRectAndCircleColliding}.
+     * Jeśli drugie ciało jest {@link RectangularBody | prostokątne}, zleca sprawdzenie funkcji isRectAndCircleColliding().
      * 
      * @param body - Ciało z którym sprawdzana jest kolizja
      * @returns Czy ciała ze sobą kolidują
@@ -86,6 +120,13 @@ export class CircularBody implements Body {
             return this.radius + body.radius >= distanceAB(this.position, body.position)
         } else return false
     }
+
+    /**
+     * Przesuwa ciało o daną odległość.
+     * 
+     * @param by - Odległość o jaką ciało ma być przesunięte
+     */
+    moveBy(by: XYVar) { this.position = { x: this.position.x + by.x, y: this.position.y + by.y } }
 }
 
 /**
@@ -98,7 +139,7 @@ export class CircularBody implements Body {
  * @param circle - Ciało okrągłe
  * @returns Czy ciałą ze sobą kolidują
  */
-function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody): boolean {
+export function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody): boolean {
     const circleDistance = { x: Math.abs(circle.position.x - rect.position.x), y: Math.abs(circle.position.y - rect.position.y) }
 
     if(circleDistance.x > (rect.size.x / 2 + circle.radius)) return false
