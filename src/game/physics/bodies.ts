@@ -1,5 +1,5 @@
 import { XYVar } from '../../types'
-import { distanceAB } from './utils'
+import { distanceAB, multiplyXYVar } from './utils'
 
 /**
  * Interfejs definiujący podstawowe cechy i zachwania które musi posiadać 2 wymiarowe ciało.
@@ -10,6 +10,14 @@ export interface Body {
      * Pozycja ciała w układzie współrzędnych.
      */
     position: XYVar,
+    /**
+     * Prędkość z jaką przemieszcza się ciało.
+     */
+    speed: XYVar,
+    /**
+     * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     */
+    update: (delta: number) => void,
     /**
      * Sprawdza czy ciała ze sobą kolidują.
      * 
@@ -37,6 +45,10 @@ export class RectangularBody implements Body {
      * Wymiary ciała, nie mogą być negatywne.
      */
     size: XYVar
+    /**
+     * Prędkość z jaką przemieszcza się ciało.
+     */
+    speed: XYVar = { x: 0, y: 0 }
 
     /**
      * Tworzy ciało w kształcie prostokąta, nadaje mu pozycję startową i wymiary.
@@ -51,6 +63,13 @@ export class RectangularBody implements Body {
     ) {
         this.position = position
         this.size = { x: Math.abs(size.x), y: Math.abs(size.y) }
+    }
+
+    /**
+     * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     */
+    update(delta: number) {
+        this.moveBy(multiplyXYVar(this.speed, delta))
     }
 
     /**
@@ -89,6 +108,10 @@ export class CircularBody implements Body {
      * promień ciała, nie może być negatywny
      */
     radius: number
+    /**
+     * Prędkość z jaką przemieszcza się ciało.
+     */
+    speed: XYVar = { x: 0, y: 0 }
 
     /**
      * Tworzy ciało w kształcie okręgu, nadaje mu pozycję startową i promień.
@@ -103,6 +126,13 @@ export class CircularBody implements Body {
     ) {
         this.position = position
         this.radius = Math.abs(radius)
+    }
+
+    /**
+     * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     */
+    update(delta: number) {
+        this.moveBy(multiplyXYVar(this.speed, delta))
     }
 
     /**
