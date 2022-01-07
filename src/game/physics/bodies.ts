@@ -104,11 +104,17 @@ export class RectangularBody implements Body {
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
     update(delta: number, colliders?: Array<Body>) {
-        this.speed = addXYvars(this.speed, this.acceleration)
+        this.speed = addXYvars(this.speed, multiplyXYVar(this.acceleration, delta))
 
         if(this.isCollidable && this.isBouncy) {
-            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) this.speed.x *= -1
-            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) this.speed.y *= -1
+            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) {
+                this.speed.x *= -1
+                this.acceleration.x *= -1
+            }
+            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) {
+                this.speed.y *= -1
+                this.acceleration.y *= -1
+            }
 
             this.moveBy(multiplyXYVar(this.speed, delta))
         } else this.moveBy(multiplyXYVar(this.speed, delta))
@@ -195,11 +201,17 @@ export class CircularBody implements Body {
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
      update(delta: number, colliders?: Array<Body>) {
-        this.speed = addXYvars(this.speed, this.acceleration)
+        this.speed = addXYvars(this.speed, multiplyXYVar(this.acceleration, delta))
 
         if(this.isCollidable && this.isBouncy) {
-            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) this.speed.x *= -1
-            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) this.speed.y *= -1
+            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) {
+                this.speed.x *= -1
+                this.acceleration.x *= -1
+            }
+            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) {
+                this.speed.y *= -1
+                this.acceleration.y *= -1
+            }
 
             this.moveBy(multiplyXYVar(this.speed, delta))
         } else this.moveBy(multiplyXYVar(this.speed, delta))
