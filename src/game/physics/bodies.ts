@@ -19,9 +19,20 @@ export interface Body {
      */
     acceleration: XYVar,
     /**
-     * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
      */
-    update: (delta: number) => void,
+    isCollidable: boolean,
+    /**
+     * Wartośc określająca czy ciało ma się odbijać.
+     */
+    isBouncy: boolean,
+    /**
+     * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     * 
+     * @param delta - Czas jaki wyświetlana była poprzednia klatka
+     * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
+     */
+    update: (delta: number, colliders?: Array<Body>) => void,
     /**
      * Sprawdza czy ciała ze sobą kolidują.
      * 
@@ -56,7 +67,15 @@ export class RectangularBody implements Body {
     /**
      * Przyspieszenie jakie posiada ciało.
      */
-     acceleration: XYVar = { x: 0, y: 0 }
+    acceleration: XYVar = { x: 0, y: 0 }
+    /**
+     * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
+     */
+    isCollidable: boolean
+    /**
+     * Wartośc określająca czy ciało ma się odbijać.
+     */
+    isBouncy: boolean
 
     /**
      * Tworzy ciało w kształcie prostokąta, nadaje mu pozycję startową i wymiary.
@@ -67,19 +86,32 @@ export class RectangularBody implements Body {
      */
     constructor(
         position: XYVar,
-        size: XYVar
+        size: XYVar,
+        isCollidable: boolean = false,
+        isBouncy: boolean = false
     ) {
         this.position = position
         this.size = { x: Math.abs(size.x), y: Math.abs(size.y) }
+
+        this.isCollidable = isCollidable
+        this.isBouncy = isBouncy
     }
 
     /**
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     * 
+     * @param delta - Czas jaki wyświetlana była poprzednia klatka
+     * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
-    update(delta: number) {
+    update(delta: number, colliders?: Array<Body>) {
         this.speed = addXYvars(this.speed, this.acceleration)
 
-        this.moveBy(multiplyXYVar(this.speed, delta))
+        if(this.isCollidable && this.isBouncy) {
+            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) this.speed.x *= -1
+            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) this.speed.y *= -1
+
+            this.moveBy(multiplyXYVar(this.speed, delta))
+        } else this.moveBy(multiplyXYVar(this.speed, delta))
     }
 
     /**
@@ -88,14 +120,15 @@ export class RectangularBody implements Body {
      * Jeśli drugie ciało jest {@link CircularBody | okrągłe}, zleca sprawdzenie funkcji isRectAndCircleColliding().
      * 
      * @param body - Ciało z którym sprawdzana jest kolizja
+     * @param offset - Ochylenie ciała od orginalnej pozycji
      * @returns Czy ciała ze sobą kolidują
      */
-    isColliding(body: Body): boolean {
+    isColliding(body: Body, offset: XYVar = { x: 0, y: 0 }): boolean {
         if(body instanceof RectangularBody) {
-            return this.position.x + this.size.x / 2 >= body.position.x - body.size.x / 2 && this.position.x - this.size.x / 2 <= body.position.x + body.size.x / 2 &&
-                this.position.y + this.size.y / 2 >= body.position.y - body.size.y / 2 && this.position.y - this.size.y / 2 <= body.position.y + body.size.y / 2
+            return this.position.x + offset.x + this.size.x / 2 >= body.position.x - body.size.x / 2 && this.position.x + offset.x - this.size.x / 2 <= body.position.x + body.size.x / 2 &&
+                this.position.y + offset.y + this.size.y / 2 >= body.position.y - body.size.y / 2 && this.position.y + offset.y - this.size.y / 2 <= body.position.y + body.size.y / 2
         } else if(body instanceof CircularBody) {
-            return isRectAndCircleColliding(this, body)
+            return isRectAndCircleColliding(this, body, offset)
         } else return false
     }
 
@@ -125,7 +158,15 @@ export class CircularBody implements Body {
     /**
      * Przyspieszenie jakie posiada ciało.
      */
-     acceleration: XYVar = { x: 0, y: 0 }
+    acceleration: XYVar = { x: 0, y: 0 }
+    /**
+     * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
+     */
+    isCollidable: boolean
+    /**
+     * Wartośc określająca czy ciało ma się odbijać.
+     */
+    isBouncy: boolean
 
     /**
      * Tworzy ciało w kształcie okręgu, nadaje mu pozycję startową i promień.
@@ -136,19 +177,32 @@ export class CircularBody implements Body {
      */
     constructor(
         position: XYVar,
-        radius: number
+        radius: number,
+        isCollidable: boolean = false,
+        isBouncy: boolean = false
     ) {
         this.position = position
         this.radius = Math.abs(radius)
+
+        this.isCollidable = isCollidable
+        this.isBouncy = isBouncy
     }
 
     /**
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     * 
+     * @param delta - Czas jaki wyświetlana była poprzednia klatka
+     * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
-    update(delta: number) {
+     update(delta: number, colliders?: Array<Body>) {
         this.speed = addXYvars(this.speed, this.acceleration)
 
-        this.moveBy(multiplyXYVar(this.speed, delta))
+        if(this.isCollidable && this.isBouncy) {
+            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) this.speed.x *= -1
+            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) this.speed.y *= -1
+
+            this.moveBy(multiplyXYVar(this.speed, delta))
+        } else this.moveBy(multiplyXYVar(this.speed, delta))
     }
 
     /**
@@ -157,13 +211,14 @@ export class CircularBody implements Body {
      * Jeśli drugie ciało jest {@link RectangularBody | prostokątne}, zleca sprawdzenie funkcji isRectAndCircleColliding().
      * 
      * @param body - Ciało z którym sprawdzana jest kolizja
+     * @param offset - Ochylenie ciała od orginalnej pozycji
      * @returns Czy ciała ze sobą kolidują
      */
-    isColliding(body: Body): boolean {
+    isColliding(body: Body, offset: XYVar = { x: 0, y: 0 }): boolean {
         if(body instanceof RectangularBody) {
-            return isRectAndCircleColliding(body, this)
+            return isRectAndCircleColliding(body, this, multiplyXYVar(offset, -1))
         } else if(body instanceof CircularBody) {
-            return this.radius + body.radius >= distanceAB(this.position, body.position)
+            return this.radius + body.radius >= distanceAB(addXYvars(this.position, offset), body.position)
         } else return false
     }
 
@@ -183,10 +238,11 @@ export class CircularBody implements Body {
  * 
  * @param rect - Ciało prostokątne
  * @param circle - Ciało okrągłe
+ * @param offset - Ochylenie ciała prostokątnego od orginalnej pozycji
  * @returns Czy ciałą ze sobą kolidują
  */
-export function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody): boolean {
-    const circleDistance = { x: Math.abs(circle.position.x - rect.position.x), y: Math.abs(circle.position.y - rect.position.y) }
+export function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody, offset = { x: 0, y: 0 }): boolean {
+    const circleDistance = { x: Math.abs(circle.position.x - rect.position.x - offset.x), y: Math.abs(circle.position.y - rect.position.y - offset.y) }
 
     if(circleDistance.x > (rect.size.x / 2 + circle.radius)) return false
     if(circleDistance.y > (rect.size.y / 2 + circle.radius)) return false
