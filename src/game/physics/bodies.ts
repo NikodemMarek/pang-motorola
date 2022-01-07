@@ -1,5 +1,5 @@
 import { XYVar } from '../../types'
-import { distanceAB, multiplyXYVar } from './utils'
+import { addXYvars, distanceAB, multiplyXYVar } from './utils'
 
 /**
  * Interfejs definiujący podstawowe cechy i zachwania które musi posiadać 2 wymiarowe ciało.
@@ -14,6 +14,10 @@ export interface Body {
      * Prędkość z jaką przemieszcza się ciało.
      */
     speed: XYVar,
+    /**
+     * Przyspieszenie jakie posiada ciało.
+     */
+    acceleration: XYVar,
     /**
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
      */
@@ -49,6 +53,10 @@ export class RectangularBody implements Body {
      * Prędkość z jaką przemieszcza się ciało.
      */
     speed: XYVar = { x: 0, y: 0 }
+    /**
+     * Przyspieszenie jakie posiada ciało.
+     */
+     acceleration: XYVar = { x: 0, y: 0 }
 
     /**
      * Tworzy ciało w kształcie prostokąta, nadaje mu pozycję startową i wymiary.
@@ -69,6 +77,8 @@ export class RectangularBody implements Body {
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
      */
     update(delta: number) {
+        this.speed = addXYvars(this.speed, this.acceleration)
+
         this.moveBy(multiplyXYVar(this.speed, delta))
     }
 
@@ -112,6 +122,10 @@ export class CircularBody implements Body {
      * Prędkość z jaką przemieszcza się ciało.
      */
     speed: XYVar = { x: 0, y: 0 }
+    /**
+     * Przyspieszenie jakie posiada ciało.
+     */
+     acceleration: XYVar = { x: 0, y: 0 }
 
     /**
      * Tworzy ciało w kształcie okręgu, nadaje mu pozycję startową i promień.
@@ -132,6 +146,8 @@ export class CircularBody implements Body {
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
      */
     update(delta: number) {
+        this.speed = addXYvars(this.speed, this.acceleration)
+
         this.moveBy(multiplyXYVar(this.speed, delta))
     }
 
