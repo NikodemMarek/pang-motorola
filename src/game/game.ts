@@ -24,6 +24,6 @@ export default class Game {
         const frameTime = 1000 / FPS
 
         this.state = Game.states.RUNNING
-        setInterval(() => { if(this.state == Game.states.RUNNING) this.update(frameTime) }, frameTime)
+        setInterval(() => { if(this.state == Game.states.RUNNING) this.update(frameTime / 1000) }, frameTime)
     }
 }
