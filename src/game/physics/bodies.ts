@@ -1,5 +1,5 @@
 import { XYVar } from '../../types'
-import { addXYvars, distanceAB, multiplyXYVar } from './utils'
+import { addXYvars, distanceAB, magnitude, multiplyXYVar, normalize, rotate } from './utils'
 
 /**
  * Interfejs definiujący podstawowe cechy i zachwania które musi posiadać 2 wymiarowe ciało.
@@ -22,10 +22,6 @@ export interface Body {
      * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
      */
     isCollidable: boolean,
-    /**
-     * Wartośc określająca czy ciało ma się odbijać.
-     */
-    isBouncy: boolean,
     /**
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
      * 
@@ -72,10 +68,6 @@ export class RectangularBody implements Body {
      * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
      */
     isCollidable: boolean
-    /**
-     * Wartośc określająca czy ciało ma się odbijać.
-     */
-    isBouncy: boolean
 
     /**
      * Tworzy ciało w kształcie prostokąta, nadaje mu pozycję startową i wymiary.
@@ -87,14 +79,12 @@ export class RectangularBody implements Body {
     constructor(
         position: XYVar,
         size: XYVar,
-        isCollidable: boolean = false,
-        isBouncy: boolean = false
+        isCollidable: boolean = false
     ) {
         this.position = position
         this.size = { x: Math.abs(size.x), y: Math.abs(size.y) }
 
         this.isCollidable = isCollidable
-        this.isBouncy = isBouncy
     }
 
     /**
@@ -106,18 +96,8 @@ export class RectangularBody implements Body {
     update(delta: number, colliders?: Array<Body>) {
         this.speed = addXYvars(this.speed, multiplyXYVar(this.acceleration, delta))
 
-        if(this.isCollidable && this.isBouncy) {
-            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) {
-                this.speed.x *= -1
-                this.acceleration.x *= -1
-            }
-            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) {
-                this.speed.y *= -1
-                this.acceleration.y *= -1
-            }
-
-            this.moveBy(multiplyXYVar(this.speed, delta))
-        } else this.moveBy(multiplyXYVar(this.speed, delta))
+        if(this.isCollidable && colliders?.some(collider => this.isColliding(collider))) {  }
+        else this.moveBy(multiplyXYVar(this.speed, delta))
     }
 
     /**
@@ -129,12 +109,12 @@ export class RectangularBody implements Body {
      * @param offset - Ochylenie ciała od orginalnej pozycji
      * @returns Czy ciała ze sobą kolidują
      */
-    isColliding(body: Body, offset: XYVar = { x: 0, y: 0 }): boolean {
+    isColliding(body: Body): boolean {
         if(body instanceof RectangularBody) {
-            return this.position.x + offset.x + this.size.x / 2 >= body.position.x - body.size.x / 2 && this.position.x + offset.x - this.size.x / 2 <= body.position.x + body.size.x / 2 &&
-                this.position.y + offset.y + this.size.y / 2 >= body.position.y - body.size.y / 2 && this.position.y + offset.y - this.size.y / 2 <= body.position.y + body.size.y / 2
+            return this.position.x + this.size.x / 2 >= body.position.x - body.size.x / 2 && this.position.x - this.size.x / 2 <= body.position.x + body.size.x / 2 &&
+                this.position.y + this.size.y / 2 >= body.position.y - body.size.y / 2 && this.position.y - this.size.y / 2 <= body.position.y + body.size.y / 2
         } else if(body instanceof CircularBody) {
-            return isRectAndCircleColliding(this, body, offset)
+            return isRectAndCircleColliding(this, body)
         } else return false
     }
 
@@ -203,18 +183,9 @@ export class CircularBody implements Body {
      update(delta: number, colliders?: Array<Body>) {
         this.speed = addXYvars(this.speed, multiplyXYVar(this.acceleration, delta))
 
-        if(this.isCollidable && this.isBouncy) {
-            if(colliders?.some((body) => this.isColliding(body, { x: this.speed.x * delta, y: 0 }))) {
-                this.speed.x *= -1
-                this.acceleration.x *= -1
-            }
-            if(colliders?.some((body) => this.isColliding(body, { x: 0, y: this.speed.y * delta }))) {
-                this.speed.y *= -1
-                this.acceleration.y *= -1
-            }
+        this.moveBy(multiplyXYVar(this.speed, delta))
 
-            this.moveBy(multiplyXYVar(this.speed, delta))
-        } else this.moveBy(multiplyXYVar(this.speed, delta))
+        if(colliders != undefined) colliders.forEach(rect => { if(rect instanceof RectangularBody && isRectAndCircleColliding(rect, this)) resolveRectAndCirclePenetration(rect as RectangularBody, this) })
     }
 
     /**
@@ -226,11 +197,11 @@ export class CircularBody implements Body {
      * @param offset - Ochylenie ciała od orginalnej pozycji
      * @returns Czy ciała ze sobą kolidują
      */
-    isColliding(body: Body, offset: XYVar = { x: 0, y: 0 }): boolean {
+    isColliding(body: Body): boolean {
         if(body instanceof RectangularBody) {
-            return isRectAndCircleColliding(body, this, multiplyXYVar(offset, -1))
+            return isRectAndCircleColliding(body, this)
         } else if(body instanceof CircularBody) {
-            return this.radius + body.radius >= distanceAB(addXYvars(this.position, offset), body.position)
+            return this.radius + body.radius >= distanceAB(this.position, body.position)
         } else return false
     }
 
@@ -253,8 +224,8 @@ export class CircularBody implements Body {
  * @param offset - Ochylenie ciała prostokątnego od orginalnej pozycji
  * @returns Czy ciałą ze sobą kolidują
  */
-export function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody, offset = { x: 0, y: 0 }): boolean {
-    const circleDistance = { x: Math.abs(circle.position.x - rect.position.x - offset.x), y: Math.abs(circle.position.y - rect.position.y - offset.y) }
+export function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody): boolean {
+    const circleDistance = { x: Math.abs(circle.position.x - rect.position.x), y: Math.abs(circle.position.y - rect.position.y) }
 
     if(circleDistance.x > (rect.size.x / 2 + circle.radius)) return false
     if(circleDistance.y > (rect.size.y / 2 + circle.radius)) return false
@@ -263,4 +234,30 @@ export function isRectAndCircleColliding(rect: RectangularBody, circle: Circular
     if(circleDistance.y <= (rect.size.y / 2)) return true
 
     return (Math.pow(circleDistance.x - rect.size.x / 2, 2) + Math.pow(circleDistance.y - rect.size.y / 2, 2)) <= (circle.radius * circle.radius)
+}
+
+/**
+ * Obolicza jak głęboko ciało okrągłe spenetrowało ciało prostokątne.
+ * Odbija ciało okrągłe na głębokość penetracji.
+ * Zmienia wektor prędkości ciała okrągłego, na wektor odbity.
+ * 
+ * @param rect - Ciało prostokątne od którego odbija się ciało okrągłe
+ * @param circle - Ciało okrągłe które się porusza
+ */
+export function resolveRectAndCirclePenetration(rect: RectangularBody, circle: CircularBody) {
+    const nearestApex = {
+        x: Math.max(rect.position.x - rect.size.x / 2, Math.min(circle.position.x, rect.position.x + rect.size.x / 2)),
+        y: Math.max(rect.position.y - rect.size.y / 2, Math.min(circle.position.y, rect.position.y + rect.size.y / 2))
+    }
+    const distance: XYVar = { x: circle.position.x - nearestApex.x, y: circle.position.y - nearestApex.y }
+
+    const dnormal = { x: -distance.y, y: distance.x }
+    const normal_angle = Math.atan2(dnormal.y, dnormal.x)
+    const incoming_angle = Math.atan2(circle.speed.y, circle.speed.x)
+    const theta = normal_angle - incoming_angle
+    circle.speed = rotate(circle.speed, 2 * theta)
+
+    const penetrationDepth = circle.radius - magnitude(distance)
+    const penetrationVector = multiplyXYVar(normalize(distance), penetrationDepth)
+    circle.position = addXYvars(circle.position, penetrationVector)
 }
