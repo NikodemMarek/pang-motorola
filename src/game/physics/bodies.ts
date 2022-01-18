@@ -15,9 +15,9 @@ export interface Body {
      */
     speed: XYVar,
     /**
-     * Przyspieszenie jakie posiada ciało.
+     * Przyspieszenia jakie posiada ciało.
      */
-    acceleration: XYVar,
+    accelerators: Array<{ name: string, vector: XYVar }>,
     /**
      * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
      */
@@ -41,7 +41,20 @@ export interface Body {
      * 
      * @param by - Odległość o jaką ciało ma być przesunięte
      */
-    moveBy: (by: XYVar) => void
+    moveBy: (by: XYVar) => void,
+    /**
+     * Dodaje przyspieszenie z identyfikatorem do ciała.
+     * 
+     * @param name - Identyfikator przyspieszenia
+     * @param vector - Wektor przyspieszenia
+     */
+    accelerate: (name: string, vector: XYVar) => void,
+    /**
+     * Usuwa wszystkie przyspieszenia z danym identyfikatorem, z ciała.
+     * 
+     * @param name - Identyfikator przyspieszenia
+     */
+     decelerate: (name: string) => void
 }
 
 /**
@@ -61,9 +74,9 @@ export class RectangularBody implements Body {
      */
     speed: XYVar = { x: 0, y: 0 }
     /**
-     * Przyspieszenie jakie posiada ciało.
+     * Przyspieszenia jakie posiada ciało.
      */
-    acceleration: XYVar = { x: 0, y: 0 }
+    accelerators: Array<{ name: string, vector: XYVar }> = [ { name: 'initial', vector: { x: 0, y: 0 } } ]
     /**
      * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
      */
@@ -94,7 +107,7 @@ export class RectangularBody implements Body {
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
     update(delta: number, colliders?: Array<Body>) {
-        this.speed = addXYvars(this.speed, multiplyXYVar(this.acceleration, delta))
+        this.speed = addXYvars(this.speed, multiplyXYVar(addXYvars(... this.accelerators.map(acc => acc.vector)), delta))
 
         if(this.isCollidable && colliders?.some(collider => this.isColliding(collider))) {  }
         else this.moveBy(multiplyXYVar(this.speed, delta))
@@ -123,6 +136,20 @@ export class RectangularBody implements Body {
      * @param by - Odległość o jaką ciało ma być przesunięte
      */
     moveBy(by: XYVar) { this.position = { x: this.position.x + by.x, y: this.position.y + by.y } }
+
+    /**
+     * Dodaje przyspieszenie z identyfikatorem do ciała.
+     * 
+     * @param name - Identyfikator przyspieszenia
+     * @param vector - Wektor przyspieszenia
+     */
+    accelerate(name: string, vector: XYVar) { this.accelerators.push({ name: name, vector: vector }) }
+    /**
+     * Usuwa wszystkie przyspieszenia z danym identyfikatorem, z ciała.
+     * 
+     * @param name - Identyfikator przyspieszenia
+     */
+    decelerate(name: string) { this.accelerators.filter(acc => acc.name != name) }
 }
 /**
  * Klasa opisująca zachowanie dla {@link Body | ciała} w kształcie okręgu.
@@ -141,9 +168,9 @@ export class CircularBody implements Body {
      */
     speed: XYVar = { x: 0, y: 0 }
     /**
-     * Przyspieszenie jakie posiada ciało.
+     * Przyspieszenia jakie posiada ciało.
      */
-    acceleration: XYVar = { x: 0, y: 0 }
+    accelerators: Array<{ name: string, vector: XYVar }> = [ { name: 'initial', vector: { x: 0, y: 0 } } ]
     /**
      * Wartość określająca czy ciało ma byc sprawdzane pod względem kolizji.
      */
@@ -180,7 +207,7 @@ export class CircularBody implements Body {
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
      update(delta: number, colliders?: Array<Body>) {
-        this.speed = addXYvars(this.speed, multiplyXYVar(this.acceleration, delta))
+        this.speed = addXYvars(this.speed, multiplyXYVar(addXYvars(... this.accelerators.map(acc => acc.vector)), delta))
 
         this.moveBy(multiplyXYVar(this.speed, delta))
 
@@ -209,6 +236,20 @@ export class CircularBody implements Body {
      * @param by - Odległość o jaką ciało ma być przesunięte
      */
     moveBy(by: XYVar) { this.position = { x: this.position.x + by.x, y: this.position.y + by.y } }
+
+    /**
+     * Dodaje przyspieszenie z identyfikatorem do ciała.
+     * 
+     * @param name - Identyfikator przyspieszenia
+     * @param vector - Wektor przyspieszenia
+     */
+    accelerate(name: string, vector: XYVar) { this.accelerators.push({ name: name, vector: vector }) }
+    /**
+     * Usuwa wszystkie przyspieszenia z danym identyfikatorem, z ciała.
+     * 
+     * @param name - Identyfikator przyspieszenia
+     */
+    decelerate(name: string) { this.accelerators.filter(acc => acc.name != name) }
 }
 
 /**
@@ -236,7 +277,7 @@ export function isRectAndCircleColliding(rect: RectangularBody, circle: Circular
 /**
  * Obolicza jak głęboko ciało okrągłe spenetrowało ciało prostokątne.
  * Odbija ciało okrągłe na głębokość penetracji.
- * Zmienia wektor prędkości ciała okrągłego, na wektor odbity.
+ * Zmienia wektor prędkości oraz wektory przyspieszenia ciała okrągłego, na wektory odbity.
  * 
  * @param rect - Ciało prostokątne od którego odbija się ciało okrągłe
  * @param circle - Ciało okrągłe które się porusza
@@ -252,7 +293,15 @@ export function resolveRectAndCirclePenetration(rect: RectangularBody, circle: C
     const normal_angle = Math.atan2(dnormal.y, dnormal.x)
     const incoming_angle = Math.atan2(circle.speed.y, circle.speed.x)
     const theta = normal_angle - incoming_angle
+
     circle.speed = rotate(circle.speed, 2 * theta)
+    circle.accelerators = circle.accelerators.map(acc => {
+        if(acc.name == 'gravity') {
+            circle.speed = addXYvars(circle.speed, acc.vector)
+            return { name: acc.name, vector: acc.vector }
+        }
+        else return { name: acc.name, vector: rotate(acc.vector, 2 * theta) }
+    })
 
     const penetrationDepth = circle.radius - magnitude(distance)
     const penetrationVector = multiplyXYVar(normalize(distance), penetrationDepth)
