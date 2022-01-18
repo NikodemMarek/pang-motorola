@@ -106,7 +106,6 @@ export class RectangularBody implements Body {
      * Jeśli drugie ciało jest {@link CircularBody | okrągłe}, zleca sprawdzenie funkcji isRectAndCircleColliding().
      * 
      * @param body - Ciało z którym sprawdzana jest kolizja
-     * @param offset - Ochylenie ciała od orginalnej pozycji
      * @returns Czy ciała ze sobą kolidują
      */
     isColliding(body: Body): boolean {
@@ -194,7 +193,6 @@ export class CircularBody implements Body {
      * Jeśli drugie ciało jest {@link RectangularBody | prostokątne}, zleca sprawdzenie funkcji isRectAndCircleColliding().
      * 
      * @param body - Ciało z którym sprawdzana jest kolizja
-     * @param offset - Ochylenie ciała od orginalnej pozycji
      * @returns Czy ciała ze sobą kolidują
      */
     isColliding(body: Body): boolean {
@@ -221,7 +219,6 @@ export class CircularBody implements Body {
  * 
  * @param rect - Ciało prostokątne
  * @param circle - Ciało okrągłe
- * @param offset - Ochylenie ciała prostokątnego od orginalnej pozycji
  * @returns Czy ciałą ze sobą kolidują
  */
 export function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody): boolean {
