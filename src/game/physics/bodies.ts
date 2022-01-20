@@ -149,7 +149,7 @@ export class RectangularBody implements Body {
      * 
      * @param name - Identyfikator przyspieszenia
      */
-    decelerate(name: string) { this.accelerators.filter(acc => acc.name != name) }
+    decelerate(name: string) { this.accelerators = this.accelerators.filter(acc => acc.name != name) }
 }
 /**
  * Klasa opisująca zachowanie dla {@link Body | ciała} w kształcie okręgu.
@@ -249,7 +249,7 @@ export class CircularBody implements Body {
      * 
      * @param name - Identyfikator przyspieszenia
      */
-    decelerate(name: string) { this.accelerators.filter(acc => acc.name != name) }
+    decelerate(name: string) { this.accelerators = this.accelerators.filter(acc => acc.name != name) }
 }
 
 /**
