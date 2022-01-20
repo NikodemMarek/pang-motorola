@@ -1,8 +1,8 @@
 import { BallSize, GAME_SIZE } from '../../const'
 import { XYVar } from '../../types'
-import { Body, CircularBody } from './bodies'
+import { Body, CircularBody, RectangularBody } from './bodies'
 
-export default class BallBody extends CircularBody {
+export class BallBody extends CircularBody {
     lastHeight: number
     peakHeight: number
     isFalling: boolean = true
@@ -32,5 +32,14 @@ export default class BallBody extends CircularBody {
         else this.isFalling = false
 
         this.lastHeight = this.position.y
+    }
+}
+
+export class PlatformBody extends RectangularBody {
+    constructor(
+        position: XYVar,
+        size: XYVar
+    ) {
+        super(position, size, true)
     }
 }
