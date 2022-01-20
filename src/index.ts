@@ -1,5 +1,6 @@
 import { Application } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
+import { GAME_SIZE } from './const'
 import MainMenu from './views/game-menus'
 import Loading from './views/loading'
 
@@ -11,8 +12,8 @@ const app = new Application({
     resolution: window.devicePixelRatio || 1,
     autoDensity: true,
     backgroundColor: 0xf0f0f0,
-    width: 800,
-    height: 500
+    width: GAME_SIZE.x,
+    height: GAME_SIZE.y
 })
 
 const _this = app.stage
