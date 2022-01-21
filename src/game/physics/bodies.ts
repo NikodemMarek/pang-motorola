@@ -311,14 +311,16 @@ export function resolveRectAndCirclePenetration(rect: RectangularBody, circle: C
     const incoming_angle = Math.atan2(circle.speed.y, circle.speed.x)
     const theta = normal_angle - incoming_angle
 
-    circle.speed = rotate(circle.speed, 2 * theta)
-    circle.accelerators = circle.accelerators.map(acc => {
-        if(acc.name == 'gravity') {
-            circle.speed = addXYvars(circle.speed, acc.vector)
-            return { name: acc.name, vector: acc.vector }
-        }
-        else return { name: acc.name, vector: rotate(acc.vector, 2 * theta) }
-    })
+    if(circle.isBouncy) {
+        circle.speed = rotate(circle.speed, 2 * theta)
+        circle.accelerators = circle.accelerators.map(acc => {
+            if(acc.name == 'gravity') {
+                circle.speed = addXYvars(circle.speed, acc.vector)
+                return { name: acc.name, vector: acc.vector }
+            }
+            else return { name: acc.name, vector: rotate(acc.vector, 2 * theta) }
+        })
+    }
 
     const penetrationDepth = circle.radius - magnitude(distance)
     const penetrationVector = multiplyXYVar(normalize(distance), penetrationDepth)
