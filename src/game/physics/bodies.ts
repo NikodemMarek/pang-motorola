@@ -1,5 +1,5 @@
 import { XYVar } from '../../types'
-import { addXYvars, distanceAB, magnitude, multiplyXYVar, normalize, rotate } from './utils'
+import { addXYvars, distanceAB, magnitude, multiplyXYVar, multiplyXYVars, normalize, rotate } from './utils'
 
 /**
  * Interfejs definiujący podstawowe cechy i zachwania które musi posiadać 2 wymiarowe ciało.
@@ -82,6 +82,8 @@ export class RectangularBody implements Body {
      */
     isCollidable: boolean
 
+    rest: boolean
+
     /**
      * Tworzy ciało w kształcie prostokąta, nadaje mu pozycję startową i wymiary.
      * Upewnia się że wymiary są pozytywe.
@@ -98,6 +100,7 @@ export class RectangularBody implements Body {
         this.size = { x: Math.abs(size.x), y: Math.abs(size.y) }
 
         this.isCollidable = isCollidable
+        this.rest = false
     }
 
     /**
@@ -109,8 +112,22 @@ export class RectangularBody implements Body {
     update(delta: number, colliders?: Array<Body>) {
         this.speed = addXYvars(this.speed, multiplyXYVar(addXYvars(... this.accelerators.map(acc => acc.vector)), delta))
 
-        if(this.isCollidable && colliders?.some(collider => this.isColliding(collider))) {  }
-        else this.moveBy(multiplyXYVar(this.speed, delta))
+        if(!this.rest) {
+            if(this.isCollidable) {
+                colliders?.forEach(collider => {
+                    if(collider instanceof RectangularBody && this.isColliding(collider)) {
+                        const penetrationDepth: XYVar = {
+                            x: (this.size.x + collider.size.x) / 2 - distanceAB({ x: this.position.x, y: 0 }, { x: collider.position.x, y: 0 }),
+                            y: (this.size.y + collider.size.y) / 2 - distanceAB({ x: 0, y: this.position.y }, { x: 0, y: collider.position.y })
+                        }
+    
+                        this.position = addXYvars(this.position, multiplyXYVars(normalize(penetrationDepth), this.speed, { x: -1, y: -1 }))
+                        this.rest = true
+                    } else this.moveBy(multiplyXYVar(this.speed, delta))
+                })
+            }
+            else this.moveBy(multiplyXYVar(this.speed, delta))
+        }
     }
 
     /**
