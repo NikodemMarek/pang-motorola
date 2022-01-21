@@ -82,8 +82,6 @@ export class RectangularBody implements Body {
      */
     isCollidable: boolean
 
-    rest: boolean
-
     /**
      * Tworzy ciało w kształcie prostokąta, nadaje mu pozycję startową i wymiary.
      * Upewnia się że wymiary są pozytywe.
@@ -100,7 +98,6 @@ export class RectangularBody implements Body {
         this.size = { x: Math.abs(size.x), y: Math.abs(size.y) }
 
         this.isCollidable = isCollidable
-        this.rest = false
     }
 
     /**
@@ -110,23 +107,37 @@ export class RectangularBody implements Body {
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
     update(delta: number, colliders?: Array<Body>) {
-        this.speed = addXYvars(this.speed, multiplyXYVar(addXYvars(... this.accelerators.map(acc => acc.vector)), delta))
+        let prePosition = this.position
 
-        if(!this.rest) {
-            if(this.isCollidable) {
-                colliders?.forEach(collider => {
-                    if(collider instanceof RectangularBody && this.isColliding(collider)) {
-                        const penetrationDepth: XYVar = {
-                            x: (this.size.x + collider.size.x) / 2 - distanceAB({ x: this.position.x, y: 0 }, { x: collider.position.x, y: 0 }),
-                            y: (this.size.y + collider.size.y) / 2 - distanceAB({ x: 0, y: this.position.y }, { x: 0, y: collider.position.y })
-                        }
-    
-                        this.position = addXYvars(this.position, multiplyXYVars(normalize(penetrationDepth), this.speed, { x: -1, y: -1 }))
-                        this.rest = true
-                    } else this.moveBy(multiplyXYVar(this.speed, delta))
-                })
-            }
-            else this.moveBy(multiplyXYVar(this.speed, delta))
+        this.speed = addXYvars(this.speed, multiplyXYVar(addXYvars(... this.accelerators.map(acc => acc.vector)), delta))
+        this.moveBy(multiplyXYVar(this.speed, delta))
+
+        if(this.isCollidable) {
+            colliders?.forEach(collider => {
+                if(collider instanceof RectangularBody && this.isColliding(collider)) {
+                    const penetrationDept: XYVar = {
+                        x: (this.size.x + collider.size.x) / 2 - distanceAB({ x: this.position.x, y: 0 }, { x: collider.position.x, y: 0 }),
+                        y: (this.size.y + collider.size.y) / 2 - distanceAB({ x: 0, y: this.position.y }, { x: 0, y: collider.position.y })
+                    }
+                    const thisDirection = normalize(this.speed)
+                    const penetrationVector = multiplyXYVars(penetrationDept, { x: thisDirection.x == 0? 0: thisDirection.x > 0? 1: -1, y: thisDirection.y == 0? 0: thisDirection.y > 0? 1: -1 })
+                    
+                    this.position = prePosition
+                    this.moveBy(multiplyXYVar({ x: this.speed.x, y: 0 }, delta))
+                    if(this.isColliding(collider)) {
+                        this.position.x -= penetrationVector.x
+                        this.speed.x = 0
+                    }
+
+                    this.moveBy(multiplyXYVar({ x: 0, y: this.speed.y }, delta))
+                    if(this.isColliding(collider)) {
+                        this.position.y -= penetrationVector.y
+                        this.speed.y = 0
+                    }
+
+                    prePosition = this.position
+                }
+            })
         }
     }
 
@@ -140,8 +151,8 @@ export class RectangularBody implements Body {
      */
     isColliding(body: Body): boolean {
         if(body instanceof RectangularBody) {
-            return this.position.x + this.size.x / 2 >= body.position.x - body.size.x / 2 && this.position.x - this.size.x / 2 <= body.position.x + body.size.x / 2 &&
-                this.position.y + this.size.y / 2 >= body.position.y - body.size.y / 2 && this.position.y - this.size.y / 2 <= body.position.y + body.size.y / 2
+            return this.position.x + this.size.x / 2 > body.position.x - body.size.x / 2 && this.position.x - this.size.x / 2 < body.position.x + body.size.x / 2 &&
+                this.position.y + this.size.y / 2 > body.position.y - body.size.y / 2 && this.position.y - this.size.y / 2 < body.position.y + body.size.y / 2
         } else if(body instanceof CircularBody) {
             return isRectAndCircleColliding(this, body)
         } else return false
