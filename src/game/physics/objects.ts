@@ -52,8 +52,7 @@ export class BallBody extends CircularBody {
         super.update(delta, colliders)
 
         if(!this.isFalling && this.position.y > this.lastHeight) this.peakHeight = this.lastHeight
-        else if(this.isFalling && this.position.y < this.lastHeight && this.peakHeight > GAME_SIZE.y * 2 / 3) this.accelerate('noFalling', { x: 0, y: -160 })
-        else if(this.lastHeight < GAME_SIZE.y * 3 / 4) this.decelerate('noFalling')
+        else if(this.isFalling && this.position.y < this.lastHeight && this.peakHeight > GAME_SIZE.y * 2 / 3) this.speed.y = -140
 
         if(this.position.y > this.lastHeight) this.isFalling = true
         else this.isFalling = false
