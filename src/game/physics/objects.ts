@@ -12,7 +12,7 @@ export class BallBody extends CircularBody {
         size: BallSize,
         speed: XYVar = { x: 0, y: 0 }
     ) {
-        super(position, size, true)
+        super(position, size, true, true)
 
         this.speed = speed
         this.accelerate('gravity', { x: 0, y: 50 })
