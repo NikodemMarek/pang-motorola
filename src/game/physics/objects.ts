@@ -42,7 +42,7 @@ export class BallBody extends CircularBody {
 
     /**
      * Funkcja sprawdza czy piłka nie opadła zbyt nisko.
-     * Jeśli tak nadaje jej przyspieszenie w górę, aby wróciła powyżej minimalnej dozwolonej wysokości.
+     * Jeśli tak nadaje jej prędkość w górę, aby wróciła powyżej minimalnej dozwolonej wysokości.
      * Następnie zmienia wartości parametrów ciała w zależności od czasu.
      * 
      * @param delta - Czas jaki wyświetlana była poprzednia klatka
