@@ -1,5 +1,5 @@
 import { XYVar } from '../../types'
-import { addXYvars, distanceAB, magnitude, multiplyXYVar, multiplyXYVars, normalize, rotate } from './utils'
+import { addXYvars, distanceAB, divideXYVar, magnitude, multiplyXYVar, multiplyXYVars, normalize, rotate } from './utils'
 
 /**
  * Interfejs definiujący podstawowe cechy i zachwania które musi posiadać 2 wymiarowe ciało.
@@ -107,35 +107,24 @@ export class RectangularBody implements Body {
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
      */
     update(delta: number, colliders?: Array<Body>) {
-        let prePosition = this.position
-
         this.speed = addXYvars(this.speed, multiplyXYVar(addXYvars(... this.accelerators.map(acc => acc.vector)), delta))
         this.moveBy(multiplyXYVar(this.speed, delta))
 
         if(this.isCollidable) {
             colliders?.forEach(collider => {
                 if(collider instanceof RectangularBody && this.isColliding(collider)) {
-                    const penetrationDept: XYVar = {
-                        x: (this.size.x + collider.size.x) / 2 - distanceAB({ x: this.position.x, y: 0 }, { x: collider.position.x, y: 0 }),
-                        y: (this.size.y + collider.size.y) / 2 - distanceAB({ x: 0, y: this.position.y }, { x: 0, y: collider.position.y })
+                    const nearestApex = {
+                        x: Math.max(collider.position.x - collider.size.x / 2, Math.min(this.position.x, collider.position.x + collider.size.x / 2)),
+                        y: Math.max(collider.position.y - collider.size.y / 2, Math.min(this.position.y, collider.position.y + collider.size.y / 2))
                     }
-                    const thisDirection = normalize(this.speed)
-                    const penetrationVector = multiplyXYVars(penetrationDept, { x: thisDirection.x == 0? 0: thisDirection.x > 0? 1: -1, y: thisDirection.y == 0? 0: thisDirection.y > 0? 1: -1 })
-                    
-                    this.position = prePosition
-                    this.moveBy(multiplyXYVar({ x: this.speed.x, y: 0 }, delta))
-                    if(this.isColliding(collider)) {
-                        this.position.x -= penetrationVector.x
-                        this.speed.x = 0
-                    }
+                    const distance: XYVar = { x: this.position.x - nearestApex.x, y: this.position.y - nearestApex.y }
+                
+                    const penetrationDepth = magnitude(multiplyXYVars(normalize(distance), divideXYVar(this.size, 2))) - magnitude(distance)
+                    const penetrationVector = multiplyXYVar(normalize(distance), penetrationDepth)
+                    this.position = addXYvars(this.position, penetrationVector)
 
-                    this.moveBy(multiplyXYVar({ x: 0, y: this.speed.y }, delta))
-                    if(this.isColliding(collider)) {
-                        this.position.y -= penetrationVector.y
-                        this.speed.y = 0
-                    }
-
-                    prePosition = this.position
+                    if(penetrationVector.x != 0) this.speed.x = 0
+                    if(penetrationVector.y != 0) this.speed.y = 0
                 }
             })
         }
