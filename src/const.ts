@@ -11,3 +11,10 @@ export enum BallSize {
     BIG = 40,
     HUGE = 60
 }
+
+export const Keymap = {
+    UP: [ 'ArrowUp', 'w', 'W' ],
+    DOWN: [ 'ArrowDown', 's', 'S' ],
+    LEFT: [ 'ArrowLeft', 'a', 'A' ],
+    RIGHT: [ 'ArrowRight', 'd', 'D' ]
+}
