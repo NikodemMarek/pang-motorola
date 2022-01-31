@@ -1,10 +1,16 @@
 import { XYVar } from './types'
 
+/**
+ * Wartość określająca wymiary planszy.
+ */
 export const GAME_SIZE: XYVar = {
     x: 800,
     y: 500
 }
 
+/**
+ * Ustalone wymiary 4 wielkości piłek.
+ */
 export enum BallSize {
     SMALL = 10,
     MEDIUM = 20,
@@ -12,6 +18,9 @@ export enum BallSize {
     HUGE = 60
 }
 
+/**
+ * Domyślna mapa klawiszy którymi gracz porusza postać.
+ */
 export const Keymap = {
     UP: [ 'ArrowUp', 'w', 'W' ],
     DOWN: [ 'ArrowDown', 's', 'S' ],
