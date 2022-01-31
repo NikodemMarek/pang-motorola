@@ -1,7 +1,7 @@
 import { Keymap } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
-import { LadderBody } from './objects'
+import { LadderBody, PlatformBody } from './objects'
 
 /**
  * Klasa opisująca zachowanie obiektu postaci.
@@ -42,7 +42,11 @@ export default class PlayerBody extends RectangularBody {
      * @param ladders - Tablica z drabinami na których może znajdować się postać
      */
     override update(delta: number, colliders?: Body[], ladders?: LadderBody[]): void {
-        const isOnLadder = ladders?.some(ladder => ladder instanceof LadderBody && this.isColliding(ladder))
+        let isOnLadder = ladders?.some(ladder => {
+            return this.isColliding(ladder) &&
+                this.position.x - this.size.x / 2 > ladder.position.x - ladder.size.x / 2 &&
+                this.position.x + this.size.x / 2 < ladder.position.x + ladder.size.x / 2
+        })
         if(isOnLadder) this.speed.y = 0
 
         this.speed.x = 0
@@ -53,6 +57,15 @@ export default class PlayerBody extends RectangularBody {
                 break;
                 case 'DOWN':
                     if(isOnLadder) this.speed.y = 60
+                    else {
+                        this.position.y += 1
+
+                        if(!ladders?.some(ladder => this.isColliding(ladder))) this.position.y -= 1
+                        else {
+                            this.speed.y = 60
+                            isOnLadder = true
+                        }
+                    }
                 break;
                 case 'LEFT':
                     this.speed.x = -50
@@ -69,6 +82,6 @@ export default class PlayerBody extends RectangularBody {
             this.speed.y = 30
         }
 
-        super.update(delta, colliders)
+        super.update(delta, isOnLadder? colliders?.filter(collider => collider instanceof PlatformBody && !ladders?.some(ladder => ladder.isColliding(collider))): colliders)
     }
 }
