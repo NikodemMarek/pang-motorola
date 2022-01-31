@@ -1,6 +1,7 @@
 import { Keymap } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
+import { LadderBody } from './objects'
 
 /**
  * Klasa opisująca zachowanie obiektu postaci.
@@ -38,16 +39,20 @@ export default class PlayerBody extends RectangularBody {
      * 
      * @param delta - Czas jaki wyświetlana była poprzednia klatka
      * @param colliders - Tablica z ciałami które mogą kolidować z postacią
+     * @param ladders - Tablica z drabinami na których może znajdować się postać
      */
-    override update(delta: number, colliders?: Body[]): void {
+    override update(delta: number, colliders?: Body[], ladders?: LadderBody[]): void {
+        const isOnLadder = ladders?.some(ladder => ladder instanceof LadderBody && this.isColliding(ladder))
+        if(isOnLadder) this.speed.y = 0
+
         this.speed.x = 0
         this.moves.forEach(move => {
             switch(move) {
                 case 'UP':
-                    // TODO: Ladder up.
+                    if(isOnLadder) this.speed.y = -60
                 break;
                 case 'DOWN':
-                    // TODO: Ladder down.
+                    if(isOnLadder) this.speed.y = 60
                 break;
                 case 'LEFT':
                     this.speed.x = -50
@@ -57,6 +62,12 @@ export default class PlayerBody extends RectangularBody {
                 break;
             }
         })
+
+        if(isOnLadder) this.decelerate('gravity')
+        else if(!this.accelerators.some(acc => acc.name ==  'gravity')) {
+            this.accelerate('gravity', { x: 0, y: 50 })
+            this.speed.y = 30
+        }
 
         super.update(delta, colliders)
     }

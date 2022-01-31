@@ -79,3 +79,22 @@ export class PlatformBody extends RectangularBody {
         super(position, size, true)
     }
 }
+
+/**
+ * Klasa opisująca zachowanie drabiny.
+ */
+export class LadderBody extends RectangularBody {
+    /**
+     * Tworzy drabinę w kształcie {@link RectangularBody | prostokąta}, nadaje jej pozycję startową i wymiary.
+     * Domyślnie nadaje drabinie kolizje.
+     * 
+     * @param position - Pozycja startowa drabiny, umieszczona w jej centrum
+     * @param size - Rozmiar drabiny
+     */
+     constructor(
+        position: XYVar,
+        size: XYVar
+    ) {
+        super(position, size, true)
+    }
+}
