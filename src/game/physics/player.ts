@@ -14,23 +14,30 @@ export default class PlayerBody extends RectangularBody {
   moves = new Set()
 
   /**
-   * Tworzy postać w kształcie {@link RectangularBody | prostokąta}, nadaje mu pozycję startową i wymiary, oraz grawitację.
+   * Tworzy postać w kształcie {@link RectangularBody | prostokąta}, nadaje mu pozycję startową i wymiary, grawitację, oraz mapę klawiszy.
    * Przechwytuje interakcje gracza z klawiaturą i dodaje oraz usuwa wykonywane ruchy z {@link moves}.
    * Ruchy są dodawane do {@link moves}, zamiast bezpośrednio zmienić prędkości postaci, aby osiągnąć płyność ruchu.
    *
    * @param position - Pozycja startowa postaci, umieszczona w jego centrum
    * @param size - Rozmiar postaci
+   * @param keymap - Mapa klasiszy sterujących postacią
    */
   constructor(
     position: XYVar,
-    size: XYVar
+    size: XYVar,
+    keymap: {
+        UP: Array<string>,
+        DOWN: Array<string>,
+        LEFT: Array<string>,
+        RIGHT: Array<string>
+    } = Keymap
   ) {
     super(position, size, true)
 
     this.accelerate('gravity', { x: 0, y: 50 })
 
-    window.addEventListener('keydown', event => this.moves.add(Object.entries(Keymap).find(key => key[1].includes(event.key))?.[0]))
-    window.addEventListener('keyup', event => this.moves.delete(Object.entries(Keymap).find(key => key[1].includes(event.key))?.[0]))
+    window.addEventListener('keydown', event => this.moves.add(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
+    window.addEventListener('keyup', event => this.moves.delete(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
   }
 
   /**
