@@ -2,9 +2,12 @@ import { Container, Graphics } from 'pixi.js'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
-import { Bullet } from './weapons'
 
 export default class Game {
+    container: Container
+    state: number = Game.states.INIT
+    private update: (delta: number) => void
+
     public static states = {
         INIT: 0,
         RUNNING: 1,
@@ -15,40 +18,38 @@ export default class Game {
     container: Container
     state: number = Game.states.INIT
 
-    player: PlayerBody
+    players: Array<PlayerBody>
+    balls: Array<BallBody>
 
     borders: Array<RectangularBody>
     platforms: Array<PlatformBody>
     ladders: Array<LadderBody>
-    balls: Array<BallBody>
 
     constructor(
         container: Container,
-        player: PlayerBody,
-        borders: Array<RectangularBody>,
+        players: Array<PlayerBody>,
         objects?: {
+            balls?: Array<BallBody>
+            borders?: Array<RectangularBody>,
             platforms?: Array<PlatformBody>,
             ladders?: Array<LadderBody>,
-            balls?: Array<BallBody>,
-            bullets?: Array<Bullet>
         }
     ) {
         this.container = container
 
-        this.player = player
+        this.players = players
+        this.balls = objects?.balls || [  ]
 
-        this.borders = borders
-
+        this.borders = objects?.borders || [  ]
         this.platforms = objects?.platforms || [  ]
         this.ladders = objects?.ladders || [  ]
-        this.balls = objects?.balls || [  ]
     }
 
-    start(graphics: Graphics, FPS: number = 30) {
+    start(FPS: number = 30) {
         const frameTime = 1000 / FPS
 
         this.state = Game.states.RUNNING
-
+        
         this.draw(graphics)
         setInterval(() => {
             if(this.state == Game.states.RUNNING) {
@@ -59,26 +60,36 @@ export default class Game {
     }
 
     update(delta: number) {
+        this.players.forEach(player => player.update(delta, this.borders.concat(this.platforms), this.ladders))
         this.balls.forEach(ball => ball.update(delta, this.borders.concat(this.platforms)))
-        this.player.update(delta, this.borders.concat(this.platforms), this.ladders)
     }
 
     draw(graphics: Graphics) {
         graphics.clear()
 
-        ;([ ... this.borders, ... this.platforms, ... this.ladders, ... this.balls, this.player ] as Array<any> as Array<Body>).forEach(object => {
-            new VisualBody(object, parseInt(`0x${((1<<24)*Math.random() | 0).toString(16)}`)).draw(graphics)
-        })
+        const d = (body: Body, colorNum: number) => {
+            new VisualBody(body, [
+                0xff0000,
+                0x00ff00,
+                0x0000ff,
+                0xff00ff
+            ][colorNum]).draw(graphics)
+        }
+
+        this.platforms.forEach(_ => d(_ as unknown as Body, 0))
+        this.ladders.forEach(_ => d(_ as unknown as Body, 1))
+        this.balls.forEach(_ => d(_ as unknown as Body, 2))
+        this.players.forEach(_ => d(_ as unknown as Body, 3))
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////
-// Tymczasowa klasa pozwalająca na wyświetlenie dowolnego obiektu z klasą bozową Body.
+//////////////////////////////////////////////////////////////////////////////////////////
+// Tymczasowa klasa pozwalająca na wyświetlenie każdego obiektu które jest dzieckiem Body.
 // TODO: Remove this.
 class VisualBody {
     body: Body
     color: number
-
+    
     constructor(body: Body, color: number) {
         this.body = body
         this.color = color
@@ -87,8 +98,8 @@ class VisualBody {
     draw(graphics: Graphics) {
         graphics.beginFill(this.color)
 
-        if (this.body instanceof CircularBody) graphics.drawCircle(this.body.position.x, this.body.position.y, this.body.radius)
-        else if (this.body instanceof RectangularBody) graphics.drawRect(this.body.position.x - this.body.size.x / 2, this.body.position.y - this.body.size.y / 2, this.body.size.x, this.body.size.y)
+        if(this.body instanceof CircularBody) graphics.drawCircle(this.body.position.x, this.body.position.y, this.body.radius)
+        else if(this.body instanceof RectangularBody) graphics.drawRect(this.body.position.x - this.body.size.x / 2, this.body.position.y - this.body.size.y / 2, this.body.size.x, this.body.size.y)
 
         graphics.endFill()
     }
