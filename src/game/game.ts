@@ -1,7 +1,9 @@
 import { Container, Graphics } from 'pixi.js'
+import { BallSize } from '../const'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
+import { BulletBody } from './physics/weapons'
 
 export default class Game {
     public static states = {
@@ -16,6 +18,7 @@ export default class Game {
     
     players: Array<PlayerBody>
     balls: Array<BallBody>
+    bullets: Array<BulletBody>
 
     borders: Array<RectangularBody>
     platforms: Array<PlatformBody>
@@ -26,6 +29,7 @@ export default class Game {
         players: Array<PlayerBody>,
         objects?: {
             balls?: Array<BallBody>
+            bullets?: Array<BulletBody>
             borders?: Array<RectangularBody>,
             platforms?: Array<PlatformBody>,
             ladders?: Array<LadderBody>,
@@ -35,6 +39,7 @@ export default class Game {
 
         this.players = players
         this.balls = objects?.balls || [  ]
+        this.bullets = objects?.bullets || [  ]
 
         this.borders = objects?.borders || [  ]
         this.platforms = objects?.platforms || [  ]
@@ -57,6 +62,26 @@ export default class Game {
 
     update(delta: number) {
         this.players.forEach(player => player.update(delta, this.borders.concat(this.platforms), this.ladders))
+        this.bullets.forEach(bullet => bullet.update(delta, this.borders.concat(this.platforms)))
+        
+        const ballsToAdd: Array<BallBody> = [  ]
+        this.balls.forEach(ball => {
+            const preSize = this.bullets.length
+            this.bullets = this.bullets.filter(body => !(body instanceof BulletBody) || !ball.isColliding(body))
+
+            if(this.bullets.length < preSize) {
+                const newSize = ball.radius > BallSize.MEDIUM? ball.radius > BallSize.BIG? BallSize.MEDIUM: BallSize.BIG: ball.radius > BallSize.SMALL? BallSize.SMALL: 0
+
+                ball.radius = 0
+                ballsToAdd.push(
+                    new BallBody(ball.position, newSize, { x: (ball.speed.x > 0? ball.speed.x: -ball.speed.x) + 50, y: ball.speed.y }),
+                    new BallBody(ball.position, newSize, { x: (ball.speed.x > 0? -ball.speed.x: ball.speed.x) - 50, y: ball.speed.y })
+                )
+            }
+        })
+        this.balls = this.balls.filter(ball => ball.radius > 0)
+        this.balls.push(... ballsToAdd)
+            
         this.balls.forEach(ball => ball.update(delta, this.borders.concat(this.platforms)))
     }
 
@@ -68,7 +93,8 @@ export default class Game {
                 0xff0000,
                 0x00ff00,
                 0x0000ff,
-                0xff00ff
+                0xff00ff,
+                0x000000
             ][colorNum]).draw(graphics)
         }
 
@@ -76,6 +102,7 @@ export default class Game {
         this.ladders.forEach(_ => d(_ as unknown as Body, 1))
         this.balls.forEach(_ => d(_ as unknown as Body, 2))
         this.players.forEach(_ => d(_ as unknown as Body, 3))
+        this.bullets.forEach(_ => d(_ as unknown as Body, 4))
     }
 }
 
