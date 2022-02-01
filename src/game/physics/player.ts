@@ -87,7 +87,10 @@ export default class PlayerBody extends RectangularBody {
     })
 
     if(isOnLadder) this.decelerate('gravity')
-    else if(!this.accelerators.some(acc => acc.name == 'gravity')) this.accelerate('gravity', { x: 0, y: 50 })
+    else if(!this.accelerators.some(acc => acc.name == 'gravity')) {
+        this.speed.y = 0
+        this.accelerate('gravity', { x: 0, y: 50 })
+    }
 
     super.update(
       delta,
