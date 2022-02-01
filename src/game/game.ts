@@ -4,10 +4,6 @@ import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
 
 export default class Game {
-    container: Container
-    state: number = Game.states.INIT
-    private update: (delta: number) => void
-
     public static states = {
         INIT: 0,
         RUNNING: 1,
@@ -17,7 +13,7 @@ export default class Game {
 
     container: Container
     state: number = Game.states.INIT
-
+    
     players: Array<PlayerBody>
     balls: Array<BallBody>
 
@@ -45,7 +41,7 @@ export default class Game {
         this.ladders = objects?.ladders || [  ]
     }
 
-    start(FPS: number = 30) {
+    start(graphics: Graphics, FPS: number = 30) {
         const frameTime = 1000 / FPS
 
         this.state = Game.states.RUNNING
