@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js'
-import { BallSize } from '../const'
+import { BallSize, Guns } from '../const'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
@@ -44,6 +44,11 @@ export default class Game {
         this.borders = objects?.borders || [  ]
         this.platforms = objects?.platforms || [  ]
         this.ladders = objects?.ladders || [  ]
+
+        this.players.forEach(player => player.shoot = () => {
+            if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody(player.position.x))
+            else this.bullets.push(new BulletBody(player.position.x))
+        })
     }
 
     start(graphics: Graphics, FPS: number = 30) {

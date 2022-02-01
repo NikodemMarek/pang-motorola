@@ -1,4 +1,4 @@
-import { Keymap } from '../../const'
+import { Guns, Keymap } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
 import { LadderBody, PlatformBody } from './objects'
@@ -12,6 +12,11 @@ export default class PlayerBody extends RectangularBody {
    * Wszystkie ruchy które jednocześnie wykonuje gracz.
    */
   moves = new Set()
+  
+  gun: Guns
+  cooldown: number
+  shotTwoTimes: boolean = false
+  shoot: () => void
 
   /**
    * Tworzy postać w kształcie {@link RectangularBody | prostokąta}, nadaje mu pozycję startową i wymiary, grawitację, oraz mapę klawiszy.
@@ -29,10 +34,17 @@ export default class PlayerBody extends RectangularBody {
         UP: Array<string>,
         DOWN: Array<string>,
         LEFT: Array<string>,
-        RIGHT: Array<string>
-    } = Keymap
+        RIGHT: Array<string>,
+        SHOOT: Array<String>
+    } = Keymap,
+    gun: Guns = Guns.HARPOON,
+    shoot?: () => void
   ) {
     super(position, size, true)
+    
+    this.gun = gun
+    this.cooldown = 0
+    this.shoot = shoot || function() {  }
 
     this.accelerate('gravity', { x: 0, y: 50 })
 
@@ -83,19 +95,39 @@ export default class PlayerBody extends RectangularBody {
         case 'RIGHT':
           if(!isOnLadder || isOnLadder && this.position.y + this.size.y / 2 >= collidingLadder!.position.y + collidingLadder!.size.y / 2) this.speed.x = 50
         break;
+        case 'SHOOT':
+            if(this.cooldown <= 0) {
+                this.shoot()
+                switch(this.gun) {
+                    case Guns.HARPOON:
+                    case Guns.POWER_WIRE:
+                        this.cooldown = 1.5
+                    break;
+                    case Guns.VULCAN_MISSILE:
+                        this.cooldown = 0.5
+                    break;
+                    case Guns.DOUBLE_WIRE:
+                        this.cooldown = this.shotTwoTimes? 1.5: 0.3
+                        this.shotTwoTimes = !this.shotTwoTimes
+                    break;
+                }
+            }
+        break;
       }
     })
-
+    
     if(isOnLadder) this.decelerate('gravity')
     else if(!this.accelerators.some(acc => acc.name == 'gravity')) {
         this.speed.y = 0
         this.accelerate('gravity', { x: 0, y: 50 })
     }
-
+    
     super.update(
-      delta,
-      isOnLadder? colliders?.filter(collider => !(collider instanceof PlatformBody) ||
+        delta,
+        isOnLadder? colliders?.filter(collider => !(collider instanceof PlatformBody) ||
         !collidingLadder!.isColliding(collider) && collider.position.y - collider.size.y / 2 < this.position.y + this.size.y / 2): colliders
     )
+
+    this.cooldown -= delta
   }
 }
