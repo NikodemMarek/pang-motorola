@@ -3,7 +3,7 @@ import { BallSize } from '../const'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
-import { BulletBody } from './physics/weapons'
+import { BulletBody, PowerWireBody } from './physics/weapons'
 
 export default class Game {
     public static states = {
@@ -62,7 +62,7 @@ export default class Game {
 
     update(delta: number) {
         this.players.forEach(player => player.update(delta, this.borders.concat(this.platforms), this.ladders))
-        this.bullets.forEach(bullet => bullet.update(delta, this.borders.concat(this.platforms)))
+        this.bullets.forEach(bullet => bullet.update(delta))
         
         const ballsToAdd: Array<BallBody> = [  ]
         this.balls.forEach(ball => {
@@ -83,6 +83,15 @@ export default class Game {
         this.balls.push(... ballsToAdd)
             
         this.balls.forEach(ball => ball.update(delta, this.borders.concat(this.platforms)))
+
+        this.bullets = this.bullets.filter(bullet => {
+            if(bullet instanceof PowerWireBody && bullet.timeLeft > 0 && [this.borders[0]].concat(this.platforms).some(platform => bullet.isColliding(platform))) {
+                bullet.speed.y = 0
+                bullet.timeLeft -= delta
+
+                return true
+            } else return ![this.borders[0]].concat(this.platforms).some(platform => bullet.isColliding(platform))
+        })
     }
 
     draw(graphics: Graphics) {

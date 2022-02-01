@@ -1,4 +1,4 @@
-import { XYVar } from '../../types'
+import { GAME_SIZE } from '../../const'
 import { RectangularBody } from './bodies'
 
 export class BulletBody extends RectangularBody {
@@ -8,10 +8,14 @@ export class BulletBody extends RectangularBody {
      * @param position - Pozycja startowa pocisku, umieszczona w jego centrum
      */
      constructor(
-        position: XYVar
+        positionX: number
     ) {
-        super(position, { x: 10, y: 10 }, false)
+        super({ x: positionX, y: GAME_SIZE.y + GAME_SIZE.x / 2 }, { x: 10, y: GAME_SIZE.y }, true)
 
         this.speed.y -= 250
     }
+}
+
+export class PowerWireBody extends BulletBody {
+    timeLeft: number = 5
 }
