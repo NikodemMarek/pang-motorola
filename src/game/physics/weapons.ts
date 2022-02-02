@@ -1,11 +1,14 @@
 import { GAME_SIZE } from '../../const'
 import { RectangularBody } from './bodies'
 
+/**
+ * Klasa opisująca zachowanie pocisków.
+ */
 export class BulletBody extends RectangularBody {
     /**
-     * Tworzy pocisk w kształcie prostokąta, nadaje mu pozycję startową, wymiary i prędkość.
+     * Tworzy pocisk w kształcie prostokąta, nadaje mu pozycję startową, wymiary i prędkość w górę na osi y.
      * 
-     * @param position - Pozycja startowa pocisku, umieszczona w jego centrum
+     * @param positionX - Pozycja startowa na osi x pocisku
      */
      constructor(
         positionX: number
@@ -16,6 +19,12 @@ export class BulletBody extends RectangularBody {
     }
 }
 
+/**
+ * Klasa opisująca zachowanie przewodów.
+ */
 export class PowerWireBody extends BulletBody {
+    /**
+     * Czas do zniknięcia przewodu.
+     */
     timeLeft: number = 5
 }

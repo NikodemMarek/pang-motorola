@@ -5,7 +5,16 @@ import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import { BulletBody, PowerWireBody } from './physics/weapons'
 
+/**
+ * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
+ * Przechowuje stan gry i wszystkie obiekty w grze.
+ * Odświeża i wyświetla obiekty w grze.
+ * 
+ */
 export default class Game {
+    /**
+     * Stany gry.
+     */
     public static states = {
         INIT: 0,
         RUNNING: 1,
@@ -13,17 +22,49 @@ export default class Game {
         FINISHED: 2
     }
 
+    /**
+     * Pojemnik w którym będzie wyświetlała się gra.
+     */
     container: Container
+    /**
+     * Obecny stan gry.
+     */
     state: number = Game.states.INIT
     
+    /**
+     * Lista postaci w grze.
+     */
     players: Array<PlayerBody>
+    /**
+     * Lista piłek w grze.
+     */
     balls: Array<BallBody>
+    /**
+     * Lista pocisków w grze.
+     */
     bullets: Array<BulletBody>
 
+    /**
+     * Granice przestrzeni gry.
+     */
     borders: Array<RectangularBody>
+    /**
+     * Lista platform w grze.
+     */
     platforms: Array<PlatformBody>
+    /**
+     * Lista drabin w grze.
+     */
     ladders: Array<LadderBody>
 
+    /**
+     * Przypisuje pojemnik na grę, i dodaje postacie, oraz obiekty do gry.
+     * Przypisuje funkcje strzelania każdej postaci w grze.
+     * 
+     * @param container - Pojemnik na grę
+     * @param players - Lista graczy w grze
+     * @param objects - Listay obiektów w grze
+     */
     constructor(
         container: Container,
         players: Array<PlayerBody>,
@@ -51,6 +92,13 @@ export default class Game {
         })
     }
 
+    /**
+     * Rozpoczyna grę.
+     * Zmienia stan gry, oblicza czas na odświeżenie gry i uruchamia pętlę gry.
+     * 
+     * @param graphics - Obiekt pozwalający na rysowanie kształtów
+     * @param FPS - Oczekiwana ilość odświeżeń i klatek na sekundę
+     */
     start(graphics: Graphics, FPS: number = 30) {
         const frameTime = 1000 / FPS
 
@@ -65,6 +113,12 @@ export default class Game {
         }, frameTime)
     }
 
+    /**
+     * Odświeża wszystkie obiekty w grze.
+     * Dzieli piłki trafione przez pocisk.
+     * 
+     * @param delta - Czas który upłynął od ostatniego odświeżenia
+     */
     update(delta: number) {
         this.players.forEach(player => player.update(delta, this.borders.concat(this.platforms), this.ladders))
         this.bullets.forEach(bullet => bullet.update(delta))
@@ -99,6 +153,11 @@ export default class Game {
         })
     }
 
+    /**
+     * Wyświetla obiekty w pojemniku gry.
+     * 
+     * @param graphics - Obiekt pozwalający na rysowanie kształtów
+     */
     draw(graphics: Graphics) {
         graphics.clear()
 

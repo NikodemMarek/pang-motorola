@@ -13,9 +13,21 @@ export default class PlayerBody extends RectangularBody {
    */
   moves = new Set()
   
+  /**
+   * Aktywna broń.
+   */
   gun: Guns
+  /**
+   * Opóźnienie strzału / 'przeładowanie'.
+   */
   cooldown: number
+  /**
+   * Pamięta czy broń była wystrzelona drugi raz, jeśli aktywna broń to podwójny harpun.
+   */
   shotTwoTimes: boolean = false
+  /**
+   * Funcja która wykonuje się po przyciśnięcui przycisku strzału.
+   */
   shoot: () => void
 
   /**
@@ -26,6 +38,8 @@ export default class PlayerBody extends RectangularBody {
    * @param position - Pozycja startowa postaci, umieszczona w jego centrum
    * @param size - Rozmiar postaci
    * @param keymap - Mapa klasiszy sterujących postacią
+   * @param gun - Rodzaj broni dla postaci, domyślnie harpun
+   * @param shoot - Funkcja która wykona się po przyciśnięciu przycisku strzału przez gracza
    */
   constructor(
     position: XYVar,

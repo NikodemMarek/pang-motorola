@@ -18,6 +18,9 @@ export enum BallSize {
     HUGE = 60
 }
 
+/**
+ * Rodzaje broni dostępne w grze.
+ */
 export enum Guns {
     HARPOON,
     DOUBLE_WIRE,
@@ -26,7 +29,7 @@ export enum Guns {
 }
 
 /**
- * Domyślna mapa klawiszy którymi gracz porusza postać.
+ * Domyślna mapa klawiszy którymi gracz porusza postać i strzela.
  */
 export const Keymap = {
     UP: [ 'ArrowUp', 'w', 'W' ],
