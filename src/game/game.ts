@@ -111,6 +111,13 @@ export default class Game {
     }
 
     /**
+     * Zakańcza grę.
+     */
+    finish() {
+        this.state = GameState.FINISHED
+    }
+
+    /**
      * Odświeża wszystkie obiekty w grze.
      * Dzieli piłki trafione przez pocisk.
      * 
@@ -121,6 +128,8 @@ export default class Game {
         this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
 
         this.players.forEach(player => {
+            if(this.balls.some(ball => player.isColliding(ball))) this.finish()
+
             player.update(delta, this.borders.concat(this.platforms), this.ladders)
             
             this.powerUps.forEach(powerUp => {
