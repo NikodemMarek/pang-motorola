@@ -88,6 +88,7 @@ export class RectangularBody implements Body {
      * 
      * @param position - Pozycja startowa ciała, umieszczona w jego centrum
      * @param size - Rozmiar ciała
+     * @param isCollidable - Czy ciało będzie wchodzić w kolizje
      */
     constructor(
         position: XYVar,
@@ -102,6 +103,8 @@ export class RectangularBody implements Body {
 
     /**
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     * Zmienia prędkość ciała o przyspieszenia i przesuwa je.
+     * Jeśli ciało może wchodzić w kolizje, sprawdza czy nastąpiła kolizja i jeśli nastąpiła, przsuwa je poza obiekt z którym koliduje.
      * 
      * @param delta - Czas jaki wyświetlana była poprzednia klatka
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
@@ -201,8 +204,10 @@ export class CircularBody implements Body {
      * Tworzy ciało w kształcie okręgu, nadaje mu pozycję startową i promień.
      * Upewnia się że długość promienia jest pozytywna.
      * 
-     * @param position 
-     * @param radius 
+     * @param position - Pozycja startowa ciała, umieszczona w jego centrum
+     * @param radius - Promień ciała
+     * @param isCollidable - Czy ciało będzie wchodzić w kolizje
+     * @param isBouncy - Czy ciało będzie się odbijać
      */
     constructor(
         position: XYVar,
@@ -219,6 +224,8 @@ export class CircularBody implements Body {
 
     /**
      * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     * Zmienia prędkość ciała o przyspieszenia i przesuwa je.
+     * Jeśli ciało może wchodzić w kolizje, sprawdza czy nastąpiła kolizja i jeśli nastąpiła, przsuwa je poza obiekt z którym koliduje.
      * 
      * @param delta - Czas jaki wyświetlana była poprzednia klatka
      * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
