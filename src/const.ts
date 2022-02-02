@@ -33,7 +33,7 @@ export enum BallSize {
  */
 export enum Guns {
     HARPOON,
-    DOUBLE_WIRE,
+    DOUBLE_HARPOON,
     POWER_WIRE,
     VULCAN_MISSILE
 }
@@ -45,7 +45,7 @@ export enum PowerUp {
     HARPOON,
     DOUBLE_HARPOON,
     POWER_WIRE,
-    VULCAN_MISSLiE,
+    VULCAN_MISSILE,
     FORCE_FIELD,
     HOURGLASS,
     CLOCK,

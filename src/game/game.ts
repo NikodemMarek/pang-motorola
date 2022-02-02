@@ -117,7 +117,20 @@ export default class Game {
      * @param delta - Czas który upłynął od ostatniego odświeżenia
      */
     update(delta: number) {
-        this.players.forEach(player => player.update(delta, this.borders.concat(this.platforms), this.ladders))
+        this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
+        this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
+
+        this.players.forEach(player => {
+            player.update(delta, this.borders.concat(this.platforms), this.ladders)
+            
+            this.powerUps.forEach(powerUp => {
+                if(player.isColliding(powerUp)) {
+                    player.powerUp(powerUp.type)
+                    powerUp.timeLeft = 0
+                }
+            })
+        })
+
         this.bullets.forEach(bullet => bullet.update(delta, [ this.borders[0] ].concat(this.platforms)))
         
         const ballsToAdd: Array<BallBody> = [  ]
