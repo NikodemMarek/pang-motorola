@@ -118,7 +118,7 @@ export default class Game {
      */
     update(delta: number) {
         this.players.forEach(player => player.update(delta, this.borders.concat(this.platforms), this.ladders))
-        this.bullets.forEach(bullet => bullet.update(delta))
+        this.bullets.forEach(bullet => bullet.update(delta, [ this.borders[0] ].concat(this.platforms)))
         
         const ballsToAdd: Array<BallBody> = [  ]
         this.balls.forEach(ball => {
@@ -140,15 +140,9 @@ export default class Game {
             
         this.balls.forEach(ball => ball.update(delta, this.borders.concat(this.platforms)))
 
-        this.bullets = this.bullets.filter(bullet => {
-            if(bullet instanceof PowerWireBody && bullet.timeLeft > 0 && [this.borders[0]].concat(this.platforms).some(platform => bullet.isColliding(platform))) {
-                bullet.speed.y = 0
-                bullet.timeLeft -= delta
+        this.bullets = this.bullets.filter(bullet => bullet instanceof PowerWireBody? bullet.timeLeft > 0: bullet.speed.y < 0)
 
-                return true
-            } else return ![this.borders[0]].concat(this.platforms).some(platform => bullet.isColliding(platform))
-        })
-
+        this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
         this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
     }
 

@@ -1,5 +1,5 @@
 import { GAME_SIZE } from '../../const'
-import { RectangularBody } from './bodies'
+import { Body, RectangularBody } from './bodies'
 
 /**
  * Klasa opisująca zachowanie pocisków.
@@ -27,4 +27,16 @@ export class PowerWireBody extends BulletBody {
      * Czas do zniknięcia przewodu.
      */
     timeLeft: number = 5
+
+    /**
+     * Funkcja która będzie zmieniać wartości parametrów ciała w zależności od czasu.
+     * Wyłącza odświerzanie ciała, jeśli jego czas życia jest za długi.
+     * 
+     * @param delta - Czas jaki wyświetlana była poprzednia klatka
+     * @param colliders - Tablica z ciałami które mogą kolidować z tym ciałem
+     */
+    override update(delta: number, colliders?: Body[]): void {
+        if(this.speed.y == 0) this.timeLeft -= delta
+        else super.update(delta, colliders)
+    }
 }
