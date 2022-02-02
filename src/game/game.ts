@@ -3,6 +3,7 @@ import { BallSize, GameState, Guns } from '../const'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
+import PowerUpBody from './physics/power-ups'
 import { BulletBody, PowerWireBody } from './physics/weapons'
 
 /**
@@ -46,6 +47,10 @@ export default class Game {
      * Lista drabin w grze.
      */
     ladders: Array<LadderBody>
+    /**
+     * Lista bonusów w grze.
+     */
+    powerUps: Array<PowerUpBody>
 
     /**
      * Przypisuje pojemnik na grę, i dodaje postacie, oraz obiekty do gry.
@@ -64,6 +69,7 @@ export default class Game {
             borders?: Array<RectangularBody>,
             platforms?: Array<PlatformBody>,
             ladders?: Array<LadderBody>,
+            powerUps?: Array<PowerUpBody>,
         }
     ) {
         this.container = container
@@ -75,6 +81,7 @@ export default class Game {
         this.borders = objects?.borders || [  ]
         this.platforms = objects?.platforms || [  ]
         this.ladders = objects?.ladders || [  ]
+        this.powerUps = objects?.powerUps || [  ]
 
         this.players.forEach(player => player.shoot = () => {
             if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody(player.position.x))
@@ -141,6 +148,8 @@ export default class Game {
                 return true
             } else return ![this.borders[0]].concat(this.platforms).some(platform => bullet.isColliding(platform))
         })
+
+        this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
     }
 
     /**
@@ -157,7 +166,8 @@ export default class Game {
                 0x00ff00,
                 0x0000ff,
                 0xff00ff,
-                0x000000
+                0x000000,
+                0x0ffff0
             ][colorNum]).draw(graphics)
         }
 
@@ -166,6 +176,7 @@ export default class Game {
         this.balls.forEach(_ => d(_ as unknown as Body, 2))
         this.players.forEach(_ => d(_ as unknown as Body, 3))
         this.bullets.forEach(_ => d(_ as unknown as Body, 4))
+        this.powerUps.forEach(_ => d(_ as unknown as Body, 5))
     }
 }
 

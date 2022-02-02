@@ -39,6 +39,20 @@ export enum Guns {
 }
 
 /**
+ * Rodzaje bonusów dostępnych w grze.
+ */
+export enum PowerUp {
+    HARPOON,
+    DOUBLE_HARPOON,
+    POWER_WIRE,
+    VULCAN_MISSLiE,
+    FORCE_FIELD,
+    HOURGLASS,
+    CLOCK,
+    DYNAMITE
+}
+
+/**
  * Domyślna mapa klawiszy którymi gracz porusza postać i strzela.
  */
 export const Keymap = {
