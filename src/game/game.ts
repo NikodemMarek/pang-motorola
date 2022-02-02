@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js'
-import { BallSize, Guns } from '../const'
+import { BallSize, GameState, Guns } from '../const'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
@@ -13,23 +13,13 @@ import { BulletBody, PowerWireBody } from './physics/weapons'
  */
 export default class Game {
     /**
-     * Stany gry.
-     */
-    public static states = {
-        INIT: 0,
-        RUNNING: 1,
-        PAUSED: 1,
-        FINISHED: 2
-    }
-
-    /**
      * Pojemnik w którym będzie wyświetlała się gra.
      */
     container: Container
     /**
      * Obecny stan gry.
      */
-    state: number = Game.states.INIT
+    state = GameState.INIT
     
     /**
      * Lista postaci w grze.
@@ -102,11 +92,11 @@ export default class Game {
     start(graphics: Graphics, FPS: number = 30) {
         const frameTime = 1000 / FPS
 
-        this.state = Game.states.RUNNING
+        this.state = GameState.RUNNING
         
         this.draw(graphics)
         setInterval(() => {
-            if(this.state == Game.states.RUNNING) {
+            if(this.state == GameState.RUNNING) {
                 this.update(frameTime / 1000)
                 this.draw(graphics)
             }

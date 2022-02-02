@@ -9,6 +9,16 @@ export const GAME_SIZE: XYVar = {
 }
 
 /**
+ * Stany gry.
+ */
+export enum GameState {
+    INIT,
+    RUNNING,
+    PAUSED,
+    FINISHED
+}
+
+/**
  * Ustalone wymiary 4 wielkości piłek.
  */
 export enum BallSize {
