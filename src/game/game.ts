@@ -1,5 +1,5 @@
 import { Container, Graphics } from 'pixi.js'
-import { BallSize, GameState, Guns } from '../const'
+import { BallSize, GameState, Guns, PowerUp } from '../const'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
@@ -51,6 +51,23 @@ export default class Game {
      * Lista bonusów w grze.
      */
     powerUps: Array<PowerUpBody>
+
+    /**
+     * Czas który pozostał do zakończenia się bonusu spowolnienia czasu.
+     */
+    hourglassTimeLeft: number = 0
+    /**
+     * Czas który pozostał do zakończenia się bonusu zatrzymania czasu.
+     */
+    clockTimeLeft: number = 0
+    /**
+     * Pozostałe podziały piłek, spowodowane bonusem dynamit.
+     */
+    dynamiteSplits: number = 0
+    /**
+     * Czas pomiędzy podziałami piłek spowodowanymi bonusem dynamit
+     */
+    splitCooldown: number = 0
 
     /**
      * Przypisuje pojemnik na grę, i dodaje postacie, oraz obiekty do gry.
@@ -124,48 +141,84 @@ export default class Game {
      * @param delta - Czas który upłynął od ostatniego odświeżenia
      */
     update(delta: number) {
+        this.bullets.forEach(bullet => bullet.update(delta, [ this.borders[0] ].concat(this.platforms)))
+
+        const ballsToAdd: Array<BallBody> = [  ]
+        const splitBall = (ball: BallBody) => {
+            const newSize = ball.radius > BallSize.MEDIUM? ball.radius > BallSize.BIG? BallSize.BIG: BallSize.MEDIUM: ball.radius > BallSize.SMALL? BallSize.SMALL: 0
+
+            ball.radius = 0
+            ballsToAdd.push(
+                new BallBody(ball.position, newSize, { x: (ball.speed.x > 0? ball.speed.x: -ball.speed.x) + 50, y: ball.speed.y }),
+                new BallBody(ball.position, newSize, { x: (ball.speed.x > 0? -ball.speed.x: ball.speed.x) - 50, y: ball.speed.y })
+            )
+        }
+
+        if(this.dynamiteSplits > 0 && this.splitCooldown <= 0) {
+            this.balls.forEach(ball => { if(ball.radius > BallSize.SMALL) splitBall(ball) })
+
+            this.dynamiteSplits --
+            this.splitCooldown = 1
+        }
+        
+        this.balls.forEach(ball => {
+            const preSize = this.bullets.length
+            this.bullets = this.bullets.filter(body => !(body instanceof BulletBody) || !ball.isColliding(body))
+
+            if(this.bullets.length < preSize) splitBall(ball)
+        })
+        this.balls = this.balls.filter(ball => ball.radius > 0)
+        this.balls.push(... ballsToAdd)
+            
+        this.balls.forEach(ball => ball.update(this.clockTimeLeft > 0? 0: this.hourglassTimeLeft > 0? delta / 3: delta, this.borders.concat(this.platforms)))
+
         this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
         this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
 
         this.players.forEach(player => {
-            if(this.balls.some(ball => player.isColliding(ball))) this.finish()
+            this.balls = this.balls.filter(ball => {
+                if(player.isColliding(ball)) {
+                    if(player.forceFields > 0) player.forceFields --
+                    else this.finish()
+
+                    return false
+                } else return true
+            })
 
             player.update(delta, this.borders.concat(this.platforms), this.ladders)
             
             this.powerUps.forEach(powerUp => {
                 if(player.isColliding(powerUp)) {
-                    player.powerUp(powerUp.type)
+                    switch(powerUp.type) {
+                        case PowerUp.HOURGLASS:
+                            this.hourglassTimeLeft += 25
+                        break;
+                        case PowerUp.CLOCK:
+                            this.clockTimeLeft += 10
+                        break;
+                        case PowerUp.DYNAMITE:
+                            this.dynamiteSplits = 3
+                        break;
+                        default:
+                            player.powerUp(powerUp.type)
+                    }
+
                     powerUp.timeLeft = 0
                 }
             })
         })
 
-        this.bullets.forEach(bullet => bullet.update(delta, [ this.borders[0] ].concat(this.platforms)))
-        
-        const ballsToAdd: Array<BallBody> = [  ]
-        this.balls.forEach(ball => {
-            const preSize = this.bullets.length
-            this.bullets = this.bullets.filter(body => !(body instanceof BulletBody) || !ball.isColliding(body))
-
-            if(this.bullets.length < preSize) {
-                const newSize = ball.radius > BallSize.MEDIUM? ball.radius > BallSize.BIG? BallSize.MEDIUM: BallSize.BIG: ball.radius > BallSize.SMALL? BallSize.SMALL: 0
-
-                ball.radius = 0
-                ballsToAdd.push(
-                    new BallBody(ball.position, newSize, { x: (ball.speed.x > 0? ball.speed.x: -ball.speed.x) + 50, y: ball.speed.y }),
-                    new BallBody(ball.position, newSize, { x: (ball.speed.x > 0? -ball.speed.x: ball.speed.x) - 50, y: ball.speed.y })
-                )
-            }
-        })
-        this.balls = this.balls.filter(ball => ball.radius > 0)
-        this.balls.push(... ballsToAdd)
-            
-        this.balls.forEach(ball => ball.update(delta, this.borders.concat(this.platforms)))
-
         this.bullets = this.bullets.filter(bullet => bullet instanceof PowerWireBody? bullet.timeLeft > 0: bullet.speed.y < 0)
 
         this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
         this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
+
+        if(this.hourglassTimeLeft > 0) this.hourglassTimeLeft -= delta
+        else this.hourglassTimeLeft = 0
+        if(this.clockTimeLeft > 0) this.clockTimeLeft -= delta
+        else this.clockTimeLeft = 0
+        if(this.splitCooldown > 0) this.splitCooldown -= delta
+        else this.splitCooldown = 0
     }
 
     /**
@@ -190,7 +243,7 @@ export default class Game {
         this.platforms.forEach(_ => d(_ as unknown as Body, 0))
         this.ladders.forEach(_ => d(_ as unknown as Body, 1))
         this.balls.forEach(_ => d(_ as unknown as Body, 2))
-        this.players.forEach(_ => d(_ as unknown as Body, 3))
+        this.players.forEach(_ => d(_ as unknown as Body, _.forceFields))
         this.bullets.forEach(_ => d(_ as unknown as Body, 4))
         this.powerUps.forEach(_ => d(_ as unknown as Body, 5))
     }

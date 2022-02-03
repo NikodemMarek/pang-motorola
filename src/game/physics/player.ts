@@ -31,6 +31,15 @@ export default class PlayerBody extends RectangularBody {
     shoot: () => void
 
     /**
+     * Ilość tarczy ochronnych które podniósł gracz.
+     */
+    forceFields: number = 0
+    /**
+     * Czas który pozostał do zniknięcia tarczy ochronnej.
+     */
+    forceFieldsTimeLeft: number = 0
+
+    /**
      * Tworzy postać w kształcie {@link RectangularBody | prostokąta}, nadaje mu pozycję startową i wymiary, grawitację, oraz mapę klawiszy.
      * Przechwytuje interakcje gracza z klawiaturą i dodaje oraz usuwa wykonywane ruchy z {@link moves}.
      * Ruchy są dodawane do {@link moves}, zamiast bezpośrednio zmienić prędkości postaci, aby osiągnąć płyność ruchu.
@@ -143,6 +152,9 @@ export default class PlayerBody extends RectangularBody {
         )
 
         this.cooldown -= delta
+    
+        if(this.forceFieldsTimeLeft > 0) this.forceFieldsTimeLeft -= delta
+        else this.forceFields = 0
     }
 
     powerUp(type: PowerUp) {
@@ -158,6 +170,10 @@ export default class PlayerBody extends RectangularBody {
             break;
             case PowerUp.VULCAN_MISSILE:
                 this.gun = Guns.VULCAN_MISSILE
+            break;
+            case PowerUp.FORCE_FIELD:
+                this.forceFields ++
+                this.forceFieldsTimeLeft += 20
             break;
         }
     }
