@@ -66,17 +66,26 @@ export class BallBody extends CircularBody {
  */
 export class PlatformBody extends RectangularBody {
     /**
+     * Czy platformę można zniszczyć pociskiem.
+     */
+    isBreakable: boolean
+
+    /**
      * Tworzy platformę w kształcie {@link RectangularBody | prostokąta}, nadaje jej pozycję startową i wymiary.
      * Domyślnie nadaje platformie kolizje.
      * 
      * @param position - Pozycja startowa platformy, umieszczona w jej centrum
      * @param size - Rozmiar platformy
+     * @param isBreakable - Czy platformę można zniszczyć pociskiem
      */
     constructor(
         position: XYVar,
-        size: XYVar
+        size: XYVar,
+        isBreakable: boolean = false
     ) {
         super(position, size, true)
+
+        this.isBreakable = isBreakable
     }
 }
 

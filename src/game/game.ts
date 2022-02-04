@@ -141,7 +141,13 @@ export default class Game {
      * @param delta - Czas który upłynął od ostatniego odświeżenia
      */
     update(delta: number) {
-        this.bullets.forEach(bullet => bullet.update(delta, [ this.borders[0] ].concat(this.platforms)))
+        this.bullets.forEach(bullet => bullet.update(delta))
+
+        const newPlatforms = this.platforms.filter(platform => !this.bullets.some(bullet => bullet.isColliding(platform)))
+        this.bullets = this.bullets.filter(bullet => !this.platforms.some(platform => platform.isColliding(bullet)))
+        this.platforms = newPlatforms
+
+        this.bullets.forEach(bullet => bullet.update(0, [ this.borders[0] ].concat(this.platforms)))
 
         const ballsToAdd: Array<BallBody> = [  ]
         const splitBall = (ball: BallBody) => {
