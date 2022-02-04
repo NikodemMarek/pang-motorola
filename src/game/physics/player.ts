@@ -85,9 +85,9 @@ export default class PlayerBody extends RectangularBody {
      */
     override update(delta: number, colliders?: Body[], ladders?: LadderBody[]): void {
         const isInsideLadder = (ladder: LadderBody) =>
-        this.isColliding(ladder) &&
-        this.position.x - this.size.x / 2 > ladder.position.x - ladder.size.x / 2 &&
-        this.position.x + this.size.x / 2 < ladder.position.x + ladder.size.x / 2
+            this.isColliding(ladder) &&
+            this.position.x - this.size.x / 2 > ladder.position.x - ladder.size.x / 2 &&
+            this.position.x + this.size.x / 2 < ladder.position.x + ladder.size.x / 2
 
         let collidingLadder = ladders?.find(ladder => isInsideLadder(ladder))
         let isOnLadder = collidingLadder != undefined
@@ -113,14 +113,17 @@ export default class PlayerBody extends RectangularBody {
                     }
                 break;
                 case 'LEFT':
-                    if(!isOnLadder || isOnLadder && this.position.y + this.size.y / 2 >= collidingLadder!.position.y + collidingLadder!.size.y / 2) this.speed.x = -50
+                    if(!isOnLadder) this.speed.x = -50
+                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = -50
                 break;
                 case 'RIGHT':
-                    if(!isOnLadder || isOnLadder && this.position.y + this.size.y / 2 >= collidingLadder!.position.y + collidingLadder!.size.y / 2) this.speed.x = 50
+                    if(!isOnLadder) this.speed.x = 50
+                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = 50
                 break;
                 case 'SHOOT':
                     if(this.cooldown <= 0) {
                         this.shoot()
+
                         switch(this.gun) {
                             case Guns.HARPOON:
                             case Guns.POWER_WIRE:
@@ -147,8 +150,8 @@ export default class PlayerBody extends RectangularBody {
         
         super.update(
             delta,
-            isOnLadder? colliders?.filter(collider => !(collider instanceof PlatformBody) ||
-            !collidingLadder!.isColliding(collider) && collider.position.y - collider.size.y / 2 < this.position.y + this.size.y / 2): colliders
+            isOnLadder? colliders?.filter(collider => !(collider instanceof PlatformBody) || !collidingLadder!.isColliding(collider) && collider.position.y - collider.size.y / 2 < this.position.y + this.size.y / 2):
+                colliders?.concat(ladders != undefined? ladders!.filter(ladder => ladder.position.y - ladder.size.y / 2 + delta > this.position.y + this.size.y / 2): [  ])
         )
 
         this.cooldown -= delta
