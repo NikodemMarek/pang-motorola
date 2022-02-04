@@ -8,6 +8,10 @@ export const GAME_SIZE: XYVar = {
     y: 500
 }
 
+export enum BasePath {
+    LEVELS = './levels/'
+}
+
 /**
  * Stany gry.
  */

@@ -1,5 +1,6 @@
 import { Container, Graphics } from 'pixi.js'
-import { BallSize, GameState, Guns, PowerUp } from '../const'
+import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
+import { Level } from '../types'
 import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
@@ -79,26 +80,23 @@ export default class Game {
      */
     constructor(
         container: Container,
-        players: Array<PlayerBody>,
-        objects?: {
-            balls?: Array<BallBody>
-            bullets?: Array<BulletBody>
-            borders?: Array<RectangularBody>,
-            platforms?: Array<PlatformBody>,
-            ladders?: Array<LadderBody>,
-            powerUps?: Array<PowerUpBody>,
-        }
+        level: Level
     ) {
         this.container = container
 
-        this.players = players
-        this.balls = objects?.balls || [  ]
-        this.bullets = objects?.bullets || [  ]
+        this.players = level.players
+        this.balls = level.balls || [  ]
+        this.bullets = level.bullets || [  ]
 
-        this.borders = objects?.borders || [  ]
-        this.platforms = objects?.platforms || [  ]
-        this.ladders = objects?.ladders || [  ]
-        this.powerUps = objects?.powerUps || [  ]
+        this.borders = [
+            new RectangularBody({ x: GAME_SIZE.x / 2, y: 0 }, { x: GAME_SIZE.x, y: 0 }, true),
+            new RectangularBody({ x: GAME_SIZE.x / 2, y: GAME_SIZE.y }, { x: GAME_SIZE.x, y: 0 }, true),
+            new RectangularBody({ x: 0, y: GAME_SIZE.y / 2 }, { x: 0, y: GAME_SIZE.y }, true),
+            new RectangularBody({ x: GAME_SIZE.x, y: GAME_SIZE.y / 2 }, { x: 0, y: GAME_SIZE.y }, true)
+        ]
+        this.platforms = level.platforms || [  ]
+        this.ladders = level.ladders || [  ]
+        this.powerUps = level.powerUps || [  ]
 
         this.players.forEach(player => player.shoot = () => {
             if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody(player.position.x))
