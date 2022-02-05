@@ -1,23 +1,60 @@
 {
     "players": [
-        [ { "x": 100, "y": 230 }, 2 ]
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 100, "y": 230},
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
     ],
     "platforms": [
-        [ { "x": 170, "y": 350 }, { "x": 180, "y": 20 }, true ]
-    ],
-    "ladders": [
-        [ { "x": 200, "y": 415 }, { "x": 80, "y": 150 } ]
-    ],
-    "balls": [
-        [ { "x": 450, "y": 100 }, 40 ]
+        {
+            "position": {"x": 150, "y": 300},
+            "size": {"x": 200, "y": 20},
+            "isBreakable": true
+        },
+        {
+            "position": {"x": 400, "y": 400},
+            "size": {"x": 120, "y": 15},
+            "isBreakable": false
+        }
     ],
     "bullets": [
-        250
+        {
+            "position": {"x": 500, "y": 460},
+            "size": {"x": 10, "y": 10},
+            "gun": 0
+        }
     ],
-    "powerWires": [
-        550
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 500, "y": 200},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200,
+            "peakHeight": 200
+        }
+    ],
+    "ladders": [
+        {
+            "position": {"x": 100, "y": 390},
+            "size": {"x": 80, "y": 200}
+        }
     ],
     "powerUps": [
-        [ { "x": 550, "y": 300 }, 7 ]
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 400, "y": 300},
+            "size": {"x": 40, "y": 60},
+            "timeLeft": 15,
+            "type": 6
+        }
     ]
 }

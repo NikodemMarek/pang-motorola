@@ -1,10 +1,10 @@
 import levels from '../static/levels/levels.json'
-import { BasePath, Guns, Keymap, PLAYER_SIZE } from './const'
+import { BasePath } from './const'
+import { HarpoonBody, PowerWireBody, VulcanMissile } from './game/physics/bullets'
 import { BallBody, LadderBody, PlatformBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
-import { BulletBody, PowerWireBody } from './game/physics/bullets'
-import { Level, XYVar } from './types'
+import { Level } from './types'
 
 /**
  * Pobiera listę domyślnych poziomów do gry.
@@ -14,7 +14,7 @@ import { Level, XYVar } from './types'
 export const getLevelsList = () => levels
 
 /**
- * Wczytuje plik JSON z posiomem i zwraca go jako Promise.
+ * Wczytuje plik JSON z poziomem i zwraca go jako Promise.
  * 
  * @param name - Nazwa poziomu do wczytania
  * @returns Promise z poziomem w surowej formie
@@ -26,40 +26,49 @@ export const loadLevel = async (name: string): Promise<Object | undefined> => {
     else return undefined
 }
 
+/**
+ * Konwertuje surowy poziom na {@link Level}.
+ * 
+ * @param rawLevel - Poziom w surowej postaci
+ * @returns Poziom w postaci
+ */
 export const getLevel = (rawLevel: any): Level => {
-    const players: Array<PlayerBody> = (rawLevel.players as Array<Array<any>>).map(player => new PlayerBody(
-        (player[0] as XYVar),
-        PLAYER_SIZE,
-        Keymap,
-        player[1] != undefined && player[1].gun != undefined? player[1].gun: Guns.HARPOON,
-    ))
-
-    const platforms: Array<PlatformBody> = (rawLevel.platforms as Array<Array<any>>).map(platform => new PlatformBody(
-        (platform[0] as XYVar),
-        (platform[1] as XYVar),
-        platform[2]
-    ))
-
-    const ladders: Array<LadderBody> = (rawLevel.ladders as Array<Array<any>>).map(ladder => new LadderBody(
-        (ladder[0] as XYVar),
-        (ladder[1] as XYVar)
-    ))
-
-    const balls: Array<BallBody> = (rawLevel.balls as Array<Array<any>>).map(ball => new BallBody(
-        (ball[0] as XYVar),
-        ball[1]
-    ))
-
-    const bullets: Array<BulletBody> = (rawLevel.balls as Array<Array<any>>).map(bullet => bullet[1] == 2? new PowerWireBody(bullet[0]): bullet[1] == 3? new BulletBody(bullet[0]): new BulletBody(bullet[0]))
-
-    const powerUps: Array<PowerUpBody> = (rawLevel.powerUps as Array<Array<any>>).map(powerUp => new PowerUpBody(powerUp[0], powerUp[1]))
-
     return {
-        players: players,
-        platforms: platforms,
-        ladders: ladders,
-        balls: balls,
-        bullets: bullets,
-        powerUps: powerUps
-    }
+        players: (rawLevel.players as Array<PlayerBody>).map(player => {
+            const newPlayer = new PlayerBody(player.position)
+            newPlayer.shotTwoTimes = player.shotTwoTimes
+            newPlayer.forceFields = player.forceFields
+            newPlayer.forceFieldsTimeLeft = player.forceFieldsTimeLeft
+            newPlayer.gun = player.gun
+            newPlayer.cooldown = player.cooldown
+
+            return newPlayer
+        }),
+        balls: (rawLevel.balls as Array<BallBody>).map(ball => {
+            const newBall = new BallBody(ball.position, ball.radius)
+            newBall.speed = ball.speed
+            newBall.isFalling = ball.isFalling
+            newBall.lastHeight = ball.lastHeight
+            newBall.peakHeight = ball.peakHeight
+
+            return newBall
+        }),
+        bullets: (rawLevel.bullets as Array<any>).map(bullet => {
+            const newBullet = bullet.gun == 3? new VulcanMissile(bullet.position): bullet.gun == 2? new PowerWireBody(bullet.position): new HarpoonBody(bullet.position)
+            newBullet.position = bullet.position
+            newBullet.size = bullet.size
+
+            return newBullet
+        }),
+        platforms: (rawLevel.platforms as Array<PlatformBody>).map(platform => new PlatformBody(platform.position, platform.size, platform.isBreakable)),
+        ladders: (rawLevel.ladders as Array<LadderBody>).map(ladder => new LadderBody(ladder.position, ladder.size)),
+        powerUps: (rawLevel.powerUps as Array<PowerUpBody>).map(powerUp => {
+            const newPowerUp = new PowerUpBody(powerUp.position, powerUp.type)
+            newPowerUp.speed = powerUp.speed
+            newPowerUp.size = powerUp.size
+            newPowerUp.timeLeft = powerUp.timeLeft
+
+            return newPowerUp
+        })
+    } as Level
 }
