@@ -42,6 +42,14 @@ export enum GameState {
 }
 
 /**
+ * Wartość określająca wymiary postaci.
+ */
+export const PLAYER_SIZE: XYVar = {
+    x: 50,
+    y: 80
+}
+
+/**
  * Ustalone wymiary 4 wielkości piłek.
  */
 export enum BallSize {

@@ -1,5 +1,5 @@
 import levels from '../static/levels/levels.json'
-import { BasePath, Guns, Keymap } from './const'
+import { BasePath, Guns, Keymap, PLAYER_SIZE } from './const'
 import { BallBody, LadderBody, PlatformBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
@@ -29,7 +29,7 @@ export const loadLevel = async (name: string): Promise<Object | undefined> => {
 export const getLevel = (rawLevel: any): Level => {
     const players: Array<PlayerBody> = (rawLevel.players as Array<Array<any>>).map(player => new PlayerBody(
         (player[0] as XYVar),
-        { x: 50, y: 60 },
+        PLAYER_SIZE,
         Keymap,
         player[1] != undefined && player[1].gun != undefined? player[1].gun: Guns.HARPOON,
     ))
