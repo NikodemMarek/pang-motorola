@@ -73,6 +73,11 @@ export default class PlayerBody extends RectangularBody {
 
         window.addEventListener('keydown', event => this.moves.add(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
         window.addEventListener('keyup', event => this.moves.delete(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
+
+        window.addEventListener('contextmenu', event => {
+            event.preventDefault()
+            return false
+        }, false)
     }
 
     /**
