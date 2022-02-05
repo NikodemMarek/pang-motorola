@@ -1,4 +1,4 @@
-import { GRAVITY, Guns, Keymap, PLAYER_SPEED, PowerUp } from '../../const'
+import { GRAVITY, Guns, Keymap, PLAYER_SIZE, PLAYER_SPEED, PowerUp } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
 import { LadderBody, PlatformBody } from './objects'
@@ -45,14 +45,12 @@ export default class PlayerBody extends RectangularBody {
      * Ruchy są dodawane do {@link moves}, zamiast bezpośrednio zmienić prędkości postaci, aby osiągnąć płyność ruchu.
      *
      * @param position - Pozycja startowa postaci, umieszczona w jego centrum
-     * @param size - Rozmiar postaci
      * @param keymap - Mapa klasiszy sterujących postacią
      * @param gun - Rodzaj broni dla postaci, domyślnie harpun
      * @param shoot - Funkcja która wykona się po przyciśnięciu przycisku strzału przez gracza
      */
     constructor(
         position: XYVar,
-        size: XYVar,
         keymap: {
             UP: Array<string>,
             DOWN: Array<string>,
@@ -63,7 +61,7 @@ export default class PlayerBody extends RectangularBody {
         gun: Guns = Guns.HARPOON,
         shoot?: () => void
     ) {
-        super(position, size, true)
+        super(position, PLAYER_SIZE, true)
         
         this.gun = gun
         this.cooldown = 0
