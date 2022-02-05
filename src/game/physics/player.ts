@@ -127,13 +127,13 @@ export default class PlayerBody extends RectangularBody {
                         switch(this.gun) {
                             case Guns.HARPOON:
                             case Guns.POWER_WIRE:
-                                this.cooldown = 1.5
+                                this.cooldown = 1
                             break;
                             case Guns.VULCAN_MISSILE:
-                                this.cooldown = 0.5
+                                this.cooldown = 0.2
                             break;
                             case Guns.DOUBLE_HARPOON:
-                                this.cooldown = this.shotTwoTimes? 1.5: 0.3
+                                this.cooldown = this.shotTwoTimes? 1: 0.2
                                 this.shotTwoTimes = !this.shotTwoTimes
                             break;
                         }

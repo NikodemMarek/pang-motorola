@@ -1,4 +1,4 @@
-import { PLAYER_SIZE } from '../../const'
+import { BULLET_SPEED, PLAYER_SIZE } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
 
@@ -16,7 +16,7 @@ export class BulletBody extends RectangularBody {
     ) {
         super({ x: position.x, y: position.y }, { x: 10, y: 10 }, true)
 
-        this.speed.y -= 250
+        this.speed.y = BULLET_SPEED
     }
 }
 
@@ -32,7 +32,7 @@ export class HarpoonBody extends BulletBody {
      constructor(
         position: XYVar,
     ) {
-        super({ x: position.x, y: position.y })
+        super({ x: position.x, y: position.y - 0.1 })
         this.size.y = PLAYER_SIZE.y
     }
 
