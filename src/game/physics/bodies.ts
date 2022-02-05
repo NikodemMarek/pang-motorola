@@ -250,7 +250,7 @@ export class CircularBody implements Body {
         if(body instanceof RectangularBody) {
             return isRectAndCircleColliding(body, this)
         } else if(body instanceof CircularBody) {
-            return this.radius + body.radius >= distanceAB(this.position, body.position)
+            return this.radius + body.radius > distanceAB(this.position, body.position)
         } else return false
     }
 
@@ -289,13 +289,13 @@ export class CircularBody implements Body {
 export function isRectAndCircleColliding(rect: RectangularBody, circle: CircularBody): boolean {
     const circleDistance = { x: Math.abs(circle.position.x - rect.position.x), y: Math.abs(circle.position.y - rect.position.y) }
 
-    if(circleDistance.x > (rect.size.x / 2 + circle.radius)) return false
-    if(circleDistance.y > (rect.size.y / 2 + circle.radius)) return false
+    if(circleDistance.x >= (rect.size.x / 2 + circle.radius)) return false
+    if(circleDistance.y >= (rect.size.y / 2 + circle.radius)) return false
 
-    if(circleDistance.x <= (rect.size.x / 2)) return true
-    if(circleDistance.y <= (rect.size.y / 2)) return true
+    if(circleDistance.x < (rect.size.x / 2)) return true
+    if(circleDistance.y < (rect.size.y / 2)) return true
 
-    return (Math.pow(circleDistance.x - rect.size.x / 2, 2) + Math.pow(circleDistance.y - rect.size.y / 2, 2)) <= (circle.radius * circle.radius)
+    return (Math.pow(circleDistance.x - rect.size.x / 2, 2) + Math.pow(circleDistance.y - rect.size.y / 2, 2)) < (circle.radius * circle.radius)
 }
 
 /**
