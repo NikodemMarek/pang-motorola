@@ -1,6 +1,6 @@
 import { Application, Graphics } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
-import { GAME_SIZE } from './const'
+import { GAME_SIZE, ImagePath } from './const'
 import Game from './game/game'
 import { BulletBody } from './game/physics/weapons'
 import { getLevel, loadLevel } from './levels-provider'
@@ -25,7 +25,7 @@ const _this = app.stage
 /**
  * Wczytuje domyślny zestaw zasobów.
  */
-const imagesProvider: ImagesProvider = ImagesProvider.Instance('programmer-art')
+const imagesProvider: ImagesProvider = ImagesProvider.Instance(0)
 
 /**
  * Wczytany poziom.
@@ -68,8 +68,8 @@ async function onComplete() {
         {
             width: 200,
             height: 50,
-            texture: ImagesProvider.Instance().getTexture(ImagesProvider.image.MENU_BUTTON),
-            hoverTexture: ImagesProvider.Instance().getTexture(ImagesProvider.image.MENU_BUTTON_HOVER),
+            texture: imagesProvider.getTexture(ImagePath.MENU_BUTTON),
+            hoverTexture: imagesProvider.getTexture(ImagePath.MENU_BUTTON_HOVER),
             labelColor: 0x407ff9,
             labelHoverColor: 0xff7ff9
         },

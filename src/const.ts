@@ -8,8 +8,27 @@ export const GAME_SIZE: XYVar = {
     y: 500
 }
 
+/**
+ * Bazowe ścieżki do zasobów.
+ */
 export enum BasePath {
+    IMAGES = './images/',
     LEVELS = './levels/'
+}
+
+/**
+ * Nazwy grafik w formie enuma, dla poprawy czytelności.
+ */
+export enum ImagePath {
+    PINE = 'pineapple.png',
+    MENU_BUTTON = 'button-texture.png',
+    MENU_BUTTON_HOVER = 'button-texture-hover.png'
+}
+/**
+ * Nazwy animacji w formie enuma, dla poprawy czytelności.
+ */
+export enum AnimationPath {
+    LOADING = 'loading/lo'
 }
 
 /**

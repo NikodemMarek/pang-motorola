@@ -1,5 +1,6 @@
 import { Loader } from 'pixi.js'
 import sets from '../static/images/sets.json'
+import { BasePath } from './const'
 
 /**
  * Zwraca listę dostępnych zestawów grafik.
@@ -9,31 +10,9 @@ import sets from '../static/images/sets.json'
 export const getImagesSetsList = () => sets
 
 /**
- * Bazowe ścieżki do folderów z zasobami.
- */
-enum BasePath {
-    IMAGES = './images/'
-}
-
-/**
  * Klasa ułatwiająca wczytwanie i zarządzanie spritesheetami do gry.
  */
 export class ImagesProvider {
-    /**
-     * Nazwy grafik w formie enuma, dla poprawy czytelności.
-     */
-    public static image = {
-        PINE: 'pineapple.png',
-        MENU_BUTTON: 'button-texture.png',
-        MENU_BUTTON_HOVER: 'button-texture-hover.png'
-    }
-    /**
-     * Nazwy animacji w formie enuma, dla poprawy czytelności.
-     */
-    public static animation = {
-        LOADING: 'loading/lo'
-    }
-
     /**
      * Obieket tej klasy który służy jako singleton.
      */
@@ -49,8 +28,8 @@ export class ImagesProvider {
      * 
      * @param name - Nazwa zestawu do wczytania
      */
-    private constructor(name?: string) {
-        if(name != undefined) this.loadSet(name)
+    private constructor(setNumber?: number) {
+        if(setNumber != undefined) this.loadSet(setNumber)
     }
     /**
      * Jeśli obiekt w _instance nie istnieje to tworzy go używając konstruktora.
@@ -59,8 +38,8 @@ export class ImagesProvider {
      * @param name - Nazwa zestawu do wczytania
      * @returns Stały obiekt tej klasy
      */
-    public static Instance(name?: string) {
-        return this._instance || (this._instance = new this(name))
+    public static Instance(setNumber?: number) {
+        return this._instance || (this._instance = new this(setNumber))
     }
 
     /**
@@ -68,11 +47,11 @@ export class ImagesProvider {
      * Funkcja wczytuje plik map.json dla spritesheetu.
      * Jeśli spritesheet został wczytany zwraca true, jeśli nie false.
      * 
-     * @param name - Nazwa zestawu do wczytania
+     * @param setNumber - Numer zestawu do wczytania w kolejność zgodnej z {@link sets}
      * @returns True - spritesheet wczytany, false - wczytywanie się nie powiodło
      */
-    public loadSet(name: string): boolean {
-        const setData = Object(sets)[name]
+    public loadSet(setNumber: number): boolean {
+        const setData = sets[setNumber]
 
         if(setData != undefined) {
             this.path = `${BasePath.IMAGES}${setData.path}map.json`

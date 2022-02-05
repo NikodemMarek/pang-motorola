@@ -1,3 +1,4 @@
-{
-    "programmer-art": { "path": "programmer-art/" }
-}
+[
+    { "name": "programmer-art", "path": "programmer-art/" },
+    { "name": "modern", "path": "modern/" }
+]
