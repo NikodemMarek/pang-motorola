@@ -47,7 +47,8 @@ export class HarpoonBody extends BulletBody {
 
         super.update(delta, colliders)
 
-        this.size.y += (prePositionY - this.position.y) * 2
+        this.size.y += prePositionY - this.position.y
+        this.position.y += (prePositionY - this.position.y) / 2
     }
 }
 
