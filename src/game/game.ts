@@ -143,8 +143,8 @@ export default class Game {
     update(delta: number) {
         this.bullets.forEach(bullet => bullet.update(delta))
 
-        const newPlatforms = this.platforms.filter(platform => !this.bullets.some(bullet => bullet.isColliding(platform)))
-        this.bullets = this.bullets.filter(bullet => !this.platforms.some(platform => platform.isColliding(bullet)))
+        const newPlatforms = this.platforms.filter(platform => platform.isBreakable? !this.bullets.some(bullet => bullet.isColliding(platform)): true)
+        this.bullets = this.bullets.filter(bullet => !this.platforms.some(platform => platform.isBreakable? platform.isColliding(bullet): false))
         this.platforms = newPlatforms
 
         this.bullets.forEach(bullet => bullet.update(0, [ this.borders[0] ].concat(this.platforms)))
