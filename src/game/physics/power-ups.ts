@@ -1,4 +1,4 @@
-import { PowerUp } from '../../const'
+import { GRAVITY, PowerUp } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
 
@@ -25,7 +25,7 @@ export default class PowerUpBody extends RectangularBody {
         super(position, { x: 40, y: 60 }, true)
         
         this.type = type
-        this.accelerate('gravity', { x: 0, y: 50 })
+        this.accelerate('gravity', GRAVITY)
     }
 
     /**

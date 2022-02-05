@@ -1,4 +1,4 @@
-import { Guns, Keymap, PowerUp } from '../../const'
+import { GRAVITY, Guns, Keymap, PowerUp } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
 import { LadderBody, PlatformBody } from './objects'
@@ -69,7 +69,7 @@ export default class PlayerBody extends RectangularBody {
         this.cooldown = 0
         this.shoot = shoot || function() {  }
 
-        this.accelerate('gravity', { x: 0, y: 50 })
+        this.accelerate('gravity', GRAVITY)
 
         window.addEventListener('keydown', event => this.moves.add(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
         window.addEventListener('keyup', event => this.moves.delete(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
@@ -145,7 +145,7 @@ export default class PlayerBody extends RectangularBody {
         if(isOnLadder) this.decelerate('gravity')
         else if(!this.accelerators.some(acc => acc.name == 'gravity')) {
             this.speed.y = 0
-            this.accelerate('gravity', { x: 0, y: 50 })
+            this.accelerate('gravity', GRAVITY)
         }
         
         super.update(

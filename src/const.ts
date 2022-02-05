@@ -50,6 +50,14 @@ export const PLAYER_SIZE: XYVar = {
 }
 
 /**
+ * Globalna wartość grawitacji.
+ */
+export const GRAVITY: XYVar = {
+    x: 0,
+    y: 100
+}
+
+/**
  * Ustalone wymiary 4 wielkości piłek.
  */
 export enum BallSize {

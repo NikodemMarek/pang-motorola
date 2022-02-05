@@ -1,4 +1,4 @@
-import { BallSize, PLAYER_SIZE } from '../../const'
+import { BallSize, GRAVITY, PLAYER_SIZE } from '../../const'
 import { XYVar } from '../../types'
 import { Body, CircularBody, RectangularBody } from './bodies'
 
@@ -34,7 +34,7 @@ export class BallBody extends CircularBody {
         super(position, size, true, true)
 
         this.speed = speed
-        this.accelerate('gravity', { x: 0, y: 50 })
+        this.accelerate('gravity', GRAVITY)
 
         this.lastHeight = position.y
         this.peakHeight = position.y
@@ -52,7 +52,7 @@ export class BallBody extends CircularBody {
         super.update(delta, colliders)
 
         if(!this.isFalling && this.position.y > this.lastHeight) this.peakHeight = this.lastHeight
-        else if(this.isFalling && this.position.y < this.lastHeight && this.peakHeight > PLAYER_SIZE.y * 4 / 3) this.speed.y = -PLAYER_SIZE.y * 4 / 3
+        else if(this.isFalling && this.position.y < this.lastHeight && this.peakHeight > PLAYER_SIZE.y * 4 / 3) this.speed.y = -(PLAYER_SIZE.y + GRAVITY.y * 3 / 4)
 
         if(this.position.y > this.lastHeight) this.isFalling = true
         else this.isFalling = false
