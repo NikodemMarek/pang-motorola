@@ -3,7 +3,7 @@ import { BasePath, Guns, Keymap, PLAYER_SIZE } from './const'
 import { BallBody, LadderBody, PlatformBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
-import { BulletBody, PowerWireBody } from './game/physics/weapons'
+import { BulletBody, PowerWireBody } from './game/physics/bullets'
 import { Level, XYVar } from './types'
 
 /**
@@ -50,7 +50,7 @@ export const getLevel = (rawLevel: any): Level => {
         ball[1]
     ))
 
-    const bullets: Array<BulletBody> = (rawLevel.balls as Array<Array<any>>).map(bullet => new BulletBody(bullet[0])).concat((rawLevel.powerWires as Array<Array<any>>).map(bullet => new PowerWireBody(bullet[0])))
+    const bullets: Array<BulletBody> = (rawLevel.balls as Array<Array<any>>).map(bullet => bullet[1] == 2? new PowerWireBody(bullet[0]): bullet[1] == 3? new BulletBody(bullet[0]): new BulletBody(bullet[0]))
 
     const powerUps: Array<PowerUpBody> = (rawLevel.powerUps as Array<Array<any>>).map(powerUp => new PowerUpBody(powerUp[0], powerUp[1]))
 

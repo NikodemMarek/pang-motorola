@@ -2,7 +2,7 @@ import { Texture } from 'pixi.js'
 import { BallBody, LadderBody, PlatformBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
-import { BulletBody } from './game/physics/weapons'
+import { BulletBody } from './game/physics/bullets'
 
 /**
  * Typ opisujący właściwości przycisku.

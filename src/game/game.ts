@@ -5,7 +5,8 @@ import { CircularBody, RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
-import { BulletBody, PowerWireBody } from './physics/weapons'
+import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
+import { Body } from './physics/bodies'
 
 /**
  * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
@@ -99,8 +100,9 @@ export default class Game {
         this.powerUps = level.powerUps || [  ]
 
         this.players.forEach(player => player.shoot = () => {
-            if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody(player.position.x))
-            else this.bullets.push(new BulletBody(player.position.x))
+            if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody({ x: player.position.x, y: player.position.y }))
+            if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
+            else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
         })
     }
 
