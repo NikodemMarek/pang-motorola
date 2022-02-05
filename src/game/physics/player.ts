@@ -1,4 +1,4 @@
-import { GRAVITY, Guns, Keymap, PowerUp } from '../../const'
+import { GRAVITY, Guns, Keymap, PLAYER_SPEED, PowerUp } from '../../const'
 import { XYVar } from '../../types'
 import { Body, RectangularBody } from './bodies'
 import { LadderBody, PlatformBody } from './objects'
@@ -98,10 +98,10 @@ export default class PlayerBody extends RectangularBody {
         this.moves.forEach(move => {
             switch(move) {
                 case 'UP':
-                    if(isOnLadder) this.speed.y = -60
+                    if(isOnLadder) this.speed.y = -PLAYER_SPEED.y
                 break;
                 case 'DOWN':
-                    if(isOnLadder) this.speed.y = 60
+                    if(isOnLadder) this.speed.y = PLAYER_SPEED.y
                     else {
                         this.position.y += 1
 
@@ -109,16 +109,16 @@ export default class PlayerBody extends RectangularBody {
                         isOnLadder = collidingLadder != undefined
 
                         if(!isOnLadder) this.position.y -= 1
-                        else this.speed.y = 60
+                        else this.speed.y = PLAYER_SPEED.y
                     }
                 break;
                 case 'LEFT':
-                    if(!isOnLadder) this.speed.x = -50
-                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = -50
+                    if(!isOnLadder) this.speed.x = -PLAYER_SPEED.x
+                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = -PLAYER_SPEED.x
                 break;
                 case 'RIGHT':
-                    if(!isOnLadder) this.speed.x = 50
-                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = 50
+                    if(!isOnLadder) this.speed.x = PLAYER_SPEED.x
+                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = PLAYER_SPEED.x
                 break;
                 case 'SHOOT':
                     if(this.cooldown <= 0) {

@@ -50,6 +50,14 @@ export const PLAYER_SIZE: XYVar = {
 }
 
 /**
+ * Prędkość postaci w posiomie i podczas chodzenia po drabinie.
+ */
+export const PLAYER_SPEED: XYVar = {
+    x: 100,
+    y: 75
+}
+
+/**
  * Globalna wartość grawitacji.
  */
 export const GRAVITY: XYVar = {
