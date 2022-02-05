@@ -1,12 +1,10 @@
 import { Application, Graphics } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
-import { BallSize, GAME_SIZE, Guns, Keymap, PowerUp } from './const'
+import { GAME_SIZE } from './const'
 import Game from './game/game'
-import { RectangularBody } from './game/physics/bodies'
-import { BallBody, LadderBody, PlatformBody } from './game/physics/objects'
-import PlayerBody from './game/physics/player'
-import PowerUpBody from './game/physics/power-ups'
-import { BulletBody, PowerWireBody } from './game/physics/weapons'
+import { BulletBody } from './game/physics/weapons'
+import { getLevel, loadLevel } from './levels-provider'
+import { Level } from './types'
 import Loading from './views/loading'
 import Menu from './views/menu'
 
@@ -30,9 +28,14 @@ const _this = app.stage
 const imagesProvider: ImagesProvider = ImagesProvider.Instance('programmer-art')
 
 /**
+ * Wczytany poziom.
+ */
+let level: Level
+
+/**
  * Pokazuje postęp ładowania domyślnego zestawu zasobów.
  */
-const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '')
+const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '', async () => { level = getLevel(await loadLevel('test')) })
 assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
 _this.addChild(assetsLoader)
 
@@ -40,7 +43,7 @@ _this.addChild(assetsLoader)
  * Funkcja która zostanie wykonana po załadowaniu zasobów.
  * Wyświetla główne menu gry.
  */
-function onComplete() {
+async function onComplete() {
     const menu = new Menu(
         [
             {
@@ -72,7 +75,6 @@ function onComplete() {
         },
         false
     )
-
     menu.position.set(app.view.width / 2, app.view.height / 2)
     _this.addChild(menu)
 }
@@ -87,37 +89,8 @@ function dummyGame() {
 
     _this.interactive = true
 
-    const game = new Game(
-        _this,
-        [
-            new PlayerBody({ x: 100, y: 430 }, { x: 50, y: 100 }, Keymap, Guns.POWER_WIRE)
-        ],
-        {
-            borders: [
-                new RectangularBody({ x: app.view.width / 2, y: 0 }, { x: app.view.width, y: 0 }, true),
-                new RectangularBody({ x: app.view.width / 2, y: app.view.height }, { x: app.view.width, y: 0 }, true),
-                new RectangularBody({ x: 0, y: app.view.height / 2 }, { x: 0, y: app.view.height }, true),
-                new RectangularBody({ x: app.view.width, y: app.view.height / 2 }, { x: 0, y: app.view.height }, true)
-            ],
-            platforms: [
-                new PlatformBody({ x: 200, y: 350 }, { x: 180, y: 20 })
-            ],
-            ladders: [
-                new LadderBody({ x: 200, y: 415 }, { x: 80, y: 150 })
-            ],
-            balls: [
-                new BallBody({ x: 300, y: 100 }, BallSize.SMALL)
-            ],
-            bullets: [
-                new BulletBody(250),
-                new PowerWireBody(550)
-            ],
-            powerUps: [
-                new PowerUpBody({ x: 400, y: 200 }, PowerUp.FORCE_FIELD)
-            ]
-        }
-    )
+    const game = new Game(_this, level)
     game.start(graphics)
-    
+
     setTimeout(() => game.bullets.push(new BulletBody(500)), 5000)
 }
