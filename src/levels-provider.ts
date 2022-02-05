@@ -49,7 +49,6 @@ export const getLevel = (rawLevel: any): Level => {
             newBall.speed = ball.speed
             newBall.isFalling = ball.isFalling
             newBall.lastHeight = ball.lastHeight
-            newBall.peakHeight = ball.peakHeight
 
             return newBall
         }),
