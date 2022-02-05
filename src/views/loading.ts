@@ -8,15 +8,18 @@ export default class Loading extends Container {
      * Dodaje zasoby do załadowania, do Loadera.
      * Wyświetla procentowy postęp wczytywania.
      * Wczytuje dodane zasoby.
+     * Wczytuje pozostałe zasoby do gry.
      * 
      * @param resources - Mapa zestawu zasobów do wczytania
      * @param onComplete - Funkcja która wykona się po wczytaniu zasobów
      * @param baseUrl - Scieżka do folderu z zasobami
+     * @param loadOther - Funkcja która wczyta inne zasoby niż grafiki
      */
     constructor(
         resources: Array<{ path: string, name?: string }>,
-        onComplete: Function,
-        baseUrl = './images'
+        onComplete: () => void,
+        baseUrl = './images',
+        loadOther?: () => Promise<void>
     ) {
         super()
 
@@ -30,7 +33,8 @@ export default class Loading extends Container {
         
         loader.onProgress.add(() => progressValue.text = loader.progress.toFixed(0))
         loader.onComplete.once(() => {
-            onComplete()
+            if(loadOther != undefined) loadOther().finally(onComplete)
+            else onComplete()
             
             this.parent.removeChild(this)
             this.destroy({ children: true, texture: true, baseTexture: true })
