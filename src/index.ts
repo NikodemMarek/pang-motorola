@@ -2,7 +2,6 @@ import { Application, Graphics } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { GAME_SIZE, ImagePath } from './const'
 import Game from './game/game'
-import { BulletBody } from './game/physics/weapons'
 import { getLevel, loadLevel } from './levels-provider'
 import { Level } from './types'
 import Loading from './views/loading'
@@ -90,7 +89,5 @@ function dummyGame() {
     _this.interactive = true
 
     const game = new Game(_this, level)
-    game.start(graphics)
-
-    setTimeout(() => game.bullets.push(new BulletBody(500)), 5000)
+    game.start(graphics, 60)
 }

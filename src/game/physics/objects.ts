@@ -21,6 +21,7 @@ export class BallBody extends CircularBody {
      * 
      * @param position - Pozycja startowa platformy, umieszczona w jej centrum
      * @param size - Rozmiar platformy
+     * @param speed - Prędkość startowa piłki
      */
     constructor(
         position: XYVar,

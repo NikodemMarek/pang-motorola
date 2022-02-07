@@ -30,7 +30,7 @@ export const loadLevel = async (name: string): Promise<Object | undefined> => {
  * Konwertuje surowy poziom na {@link Level}.
  * 
  * @param rawLevel - Poziom w surowej postaci
- * @returns Poziom w postaci
+ * @returns Poziom w postaci {@link Level}
  */
 export const getLevel = (rawLevel: any): Level => {
     return {

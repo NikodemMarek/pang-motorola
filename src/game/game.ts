@@ -76,8 +76,7 @@ export default class Game {
      * Przypisuje funkcje strzelania każdej postaci w grze.
      * 
      * @param container - Pojemnik na grę
-     * @param players - Lista graczy w grze
-     * @param objects - Listay obiektów w grze
+     * @param level - Dane poziomu
      */
     constructor(
         container: Container,
@@ -141,15 +140,20 @@ export default class Game {
      * @param delta - Czas który upłynął od ostatniego odświeżenia
      */
     update(delta: number) {
+        // Odświeża pozycję pocisków.
         this.bullets.forEach(bullet => bullet.update(delta))
 
+        // Usuwa platformy, które można zniszczyć, które zostały trafione pociskami.
         const newPlatforms = this.platforms.filter(platform => platform.isBreakable? !this.bullets.some(bullet => bullet.isColliding(platform)): true)
         this.bullets = this.bullets.filter(bullet => !this.platforms.some(platform => platform.isBreakable? platform.isColliding(bullet): false))
         this.platforms = newPlatforms
 
+        // Jeśli ociski trafiły w przeszkodę, cofa je.
         this.bullets.forEach(bullet => bullet.update(0, [ this.borders[0] ].concat(this.platforms)))
 
+        // Trzyma nowe piłki, które zostaną dodane do gry.
         const ballsToAdd: Array<BallBody> = [  ]
+        // Dzieli piłki.
         const splitBall = (ball: BallBody) => {
             const newSize = ball.radius > BallSize.MEDIUM? ball.radius > BallSize.BIG? BallSize.BIG: BallSize.MEDIUM: ball.radius > BallSize.SMALL? BallSize.SMALL: 0
 
@@ -160,6 +164,7 @@ export default class Game {
             )
         }
 
+        // Sprawdza czy bonus, dynamit, został podniesiony i rozbija piłki.
         if(this.dynamiteSplits > 0 && this.splitCooldown <= 0) {
             this.balls.forEach(ball => { if(ball.radius > BallSize.SMALL) splitBall(ball) })
 
@@ -167,6 +172,7 @@ export default class Game {
             this.splitCooldown = 1
         }
         
+        // Dzielni piłki trafione przez pociski.
         this.balls.forEach(ball => {
             const preSize = this.bullets.length
             this.bullets = this.bullets.filter(body => !(body instanceof BulletBody) || !ball.isColliding(body))
@@ -175,12 +181,12 @@ export default class Game {
         })
         this.balls = this.balls.filter(ball => ball.radius > 0)
         this.balls.push(... ballsToAdd)
-            
+        
+        // Odświeża pozycję piłek, zatrzymuje lub spowalnia je jeśli jest aktywny bonus zegar lub klepsydra.
         this.balls.forEach(ball => ball.update(this.clockTimeLeft > 0? 0: this.hourglassTimeLeft > 0? delta / 3: delta, this.borders.concat(this.platforms)))
 
-        this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
-        this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
-
+        // Sprawdza czy gracz został trafiony przez piłkę, kończy grę jeśli gracz nie ma aktywnego bonusu tarczy.
+        // Aktywyje nowe, podniesione bonusy.
         this.players.forEach(player => {
             this.balls = this.balls.filter(ball => {
                 if(player.isColliding(ball)) {
@@ -214,11 +220,14 @@ export default class Game {
             })
         })
 
+        // Usuwa pociski które trafiły jakiś obiekt.
         this.bullets = this.bullets.filter(bullet => bullet instanceof PowerWireBody? bullet.timeLeft > 0: bullet.speed.y < 0)
 
+        // Usuwa bonusy które zostały podniesione.
         this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
         this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
 
+        // Zwiększa czas który bonusy są już na planszy.
         if(this.hourglassTimeLeft > 0) this.hourglassTimeLeft -= delta
         else this.hourglassTimeLeft = 0
         if(this.clockTimeLeft > 0) this.clockTimeLeft -= delta
