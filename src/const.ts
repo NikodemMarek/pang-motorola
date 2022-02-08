@@ -22,7 +22,24 @@ export enum BasePath {
 export enum ImagePath {
     PINE = 'pineapple.png',
     MENU_BUTTON = 'button-texture.png',
-    MENU_BUTTON_HOVER = 'button-texture-hover.png'
+    MENU_BUTTON_HOVER = 'button-texture-hover.png',
+    PLATFORM = 'pineapple.png',
+    PLATFORM_BREAKABLE = 'pineapple.png',
+    LADDER = 'pineapple.png',
+    BALL = 'pineapple.png',
+    POWER_UP = 'pineapple.png',
+    PLAYER = 'pineapple.png',
+    HARPOON = 'pineapple.png',
+    POWER_WIRE = 'pineapple.png',
+    VULCAN_MISSILE = 'pineapple.png',
+    HARPOON_POWER_UP = 'pineapple.png',
+    DOUBLE_HARPOON_POWER_UP = 'pineapple.png',
+    POWER_WIRE_POWER_UP = 'pineapple.png',
+    VULCAN_MISSILE_POWER_UP = 'pineapple.png',
+    FORCE_FIELD_POWER_UP = 'pineapple.png',
+    HOURGLASS_POWER_UP = 'pineapple.png',
+    CLOCK_POWER_UP = 'pineapple.png',
+    DYNAMITE_POWER_UP = 'pineapple.png'
 }
 /**
  * Nazwy animacji w formie enuma, dla poprawy czytelności.
@@ -113,4 +130,16 @@ export const Keymap = {
     LEFT: [ 'ArrowLeft', 'a', 'A' ],
     RIGHT: [ 'ArrowRight', 'd', 'D' ],
     SHOOT: [ ' ', 'Shift', 'q', 'Q' ]
+}
+
+/**
+ * Określa w jakiej kolejności będą wyświetlane obiekty.
+ */
+export enum ZIndex {
+    PLATFORM,
+    LADDER,
+    BALL,
+    POWER_UP,
+    PLAYER,
+    BULLET
 }

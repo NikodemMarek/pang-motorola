@@ -52,11 +52,9 @@ export default class Menu extends Container {
 
             const optionButton = new Button(
                 () => {
+                    if(option.hideMenuOnClick != undefined? option.hideMenuOnClick: true) this.parent.removeChild(this)
+                    
                     option.onClick()
-                    if(option.hideMenuOnClick != undefined? option.hideMenuOnClick: true) {
-                        this.parent.removeChild(this)
-                        this.destroy({ children: true, texture: true, baseTexture: true })
-                    }
                 },
                 buttonProperties
             )

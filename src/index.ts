@@ -1,6 +1,7 @@
-import { Application, Graphics } from 'pixi.js'
+import { Application } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { GAME_SIZE, ImagePath } from './const'
+import BodiesDrawer from './game/bodies-drawer'
 import Game from './game/game'
 import { getLevel, loadLevel } from './levels-provider'
 import { Level } from './types'
@@ -82,12 +83,11 @@ async function onComplete() {
 // Tymczasowa prosta gra.
 // TODO: Remove this.
 function dummyGame() {
-    const graphics = new Graphics()
+    _this.sortableChildren = true
 
-    _this.addChild(graphics)
+    const drawer = new BodiesDrawer()
+    drawer.setLevel(_this, level)
 
-    _this.interactive = true
-
-    const game = new Game(_this, level)
-    game.start(graphics, 60)
+    const game = new Game(_this, drawer, level)
+    game.start(60)
 }

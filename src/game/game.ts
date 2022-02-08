@@ -1,12 +1,12 @@
-import { Container, Graphics } from 'pixi.js'
+import { Container } from 'pixi.js'
 import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
 import { Level } from '../types'
-import { CircularBody, RectangularBody } from './physics/bodies'
+import { RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
-import { Body } from './physics/bodies'
+import BodiesDrawer from './bodies-drawer'
 
 /**
  * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
@@ -19,6 +19,7 @@ export default class Game {
      * Pojemnik w którym będzie wyświetlała się gra.
      */
     container: Container
+    bodiesDrawer: BodiesDrawer
     /**
      * Obecny stan gry.
      */
@@ -80,9 +81,11 @@ export default class Game {
      */
     constructor(
         container: Container,
+        bodiesDrawer: BodiesDrawer,
         level: Level
     ) {
         this.container = container
+        this.bodiesDrawer = bodiesDrawer
 
         this.players = level.players
         this.balls = level.balls || [  ]
@@ -100,7 +103,7 @@ export default class Game {
 
         this.players.forEach(player => player.shoot = () => {
             if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody({ x: player.position.x, y: player.position.y }))
-            if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
+            else if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
             else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
         })
     }
@@ -112,16 +115,28 @@ export default class Game {
      * @param graphics - Obiekt pozwalający na rysowanie kształtów
      * @param FPS - Oczekiwana ilość odświeżeń i klatek na sekundę
      */
-    start(graphics: Graphics, FPS: number = 30) {
+    start(FPS: number = 30) {
         const frameTime = 1000 / FPS
 
         this.state = GameState.RUNNING
         
-        this.draw(graphics)
+        const draw = () => this.bodiesDrawer.update(
+                this.container,
+                {
+                    players: this.players,
+                    balls: this.balls,
+                    bullets: this.bullets,
+                    powerUps: this.powerUps,
+                    platforms: this.platforms,
+                    ladders: this.ladders
+                } as Level
+            )
+
+        draw()
         setInterval(() => {
             if(this.state == GameState.RUNNING) {
                 this.update(frameTime / 1000)
-                this.draw(graphics)
+                draw()
             }
         }, frameTime)
     }
@@ -162,6 +177,8 @@ export default class Game {
                 new BallBody({ x: ball.position.x + 10, y: ball.position.y }, newSize, { x: (ball.speed.x > 0? ball.speed.x: -ball.speed.x) + 50, y: ball.speed.y }),
                 new BallBody({ x: ball.position.x - 10, y: ball.position.y }, newSize, { x: (ball.speed.x > 0? -ball.speed.x: ball.speed.x) - 50, y: ball.speed.y })
             )
+
+            // this.bodiesDrawer.addBalls(this.container, [ ballsToAdd[0] ])
         }
 
         // Sprawdza czy bonus, dynamit, został podniesiony i rozbija piłki.
@@ -235,55 +252,4 @@ export default class Game {
         if(this.splitCooldown > 0) this.splitCooldown -= delta
         else this.splitCooldown = 0
     }
-
-    /**
-     * Wyświetla obiekty w pojemniku gry.
-     * 
-     * @param graphics - Obiekt pozwalający na rysowanie kształtów
-     */
-    draw(graphics: Graphics) {
-        graphics.clear()
-
-        const d = (body: Body, colorNum: number) => {
-            new VisualBody(body, [
-                0xff0000,
-                0x00ff00,
-                0x0000ff,
-                0xff00ff,
-                0x000000,
-                0x0ffff0
-            ][colorNum]).draw(graphics)
-        }
-
-        this.platforms.forEach(_ => d(_ as unknown as Body, 0))
-        this.ladders.forEach(_ => d(_ as unknown as Body, 1))
-        this.balls.forEach(_ => d(_ as unknown as Body, 2))
-        this.players.forEach(_ => d(_ as unknown as Body, _.forceFields))
-        this.bullets.forEach(_ => d(_ as unknown as Body, 4))
-        this.powerUps.forEach(_ => d(_ as unknown as Body, 5))
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-// Tymczasowa klasa pozwalająca na wyświetlenie każdego obiektu które jest dzieckiem Body.
-// TODO: Remove this.
-class VisualBody {
-    body: Body
-    color: number
-    
-    constructor(body: Body, color: number) {
-        this.body = body
-        this.color = color
-    }
-
-    draw(graphics: Graphics) {
-        graphics.beginFill(this.color)
-
-        if(this.body instanceof CircularBody) graphics.drawCircle(this.body.position.x, this.body.position.y, this.body.radius)
-        else if(this.body instanceof RectangularBody) graphics.drawRect(this.body.position.x - this.body.size.x / 2, this.body.position.y - this.body.size.y / 2, this.body.size.x, this.body.size.y)
-
-        graphics.endFill()
-    }
-
-    changeColor(color: number) { this.color = color }
 }
