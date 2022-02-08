@@ -20,7 +20,6 @@ export enum BasePath {
  * Nazwy grafik w formie enuma, dla poprawy czytelności.
  */
 export enum ImagePath {
-    PINE = 'pineapple.png',
     MENU_BUTTON = 'button-texture.png',
     MENU_BUTTON_HOVER = 'button-texture-hover.png',
     PLATFORM = 'pineapple.png',
@@ -39,7 +38,8 @@ export enum ImagePath {
     FORCE_FIELD_POWER_UP = 'pineapple.png',
     HOURGLASS_POWER_UP = 'pineapple.png',
     CLOCK_POWER_UP = 'pineapple.png',
-    DYNAMITE_POWER_UP = 'pineapple.png'
+    DYNAMITE_POWER_UP = 'pineapple.png',
+    BACKGROUND = 'pineapple.png'
 }
 /**
  * Nazwy animacji w formie enuma, dla poprawy czytelności.
@@ -136,6 +136,7 @@ export const Keymap = {
  * Określa w jakiej kolejności będą wyświetlane obiekty.
  */
 export enum ZIndex {
+    BACKGROUND,
     PLATFORM,
     LADDER,
     BALL,

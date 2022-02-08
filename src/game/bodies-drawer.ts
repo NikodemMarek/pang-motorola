@@ -1,6 +1,6 @@
 import { Container, Sprite, TilingSprite } from 'pixi.js'
 import { ImagesProvider } from '../assets-provider'
-import { ImagePath, ZIndex } from '../const'
+import { GAME_SIZE, ImagePath, ZIndex } from '../const'
 import { Level } from '../types'
 import { BulletBody, PowerWireBody, VulcanMissile } from './physics/bullets'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
@@ -60,6 +60,8 @@ export default class BodiesDrawer {
 
         if(level.platforms != undefined) this.addPlatforms(container, level.platforms)
         if(level.ladders != undefined) this.addLadders(container, level.ladders)
+
+        this.addBackground(container)
     }
 
     /**
@@ -319,5 +321,18 @@ export default class BodiesDrawer {
             container.addChild(newLadder)
             return newLadder
         }))
+    }
+
+    /**
+     * Wyświetla tło na planszy.
+     * 
+     * @param container - Pojemnik w którym zostanie wyświetlone tło
+     */
+    addBackground(container: Container) {
+        const background = new TilingSprite(ImagesProvider.Instance().getTexture(ImagePath.BACKGROUND)!, GAME_SIZE.x, GAME_SIZE.y)
+        background.tileScale.set(GAME_SIZE.y / background.texture.height)
+        background.zIndex = ZIndex.BACKGROUND
+
+        container.addChild(background)
     }
 }
