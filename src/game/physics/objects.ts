@@ -93,12 +93,12 @@ export class LadderBody extends RectangularBody {
      * Domyślnie nadaje drabinie kolizje.
      * 
      * @param position - Pozycja startowa drabiny, umieszczona w jej centrum
-     * @param size - Rozmiar drabiny
+     * @param sizeY - Wysokość drabiny
      */
      constructor(
         position: XYVar,
-        size: XYVar
+        sizeY: number
     ) {
-        super(position, size, true)
+        super(position, { x: PLAYER_SIZE.x + 20, y: sizeY }, true)
     }
 }

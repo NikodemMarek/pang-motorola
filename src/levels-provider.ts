@@ -55,16 +55,14 @@ export const getLevel = (rawLevel: any): Level => {
         bullets: (rawLevel.bullets as Array<any>).map(bullet => {
             const newBullet = bullet.gun == 3? new VulcanMissile(bullet.position): bullet.gun == 2? new PowerWireBody(bullet.position): new HarpoonBody(bullet.position)
             newBullet.position = bullet.position
-            newBullet.size = bullet.size
 
             return newBullet
         }),
         platforms: (rawLevel.platforms as Array<PlatformBody>).map(platform => new PlatformBody(platform.position, platform.size, platform.isBreakable)),
-        ladders: (rawLevel.ladders as Array<LadderBody>).map(ladder => new LadderBody(ladder.position, ladder.size)),
+        ladders: (rawLevel.ladders as Array<LadderBody>).map(ladder => new LadderBody(ladder.position, ladder.size.y)),
         powerUps: (rawLevel.powerUps as Array<PowerUpBody>).map(powerUp => {
             const newPowerUp = new PowerUpBody(powerUp.position, powerUp.type)
             newPowerUp.speed = powerUp.speed
-            newPowerUp.size = powerUp.size
             newPowerUp.timeLeft = powerUp.timeLeft
 
             return newPowerUp

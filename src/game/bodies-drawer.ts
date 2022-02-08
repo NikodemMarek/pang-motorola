@@ -1,6 +1,6 @@
 import { Container, Sprite, TilingSprite } from 'pixi.js'
 import { ImagesProvider } from '../assets-provider'
-import { GAME_SIZE, ImagePath, ZIndex } from '../const'
+import { GAME_SIZE, ImagePath, PLAYER_SIZE, ZIndex } from '../const'
 import { Level } from '../types'
 import { BulletBody, PowerWireBody, VulcanMissile } from './physics/bullets'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
@@ -101,8 +101,8 @@ export default class BodiesDrawer {
             const newPlayer = new Sprite(ImagesProvider.Instance().getTexture(ImagePath.PLAYER))
             newPlayer.position.set(player.position.x, player.position.y)
             newPlayer.anchor.set(0.5, 0.5)
-            newPlayer.width = player.size.x
-            newPlayer.height = player.size.y
+            newPlayer.width = PLAYER_SIZE.x
+            newPlayer.height = PLAYER_SIZE.y
 
             newPlayer.zIndex = ZIndex.PLAYER
 
@@ -140,7 +140,7 @@ export default class BodiesDrawer {
         this.bullets.push(... bullets.map(bullet => {
             const newBullet = new TilingSprite(
                 ImagesProvider.Instance().getTexture(bullet instanceof VulcanMissile? ImagePath.VULCAN_MISSILE: bullet instanceof PowerWireBody && bullet.speed.y == 0? ImagePath.POWER_WIRE: ImagePath.HARPOON)!,
-                bullet.size.x, bullet.size.y
+                20, bullet.size.y
             )
             newBullet.tileScale.set(bullet.size.x / newBullet.texture.width)
             newBullet.position.set(bullet.position.x, bullet.position.y)
@@ -174,8 +174,8 @@ export default class BodiesDrawer {
             ))
             newPowerUp.position.set(powerUp.position.x, powerUp.position.y)
             newPowerUp.anchor.set(0.5, 0.5)
-            newPowerUp.width = powerUp.size.x
-            newPowerUp.height = powerUp.size.y
+            newPowerUp.width = 50
+            newPowerUp.height = 50
 
             newPowerUp.zIndex = ZIndex.POWER_UP
 
@@ -248,7 +248,6 @@ export default class BodiesDrawer {
         
         bullets.forEach((bullet, i) => {
             this.bullets[i].position.set(bullet.position.x, bullet.position.y)
-            this.bullets[i].width = bullet.size.x
             this.bullets[i].height = bullet.size.y
         })
     }
@@ -311,7 +310,7 @@ export default class BodiesDrawer {
      */
     addLadders(container: Container, ladders: Array<LadderBody>) {
         this.ladders.push(... ladders.map(ladder => {
-            const newLadder = new TilingSprite(ImagesProvider.Instance().getTexture(ImagePath.LADDER)!, ladder.size.x, ladder.size.y)
+            const newLadder = new TilingSprite(ImagesProvider.Instance().getTexture(ImagePath.LADDER)!, PLAYER_SIZE.x + 20, ladder.size.y)
             newLadder.tileScale.set(ladder.size.x / newLadder.texture.width)
             newLadder.position.set(ladder.position.x, ladder.position.y)
             newLadder.anchor.set(0.5, 0.5)
@@ -329,8 +328,8 @@ export default class BodiesDrawer {
      * @param container - Pojemnik w którym zostanie wyświetlone tło
      */
     addBackground(container: Container) {
-        const background = new TilingSprite(ImagesProvider.Instance().getTexture(ImagePath.BACKGROUND)!, GAME_SIZE.x, GAME_SIZE.y)
-        background.tileScale.set(GAME_SIZE.y / background.texture.height)
+        const background = new TilingSprite(ImagesProvider.Instance().getTexture(ImagePath.BACKGROUND)!, GAME_SIZE.x, GAME_SIZE.y + 50)
+        background.tileScale.set((GAME_SIZE.y + 50) / background.texture.height)
         background.zIndex = ZIndex.BACKGROUND
 
         container.addChild(background)

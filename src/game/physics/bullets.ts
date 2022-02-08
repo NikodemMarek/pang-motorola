@@ -14,7 +14,7 @@ export class BulletBody extends RectangularBody {
      constructor(
         position: XYVar,
     ) {
-        super({ x: position.x, y: position.y }, { x: 10, y: 10 }, true)
+        super({ x: position.x, y: position.y }, { x: 20, y: 20 }, true)
 
         this.speed.y = BULLET_SPEED
     }

@@ -22,7 +22,7 @@ export default class PowerUpBody extends RectangularBody {
         position: XYVar,
         type: PowerUp
     ) {
-        super(position, { x: 40, y: 60 }, true)
+        super(position, { x: 50, y: 50 }, true)
         
         this.type = type
         this.accelerate('gravity', GRAVITY)

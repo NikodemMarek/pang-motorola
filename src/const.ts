@@ -1,11 +1,18 @@
 import { XYVar } from './types'
 
 /**
- * Wartość określająca wymiary planszy.
+ * Wartość określająca wymiary okna.
+ */
+export const RENDERER_SIZE: XYVar = {
+    x: 1200,
+    y: 700
+}
+/**
+ * Wartość określająca wymiary gry.
  */
 export const GAME_SIZE: XYVar = {
-    x: 800,
-    y: 500
+    x: 1000,
+    y: 650
 }
 
 /**
@@ -62,8 +69,8 @@ export enum GameState {
  * Wartość określająca wymiary postaci.
  */
 export const PLAYER_SIZE: XYVar = {
-    x: 50,
-    y: 80
+    x: 70,
+    y: 100
 }
 
 /**
@@ -94,7 +101,7 @@ export enum BallSize {
     SMALL = 10,
     MEDIUM = 20,
     BIG = 40,
-    HUGE = 60
+    HUGE = 80
 }
 
 /**

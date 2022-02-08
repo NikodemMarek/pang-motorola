@@ -1,6 +1,6 @@
 import { Application } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
-import { GAME_SIZE, ImagePath } from './const'
+import { ImagePath, RENDERER_SIZE } from './const'
 import BodiesDrawer from './game/bodies-drawer'
 import Game from './game/game'
 import { getLevel, loadLevel } from './levels-provider'
@@ -16,8 +16,8 @@ const app = new Application({
     resolution: window.devicePixelRatio || 1,
     autoDensity: true,
     backgroundColor: 0xf0f0f0,
-    width: GAME_SIZE.x,
-    height: GAME_SIZE.y
+    width: RENDERER_SIZE.x,
+    height: RENDERER_SIZE.y
 })
 
 const _this = app.stage
@@ -75,7 +75,7 @@ async function onComplete() {
         },
         false
     )
-    menu.position.set(app.view.width / 2, app.view.height / 2)
+    menu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
     _this.addChild(menu)
 }
 
