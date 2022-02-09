@@ -27,27 +27,26 @@ export enum BasePath {
  * Nazwy grafik w formie enuma, dla poprawy czytelności.
  */
 export enum ImagePath {
-    MENU_BUTTON = 'button-texture.png',
-    MENU_BUTTON_HOVER = 'button-texture-hover.png',
-    PLATFORM = 'pineapple.png',
-    PLATFORM_BREAKABLE = 'pineapple.png',
-    LADDER = 'pineapple.png',
-    BALL = 'pineapple.png',
-    POWER_UP = 'pineapple.png',
-    PLAYER = 'pineapple.png',
-    HARPOON = 'pineapple.png',
-    POWER_WIRE = 'pineapple.png',
-    VULCAN_MISSILE = 'pineapple.png',
-    FORCE_FIELD = 'pineapple.png',
-    HARPOON_POWER_UP = 'pineapple.png',
-    DOUBLE_HARPOON_POWER_UP = 'pineapple.png',
-    POWER_WIRE_POWER_UP = 'pineapple.png',
-    VULCAN_MISSILE_POWER_UP = 'pineapple.png',
-    FORCE_FIELD_POWER_UP = 'pineapple.png',
-    HOURGLASS_POWER_UP = 'pineapple.png',
-    CLOCK_POWER_UP = 'pineapple.png',
-    DYNAMITE_POWER_UP = 'pineapple.png',
-    BACKGROUND = 'pineapple.png'
+    MENU_BUTTON = 'ladder.png',
+    MENU_BUTTON_HOVER = 'ladder.png',
+    PLATFORM = 'platform.png',
+    PLATFORM_BREAKABLE = 'platform-break.png',
+    LADDER = 'ladder.png',
+    BALL = 'ball.png',
+    PLAYER = 'player-still.png',
+    HARPOON = 'harpoon.png',
+    POWER_WIRE = 'wire.png',
+    VULCAN_MISSILE = 'missile.png',
+    FORCE_FIELD = 'forcefield.png',
+    HARPOON_POWER_UP = 'harpoon.png',
+    DOUBLE_HARPOON_POWER_UP = 'harpoon.png',
+    POWER_WIRE_POWER_UP = 'wire.png',
+    VULCAN_MISSILE_POWER_UP = 'missile.png',
+    FORCE_FIELD_POWER_UP = 'forcefield-icon.png',
+    HOURGLASS_POWER_UP = 'hourglass.png',
+    CLOCK_POWER_UP = 'pause.png',
+    DYNAMITE_POWER_UP = 'dynamite.png',
+    BACKGROUND = 'background.png'
 }
 /**
  * Nazwy animacji w formie enuma, dla poprawy czytelności.
