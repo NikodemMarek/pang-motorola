@@ -149,5 +149,6 @@ export enum ZIndex {
     BALL,
     POWER_UP,
     PLAYER,
-    BULLET
+    BULLET,
+    PAUSE_MENU
 }

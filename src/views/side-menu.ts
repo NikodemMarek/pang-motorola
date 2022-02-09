@@ -10,7 +10,8 @@ export default class SideMenu extends Container {
     
     constructor(
         levelName: string,
-        info: LevelInfo
+        info: LevelInfo,
+        pause: () => void
     ) {
         super()
 
@@ -21,10 +22,8 @@ export default class SideMenu extends Container {
         name.position.set(100, 20)
         this.addChild(name)
 
-        const pause = new Button(
-            () => {
-                console.log('object');
-            },
+        const pauseButton = new Button(
+            pause,
             {
                 size: { x: 200, y: 50 },
                 label: 'Pause',
@@ -34,8 +33,8 @@ export default class SideMenu extends Container {
                 hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER)
             }
         )
-        pause.position.set(100, 120)
-        this.addChild(pause)
+        pauseButton.position.set(100, 120)
+        this.addChild(pauseButton)
 
         this.infoContainer = new Container()
         this.infoContainer.pivot.set(100, 0)

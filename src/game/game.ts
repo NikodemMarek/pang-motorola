@@ -1,5 +1,5 @@
 import { Container } from 'pixi.js'
-import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
+import { BallSize, GameState, GAME_SIZE, Guns, ImagePath, PowerUp, RENDERER_SIZE, ZIndex } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
@@ -8,6 +8,8 @@ import PowerUpBody from './physics/power-ups'
 import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
 import BodiesDrawer from './bodies-drawer'
 import SideMenu from '../views/side-menu'
+import Menu from '../views/menu'
+import { ImagesProvider } from '../assets-provider'
 
 /**
  * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
@@ -130,7 +132,8 @@ export default class Game {
                 gun: this.players[0].gun,
                 forceFields: this.players[0].forceFields,
                 forceFieldTimeLeft: this.players[0].forceFieldsTimeLeft,
-            }
+            },
+            this.pause
         )
         this.sideMenu.position.set(GAME_SIZE.x, 0)
         container.addChild(this.sideMenu)
@@ -160,6 +163,34 @@ export default class Game {
                 this.draw()
             }
         }, frameTime)
+    }
+
+    /**
+     * Zatrzymuje grę i wyświetla menu pauzy.
+     */
+    pause = () => {
+        this.state = GameState.PAUSED
+
+        const pauseMenu = new Menu(
+            [
+                {
+                    onClick: () => this.state = GameState.RUNNING,
+                    properties: {
+                        label: 'Continue',
+                    }
+                }
+            ],
+            {
+                size: { x: 200, y: 50 },
+                texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                labelColor: 0x00ff00,
+                labelHoverColor: 0x00ff00
+            }
+        )
+        pauseMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
+        pauseMenu.zIndex = ZIndex.PAUSE_MENU
+        this.container.addChild(pauseMenu)
     }
 
     /**
