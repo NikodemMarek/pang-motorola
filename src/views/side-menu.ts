@@ -22,6 +22,7 @@ export default class SideMenu extends Container {
         name.position.set(100, 20)
         this.addChild(name)
 
+        window.addEventListener('keydown', event => { if(event.key == 'Escape') pause() })
         const pauseButton = new Button(
             pause,
             {

@@ -169,28 +169,30 @@ export default class Game {
      * Zatrzymuje grę i wyświetla menu pauzy.
      */
     pause = () => {
-        this.state = GameState.PAUSED
-
-        const pauseMenu = new Menu(
-            [
-                {
-                    onClick: () => this.state = GameState.RUNNING,
-                    properties: {
-                        label: 'Continue',
+        if(this.state != GameState.PAUSED) {
+            this.state = GameState.PAUSED
+    
+            const pauseMenu = new Menu(
+                [
+                    {
+                        onClick: () => this.state = GameState.RUNNING,
+                        properties: {
+                            label: 'Continue',
+                        }
                     }
+                ],
+                {
+                    size: { x: 200, y: 50 },
+                    texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                    hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                    labelColor: 0x00ff00,
+                    labelHoverColor: 0x00ff00
                 }
-            ],
-            {
-                size: { x: 200, y: 50 },
-                texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                labelColor: 0x00ff00,
-                labelHoverColor: 0x00ff00
-            }
-        )
-        pauseMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
-        pauseMenu.zIndex = ZIndex.PAUSE_MENU
-        this.container.addChild(pauseMenu)
+            )
+            pauseMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
+            pauseMenu.zIndex = ZIndex.PAUSE_MENU
+            this.container.addChild(pauseMenu)
+        }
     }
 
     /**
