@@ -1,4 +1,4 @@
-import { Application } from 'pixi.js'
+import { Application, BitmapFont } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { ImagePath, RENDERER_SIZE } from './const'
 import BodiesDrawer from './game/bodies-drawer'
@@ -35,7 +35,15 @@ let level: Level
 /**
  * Pokazuje postęp ładowania domyślnego zestawu zasobów.
  */
-const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '', async () => { level = getLevel(await loadLevel('test')) })
+const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '', async () => {
+    level = getLevel(await loadLevel('test'))
+
+    BitmapFont.from('buttonLabelFont', {
+        fontFamily: 'Noto Sans',
+        fill: 0xffffff,
+        fontSize: 30
+    })
+})
 assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
 _this.addChild(assetsLoader)
 
@@ -66,8 +74,7 @@ async function onComplete() {
             }
         ],
         {
-            width: 200,
-            height: 50,
+            size: { x: 200, y: 50 },
             texture: imagesProvider.getTexture(ImagePath.MENU_BUTTON),
             hoverTexture: imagesProvider.getTexture(ImagePath.MENU_BUTTON_HOVER),
             labelColor: 0x407ff9,

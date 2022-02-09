@@ -13,13 +13,9 @@ export interface ButtonProperties {
      */
     label?: string,
     /**
-     * Szerokość przycisku.
+     * Wielkość przycisku.
      */
-    width?: number,
-    /**
-     * Wysokość przycisku.
-     */
-    height?: number,
+    size?: XYVar
     /**
      * Grafika przysisku widoczna za {@link label | napisem}.
      */

@@ -1,10 +1,10 @@
-import { BitmapFont, BitmapText, Sprite } from 'pixi.js'
+import { BitmapText, Container, Sprite } from 'pixi.js'
 import { ButtonProperties } from '../types'
 
 /**
  * Przycisk składający się z grafiki i/lub napisu.
  */
-export default class Button extends Sprite {
+export default class Button extends Container {
     /**
      * Przygotowuje przycisk do umieszczenia na ekranie.
      * Nadaje wielkość przyciskowi, pozycjonuje go, dodaje napis i wydarzenia po kliknięciu oraz najechaniu.
@@ -16,34 +16,42 @@ export default class Button extends Sprite {
         onClick: Function,
         properties: ButtonProperties
     ) {
-        super(properties.texture)
+        super()
 
-        this.buttonMode = true
-        this.width = properties.width || 100
-        this.height = properties.height || 100
+        const size = {
+            x: properties.size!.x || 200,
+            y: properties.size!.y || 50
+        }
+
+        this.pivot.set(size.x / 2, size.y / 2)
         
-        BitmapFont.from('buttonLabelFont', {
-            fontFamily: 'Noto Sans',
-            fill: 0xffffff,
-            fontSize: 30
-        })
+        this.buttonMode = true
+        this.interactive = true
+        this.on('click', () => onClick())
+
+        const buttonTexture = new Sprite(properties.texture)
+        buttonTexture.anchor.set(0.5, 0.5)
+        buttonTexture.position.set(size.x / 2, size.y / 2)
+        buttonTexture.width = size.x
+        buttonTexture.height = size.y
+        this.addChild(buttonTexture)
+        
+        if(properties.hoverTexture != undefined) {
+            this.on('mouseover', () => buttonTexture.texture = properties.hoverTexture!!)
+            this.on('mouseout', () => buttonTexture.texture = properties.texture!! || properties.texture!!)
+        }
 
         const buttonLabel: BitmapText = new BitmapText(properties.label || '', {
             fontName: 'buttonLabelFont',
             tint: properties.labelColor || 0xffffff
         })
         buttonLabel.anchor.set(0.5, 0.5)
+        buttonLabel.position.set(size.x / 2, size.y / 2)
         this.addChild(buttonLabel)
 
-        this.interactive = true
-        this.on('click', () => onClick())
         if(properties.labelHoverColor != undefined) {
             this.on('mouseover', () => buttonLabel.tint = properties.labelHoverColor!!)
             this.on('mouseout', () => buttonLabel.tint = properties.labelColor || 0xffffff)
-        }
-        if(properties.hoverTexture != undefined) {
-            this.on('mouseover', () => this.texture = properties.hoverTexture!!)
-            this.on('mouseout', () => this.texture = properties.texture!! || properties.texture!!)
         }
     }
 }

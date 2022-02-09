@@ -34,16 +34,14 @@ export default class Menu extends Container {
         options.forEach(option => {
             const buttonProperties: ButtonProperties = option.properties != undefined? {
                 label: option.properties.label || properties.label || '',
-                width: option.properties.width || properties.width || 100,
-                height: option.properties.height || properties.height || 50,
+                size: option.properties.size || properties.size || { x: 200 ,y: 50 },
                 texture: option.properties.texture || properties.texture,
                 hoverTexture: option.properties.hoverTexture || properties.hoverTexture,
                 labelColor: option.properties.labelColor || properties.labelColor || 0xffffff,
                 labelHoverColor: option.properties.labelHoverColor || properties.labelHoverColor || option.properties.labelColor || properties.labelColor || 0xffffff
             }: {
                 label: properties.label || '',
-                width: properties.width || 100,
-                height: properties.height || 50,
+                size: properties.size || { x: 200 ,y: 50 },
                 texture: properties.texture,
                 hoverTexture: properties.hoverTexture,
                 labelColor: properties.labelColor || 0xffffff,
@@ -60,13 +58,11 @@ export default class Menu extends Container {
             )
             
             if(isHorizontal) {
-                optionButton.anchor.set(0.5, 0.5)
-                optionButton.position.set(nextPosition + buttonProperties.width!! / 2, 0)
-                nextPosition += buttonProperties.width!! + space * 2
+                optionButton.position.set(nextPosition + buttonProperties.size!.x / 2, 0)
+                nextPosition += buttonProperties.size!.x + space * 2
             } else {
-                optionButton.anchor.set(0.5, 0.5)
-                optionButton.position.set(0, nextPosition + buttonProperties.height!! / 2)
-                nextPosition += buttonProperties.height!! + space * 2
+                optionButton.position.set(0, nextPosition + buttonProperties.size!.y / 2)
+                nextPosition += buttonProperties.size!.y + space * 2
             }
 
             this.addChild(optionButton)
