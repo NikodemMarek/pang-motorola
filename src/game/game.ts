@@ -20,13 +20,22 @@ export default class Game {
      * Pojemnik w którym będzie wyświetlała się gra.
      */
     container: Container
+    /**
+     * Klasa pozwalająca na wyświetlanie gry.
+     */
     bodiesDrawer: BodiesDrawer
+    /**
+     * Menu z informacjami na temat rozgrywki.
+     */
     sideMenu: SideMenu
     /**
      * Obecny stan gry.
      */
     state = GameState.INIT
 
+    /**
+     * Czas trwania rozgrywki.
+     */
     time: number = 0
     
     /**
@@ -81,6 +90,7 @@ export default class Game {
      * Przypisuje funkcje strzelania każdej postaci w grze.
      * 
      * @param container - Pojemnik na grę
+     * @param bodiesDrawer - Obiekt rysujący grę
      * @param level - Dane poziomu
      */
     constructor(
@@ -219,6 +229,7 @@ export default class Game {
             this.balls = this.balls.filter(ball => {
                 if(player.isColliding(ball)) {
                     if(player.forceFields > 0) player.forceFields --
+                    else if(player.lives > 0) player.lives --
                     else this.finish()
 
                     return false
@@ -283,9 +294,9 @@ export default class Game {
         this.sideMenu.updateInfo(
             {
                 time: this.time,
-                lives: 0,
                 clockTimeLeft: this.clockTimeLeft,
                 hourglassTimeLeft: this.hourglassTimeLeft,
+                lives: this.players[0].lives,
                 gun: this.players[0].gun,
                 forceFields: this.players[0].forceFields,
                 forceFieldTimeLeft: this.players[0].forceFieldsTimeLeft,

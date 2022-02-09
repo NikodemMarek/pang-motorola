@@ -38,6 +38,11 @@ export default class PlayerBody extends RectangularBody {
      * Czas który pozostał do zniknięcia tarczy ochronnej.
      */
     forceFieldsTimeLeft: number = 0
+    
+    /**
+     * Ilość żyć które pozostały postaci.
+     */
+    lives: number
 
     /**
      * Tworzy postać w kształcie {@link RectangularBody | prostokąta}, nadaje mu pozycję startową i wymiary, grawitację, oraz mapę klawiszy.
@@ -66,6 +71,8 @@ export default class PlayerBody extends RectangularBody {
         this.gun = gun
         this.cooldown = 0
         this.shoot = shoot || function() {  }
+
+        this.lives = 3
 
         this.accelerate('gravity', GRAVITY)
 
