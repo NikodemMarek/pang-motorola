@@ -38,6 +38,7 @@ export enum ImagePath {
     HARPOON = 'pineapple.png',
     POWER_WIRE = 'pineapple.png',
     VULCAN_MISSILE = 'pineapple.png',
+    FORCE_FIELD = 'pineapple.png',
     HARPOON_POWER_UP = 'pineapple.png',
     DOUBLE_HARPOON_POWER_UP = 'pineapple.png',
     POWER_WIRE_POWER_UP = 'pineapple.png',

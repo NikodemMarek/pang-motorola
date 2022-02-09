@@ -14,7 +14,7 @@ export default class BodiesDrawer {
     /**
      * Postacie na planszy.
      */
-    private players: Array<Sprite> = [  ]
+    private players: Array<Container> = [  ]
     /**
      * Piłki na planszy.
      */
@@ -45,7 +45,8 @@ export default class BodiesDrawer {
      * @param level - Obiekty w poziomie
      */
     setLevel(container: Container, level: Level) {
-        this.removeSprite(container, this.players, this.players.length)
+        this.removeSprite(container, this.players.map(player => player.getChildAt(1) as Sprite), this.players.length)
+        this.removeSprite(container, this.players.map(player => player.getChildAt(0) as Sprite), this.players.length)
         this.removeSprite(container, this.balls, this.balls.length)
         this.removeSprite(container, this.bullets, this.bullets.length)
         this.removeSprite(container, this.powerUps, this.powerUps.length)
@@ -98,16 +99,28 @@ export default class BodiesDrawer {
      */
     addPlayers(container: Container, players: Array<PlayerBody>) {
         this.players.push(... players.map(player => {
+            const playerContainer = new Container()
+            playerContainer.zIndex = ZIndex.PLAYER
+            playerContainer.position.set(player.position.x, player.position.y)
+
+            const newForceField = new Sprite(ImagesProvider.Instance().getTexture(ImagePath.FORCE_FIELD))
+            newForceField.anchor.set(0.5, 0.5)
+            newForceField.position.set(0, -5)
+            newForceField.width = PLAYER_SIZE.x + 20
+            newForceField.height = PLAYER_SIZE.y + 10
+            newForceField.visible = false
+
+            playerContainer.addChild(newForceField)
+
             const newPlayer = new Sprite(ImagesProvider.Instance().getTexture(ImagePath.PLAYER))
-            newPlayer.position.set(player.position.x, player.position.y)
             newPlayer.anchor.set(0.5, 0.5)
             newPlayer.width = PLAYER_SIZE.x
             newPlayer.height = PLAYER_SIZE.y
 
-            newPlayer.zIndex = ZIndex.PLAYER
-
-            container.addChild(newPlayer)
-            return newPlayer
+            playerContainer.addChild(newPlayer)
+            
+            container.addChild(playerContainer)
+            return playerContainer
         }))
     }
     /**
@@ -212,7 +225,12 @@ export default class BodiesDrawer {
      * @param players - Tablica z postaciami
      */
     updatePlayers(players: Array<PlayerBody>) {
-        players.forEach((player, i) => this.players[i].position.set(player.position.x, player.position.y))
+        players.forEach((player, i) => {
+            if(player.forceFields > 0) this.players[i].children[0].visible = true
+            else this.players[i].children[0].visible = false
+
+            this.players[i].position.set(player.position.x, player.position.y)
+        })
     }
     /**
      * Przesuwa piłki w pojemniku gry.
