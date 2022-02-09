@@ -52,7 +52,7 @@ export enum ImagePath {
  * Nazwy animacji w formie enuma, dla poprawy czytelności.
  */
 export enum AnimationPath {
-    LOADING = 'loading/lo'
+    PLAYER_SIDE = 'player-side'
 }
 
 /**

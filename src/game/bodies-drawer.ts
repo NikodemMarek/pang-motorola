@@ -1,6 +1,6 @@
-import { Container, Sprite, TilingSprite } from 'pixi.js'
+import { AnimatedSprite, Container, Sprite, TilingSprite } from 'pixi.js'
 import { ImagesProvider } from '../assets-provider'
-import { GAME_SIZE, ImagePath, PLAYER_SIZE, ZIndex } from '../const'
+import { AnimationPath, GAME_SIZE, ImagePath, PLAYER_SIZE, ZIndex } from '../const'
 import { Level } from '../types'
 import { BulletBody, PowerWireBody, VulcanMissile } from './physics/bullets'
 import { BallBody, LadderBody, PlatformBody } from './physics/objects'
@@ -112,10 +112,11 @@ export default class BodiesDrawer {
 
             playerContainer.addChild(newForceField)
 
-            const newPlayer = new Sprite(ImagesProvider.Instance().getTexture(ImagePath.PLAYER))
+            const newPlayer = new AnimatedSprite([ ImagesProvider.Instance().getTexture(ImagePath.PLAYER)! ])
             newPlayer.anchor.set(0.5, 0.5)
             newPlayer.width = PLAYER_SIZE.x
             newPlayer.height = PLAYER_SIZE.y
+            newPlayer.animationSpeed = 0.1
 
             playerContainer.addChild(newPlayer)
             
@@ -230,6 +231,12 @@ export default class BodiesDrawer {
             else this.players[i].children[0].visible = false
 
             this.players[i].position.set(player.position.x, player.position.y)
+
+            const playerSprite = this.players[i].children[1] as AnimatedSprite
+            if(player.speed.x != 0 && player.speed.y == 0 && playerSprite.textures.length == 1) {
+                playerSprite.textures = ImagesProvider.Instance().getAnimation(AnimationPath.PLAYER_SIDE)!
+                playerSprite.play()
+            } else if(player.speed.x == 0) playerSprite.textures = [ ImagesProvider.Instance().getTexture(ImagePath.PLAYER)! ]
         })
     }
     /**
