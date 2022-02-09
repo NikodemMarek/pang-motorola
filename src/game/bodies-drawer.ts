@@ -261,10 +261,9 @@ export default class BodiesDrawer {
 
         if(difference > 0) this.addBullets(container, Array(difference).fill(new BulletBody({ x: 0, y: 0 })))
         else if(difference < 0) this.removeSprite(container, this.bullets, -difference)
-
-        if(difference != 0) bullets.forEach((bullet, i) => this.bullets[i].texture = ImagesProvider.Instance().getTexture(bullet instanceof VulcanMissile? ImagePath.VULCAN_MISSILE: bullet instanceof PowerWireBody && bullet.speed.y == 0? ImagePath.POWER_WIRE: ImagePath.HARPOON)!)
         
         bullets.forEach((bullet, i) => {
+            this.bullets[i].texture = ImagesProvider.Instance().getTexture(bullet instanceof VulcanMissile? ImagePath.VULCAN_MISSILE: bullet instanceof PowerWireBody && bullet.speed.y == 0? ImagePath.POWER_WIRE: ImagePath.HARPOON)!
             this.bullets[i].position.set(bullet.position.x, bullet.position.y)
             this.bullets[i].height = bullet.size.y
         })

@@ -25,7 +25,7 @@ const _this = app.stage
 /**
  * Wczytuje domyślny zestaw zasobów.
  */
-const imagesProvider: ImagesProvider = ImagesProvider.Instance(0)
+const imagesProvider: ImagesProvider = ImagesProvider.Instance(1)
 
 /**
  * Wczytany poziom.
