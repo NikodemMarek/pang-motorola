@@ -7,6 +7,7 @@ import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
 import BodiesDrawer from './bodies-drawer'
+import SideMenu from '../views/side-menu'
 
 /**
  * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
@@ -20,10 +21,13 @@ export default class Game {
      */
     container: Container
     bodiesDrawer: BodiesDrawer
+    sideMenu: SideMenu
     /**
      * Obecny stan gry.
      */
     state = GameState.INIT
+
+    time: number = 0
     
     /**
      * Lista postaci w grze.
@@ -106,6 +110,22 @@ export default class Game {
             else if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
             else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
         })
+
+        this.sideMenu = new SideMenu(
+            'test',
+            {
+                lives: 0,
+                clockTimeLeft: this.clockTimeLeft,
+                hourglassTimeLeft: this.hourglassTimeLeft,
+                gun: this.players[0].gun,
+                forceFields: this.players[0].forceFields,
+                forceFieldTimeLeft: this.players[0].forceFieldsTimeLeft,
+            }
+        )
+        this.sideMenu.position.set(GAME_SIZE.x, 0)
+        container.addChild(this.sideMenu)
+
+        this.draw()
     }
 
     /**
@@ -120,23 +140,14 @@ export default class Game {
 
         this.state = GameState.RUNNING
         
-        const draw = () => this.bodiesDrawer.update(
-                this.container,
-                {
-                    players: this.players,
-                    balls: this.balls,
-                    bullets: this.bullets,
-                    powerUps: this.powerUps,
-                    platforms: this.platforms,
-                    ladders: this.ladders
-                } as Level
-            )
+        this.time = 0
 
-        draw()
         setInterval(() => {
             if(this.state == GameState.RUNNING) {
+                this.time += frameTime / 1000
+
                 this.update(frameTime / 1000)
-                draw()
+                this.draw()
             }
         }, frameTime)
     }
@@ -251,5 +262,34 @@ export default class Game {
         else this.clockTimeLeft = 0
         if(this.splitCooldown > 0) this.splitCooldown -= delta
         else this.splitCooldown = 0
+    }
+
+    /**
+     * Wyświetla grę i statystyki.
+     */
+    draw() {
+        this.bodiesDrawer.update(
+            this.container,
+            {
+                players: this.players,
+                balls: this.balls,
+                bullets: this.bullets,
+                powerUps: this.powerUps,
+                platforms: this.platforms,
+                ladders: this.ladders
+            } as Level
+        )
+
+        this.sideMenu.updateInfo(
+            {
+                time: this.time,
+                lives: 0,
+                clockTimeLeft: this.clockTimeLeft,
+                hourglassTimeLeft: this.hourglassTimeLeft,
+                gun: this.players[0].gun,
+                forceFields: this.players[0].forceFields,
+                forceFieldTimeLeft: this.players[0].forceFieldsTimeLeft,
+            }
+        )
     }
 }

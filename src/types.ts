@@ -3,6 +3,7 @@ import { BallBody, LadderBody, PlatformBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
 import { BulletBody } from './game/physics/bullets'
+import { Guns } from './const'
 
 /**
  * Typ opisujący właściwości przycisku.
@@ -70,4 +71,42 @@ export interface XYVar {
     * Lista bonusów w grze.
     */
    powerUps: Array<PowerUpBody>
+}
+
+/**
+ * Typ opisujący statystyki w grze.
+ */
+export interface LevelInfo {
+    /**
+     * Liczba pozostałych żyć.
+     */
+    lives?: number,
+    /**
+     * Liczba uzyskanych punktów.
+     */
+    points?: number,
+    /**
+     * Czas trwania gry.
+     */
+    time?: number,
+    /**
+     * Obecnie posiadana broń.
+     */
+    gun?: Guns,
+    /**
+     * Ilość posiadanych tarcz.
+     */
+    forceFields?: number,
+    /**
+     * Czas pozostały do skończenia się bonusu tarczy.
+     */
+    forceFieldTimeLeft?: number,
+    /**
+     * Czas pozostały do skończenia się bonusu zegara.
+     */
+    clockTimeLeft?: number,
+    /**
+     * Czas pozostały do skończenia się bonusu klepsydry.
+     */
+    hourglassTimeLeft?: number
 }
