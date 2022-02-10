@@ -260,8 +260,14 @@ export default class BodiesDrawer {
             this.players[i].position.set(player.position.x, player.position.y)
 
             const playerSprite = this.players[i].children[1] as AnimatedSprite
-            if(player.speed.x != 0 && player.speed.y == 0 && playerSprite.textures.length == 1) {
-                playerSprite.textures = ImagesProvider.Instance().getAnimation(AnimationPath.PLAYER_SIDE)!
+            if(player.speed.y != 0 && !player.accelerators.some(acc => acc.name == 'gravity')) {
+                playerSprite.textures = [ ImagesProvider.Instance().getTexture(ImagePath.PLAYER_LADDER)!, ImagesProvider.Instance().getTexture(ImagePath.BALL)! ]
+                playerSprite.play()
+            } else if(player.speed.x > 0 && playerSprite.textures.length == 1) {
+                playerSprite.textures = ImagesProvider.Instance().getAnimation(AnimationPath.PLAYER_RSIDE)!
+                playerSprite.play()
+            } else if(player.speed.x < 0 && playerSprite.textures.length == 1) {
+                playerSprite.textures = ImagesProvider.Instance().getAnimation(AnimationPath.PLAYER_LSIDE)!
                 playerSprite.play()
             } else if(player.speed.x == 0) playerSprite.textures = [ ImagesProvider.Instance().getTexture(ImagePath.PLAYER)! ]
         })
