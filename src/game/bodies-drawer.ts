@@ -260,16 +260,16 @@ export default class BodiesDrawer {
             this.players[i].position.set(player.position.x, player.position.y)
 
             const playerSprite = this.players[i].children[1] as AnimatedSprite
-            if(player.speed.y != 0 && !player.accelerators.some(acc => acc.name == 'gravity')) {
-                playerSprite.textures = [ ImagesProvider.Instance().getTexture(ImagePath.PLAYER_LADDER)!, ImagesProvider.Instance().getTexture(ImagePath.BALL)! ]
+            if(player.speed.y != 0 && !player.accelerators.some(acc => acc.name == 'gravity') && playerSprite.textures[0] != ImagesProvider.Instance().getTexture(AnimationPath.PLAYER_LADDER + '_01.png')) {
+                playerSprite.textures = ImagesProvider.Instance().getAnimation(AnimationPath.PLAYER_LADDER)!
                 playerSprite.play()
-            } else if(player.speed.x > 0 && playerSprite.textures.length == 1) {
+            } else if(player.speed.x > 0 && player.moves.has('RIGHT') && playerSprite.textures[0] != ImagesProvider.Instance().getTexture(AnimationPath.PLAYER_RSIDE + '_01.png')) {
                 playerSprite.textures = ImagesProvider.Instance().getAnimation(AnimationPath.PLAYER_RSIDE)!
                 playerSprite.play()
-            } else if(player.speed.x < 0 && playerSprite.textures.length == 1) {
+            } else if(player.speed.x < 0 && player.moves.has('LEFT') && playerSprite.textures[0] != ImagesProvider.Instance().getTexture(AnimationPath.PLAYER_LSIDE + '_01.png')) {
                 playerSprite.textures = ImagesProvider.Instance().getAnimation(AnimationPath.PLAYER_LSIDE)!
                 playerSprite.play()
-            } else if(player.speed.x == 0) playerSprite.textures = [ ImagesProvider.Instance().getTexture(ImagePath.PLAYER)! ]
+            } else if(player.speed.x == 0 && !player.moves.has('DOWN') && !player.moves.has('UP')) playerSprite.textures = [ ImagesProvider.Instance().getTexture(ImagePath.PLAYER)! ]
         })
     }
     /**

@@ -128,7 +128,7 @@
 	"spriteSourceSize": {"x":0,"y":0,"w":25,"h":25},
 	"sourceSize": {"w":25,"h":25}
 },
-"player-back.png":
+"player-back_01.png":
 {
 	"frame": {"x":90,"y":80,"w":70,"h":100},
 	"rotated": false,
@@ -225,6 +225,7 @@
 	"sourceSize": {"w":20,"h":20}
 }},
 "animations": {
+	"player-back": ["player-back_01.png","player-back_02.png"],
 	"player-lside": ["player-lside_01.png","player-lside_02.png","player-lside_03.png"],
 	"player-side": ["player-side_01.png","player-side_02.png","player-side_03.png"]
 },

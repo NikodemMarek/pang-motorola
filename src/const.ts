@@ -34,7 +34,6 @@ export enum ImagePath {
     LADDER = 'ladder.png',
     BALL = 'ball.png',
     PLAYER = 'player-still.png',
-    PLAYER_LADDER = 'player-back.png',
     HARPOON = 'harpoon.png',
     POWER_WIRE = 'wire.png',
     VULCAN_MISSILE = 'missile.png',
@@ -56,7 +55,8 @@ export enum ImagePath {
  */
 export enum AnimationPath {
     PLAYER_LSIDE = 'player-lside',
-    PLAYER_RSIDE = 'player-side'
+    PLAYER_RSIDE = 'player-side',
+    PLAYER_LADDER = 'player-back'
 }
 
 /**
