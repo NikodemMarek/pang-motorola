@@ -44,7 +44,7 @@ export default class SideMenu extends Container {
         ;([
             new BitmapText(`${(Math.floor(info.time || 0)).toString()}s`, { fontName: 'buttonLabelFont', tint: 0x00ff00 }),
             new BitmapText(`${(info.points || 0).toString()} ${info.points == 1? 'point': 'points'}`, { fontName: 'buttonLabelFont', tint: 0x00ff00 }),
-            new BitmapText(`${(info.lives || 0).toString()} ${info.lives == 1? 'live': 'lives'}`, { fontName: 'buttonLabelFont', tint: 0x00ff00 }),
+            new BitmapText(`${(((info.lives || 0) > 0? info.lives: 0) || 0).toString()} ${info.lives == 1? 'live': 'lives'}`, { fontName: 'buttonLabelFont', tint: 0x00ff00 }),
             new BitmapText([ 'Harpoon', 'Double Harpoon', 'Power Wire', 'Vulcan Missile' ][info.gun || 0], { fontName: 'buttonLabelFont', tint: 0x00ff00 }),
             new BitmapText(`${Math.ceil(info.clockTimeLeft || 0)?.toString()}s Clock`, { fontName: 'buttonLabelFont', tint: 0x00ff00 }),
             new BitmapText(`${Math.ceil(info.hourglassTimeLeft || 0)?.toString()}s Hourglass`, { fontName: 'buttonLabelFont', tint: 0x00ff00 }),
@@ -62,7 +62,7 @@ export default class SideMenu extends Container {
         const newInfo = [
             `${(Math.floor(info.time || 0)).toString()}s`,
             `${(info.points || 0).toString()} ${info.points == 1? 'point': 'points'}`,
-            `${(info.lives || 0).toString()} ${info.lives == 1? 'live': 'lives'}`,
+            `${(((info.lives || 0) > 0? info.lives: 0) || 0).toString()} ${info.lives == 1? 'live': 'lives'}`,
             [ 'Harpoon', 'Double Harpoon', 'Power Wire', 'Vulcan Missile' ][info.gun || 0],
             ... ([
                 `${Math.ceil(info.clockTimeLeft || 0)?.toString()}s Clock`,

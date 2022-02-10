@@ -272,7 +272,10 @@ export default class Game {
             this.balls = this.balls.filter(ball => {
                 if(player.isColliding(ball)) {
                     if(player.forceFields > 0) player.forceFields --
-                    else if(player.lives > 0) player.lives --
+                    else if(player.lives > 0) {
+                        player.lives -= ball.radius / BallSize.SMALL
+                        if(player.lives <= 0) this.finish()
+                    }
                     else this.finish()
 
                     return false
