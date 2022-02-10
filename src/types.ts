@@ -1,5 +1,5 @@
 import { Texture } from 'pixi.js'
-import { BallBody, LadderBody, PlatformBody } from './game/physics/objects'
+import { BallBody, LadderBody, PlatformBody, PointBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
 import { BulletBody } from './game/physics/bullets'
@@ -71,6 +71,10 @@ export interface XYVar {
     * Lista bonusów w grze.
     */
    powerUps: Array<PowerUpBody>
+   /**
+    * Lista punktów do zebrania w grze.
+    */
+   points: Array<PointBody>
 }
 
 /**

@@ -52,9 +52,15 @@
         {
             "speed": {"x": 0, "y": 0},
             "position": {"x": 400, "y": 300},
-            "size": {"x": 40, "y": 60},
             "timeLeft": 15,
             "type": 6
+        }
+    ],
+    "points": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 550, "y": 300},
+            "value": 1000
         }
     ]
 }

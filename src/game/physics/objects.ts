@@ -102,3 +102,30 @@ export class LadderBody extends RectangularBody {
         super(position, { x: PLAYER_SIZE.x + 20, y: sizeY }, true)
     }
 }
+
+/**
+ * Klasa opisująca zachowanie punktów do podniesienia.
+ */
+export class PointBody extends RectangularBody {
+    /**
+     * Wartość punktu.
+     */
+    value: number
+
+    /**
+     * Tworzy punkt w kształcie {@link RectangularBody | prostokąta}, nadaje mu pozycję startową i wymiary.
+     * 
+     * @param position - Pozycja startowa punktu, umieszczona w jejgo centrum
+     * @param value - Wartość punktu
+     */
+     constructor(
+        position: XYVar,
+        value: number
+    ) {
+        super(position, { x: 50, y: 50 }, true)
+
+        this.value = value
+
+        this.accelerate('gravity', GRAVITY)
+    }
+}

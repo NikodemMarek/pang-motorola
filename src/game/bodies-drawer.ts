@@ -3,7 +3,7 @@ import { ImagesProvider } from '../assets-provider'
 import { AnimationPath, GAME_SIZE, ImagePath, PLAYER_SIZE, ZIndex } from '../const'
 import { Level } from '../types'
 import { BulletBody, PowerWireBody, VulcanMissile } from './physics/bullets'
-import { BallBody, LadderBody, PlatformBody } from './physics/objects'
+import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 
@@ -27,6 +27,10 @@ export default class BodiesDrawer {
      * Bonusy na planszy.
      */
     private powerUps: Array<Sprite> = [  ]
+    /**
+     * Punkty do zebrania na planszy.
+     */
+    private points: Array<Sprite> = [  ]
 
     /**
      * Platformy na planszy.
@@ -50,6 +54,7 @@ export default class BodiesDrawer {
         this.removeSprite(container, this.balls, this.balls.length)
         this.removeSprite(container, this.bullets, this.bullets.length)
         this.removeSprite(container, this.powerUps, this.powerUps.length)
+        this.removeSprite(container, this.points, this.points.length)
 
         this.removeSprite(container, this.platforms, this.platforms.length)
         this.removeSprite(container, this.ladders, this.ladders.length)
@@ -58,6 +63,7 @@ export default class BodiesDrawer {
         if(level.balls != undefined) this.addBalls(container, level.balls)
         if(level.bullets != undefined) this.addBullets(container, level.bullets)
         if(level.powerUps != undefined) this.addPowerUps(container, level.powerUps)
+        if(level.points != undefined) this.addPoints(container, level.points)
 
         if(level.platforms != undefined) this.addPlatforms(container, level.platforms)
         if(level.ladders != undefined) this.addLadders(container, level.ladders)
@@ -88,6 +94,7 @@ export default class BodiesDrawer {
         this.updatePlayers(level.players)
         this.updateBullets(container, level.bullets)
         this.updatePowerUps(container, level.powerUps)
+        this.updatePoints(container, level.points)
         this.updatePlatforms(container, level.platforms)
     }
 
@@ -198,6 +205,26 @@ export default class BodiesDrawer {
         }))
     }
     /**
+     * Wyświetla punkty do zebrania na planszy.
+     * 
+     * @param container - Pojemnik w którym zostaną wyświetlone punkty
+     * @param points - Tablica z ciałami punktów
+     */
+    addPoints(container: Container, points: Array<PointBody>) {
+        this.points.push(... points.map(point => {
+            const newPoint = new Sprite(ImagesProvider.Instance().getTexture(ImagePath.POINT))
+            newPoint.position.set(point.position.x, point.position.y)
+            newPoint.anchor.set(0.5, 0.5)
+            newPoint.width = 50
+            newPoint.height = 50
+
+            newPoint.zIndex = ZIndex.POINT
+
+            container.addChild(newPoint)
+            return newPoint
+        }))
+    }
+    /**
      * Wyświetla platformy na planszy.
      * 
      * @param container - Pojemnik w którym zostaną wyświetlone platformy
@@ -284,7 +311,7 @@ export default class BodiesDrawer {
     updatePowerUps(container: Container, powerUps: Array<PowerUpBody>) {
         const difference = powerUps.length - this.powerUps.length
 
-        if(difference > 0) this.addBullets(container, Array(difference).fill(new PowerUpBody({ x: 0, y: 0 }, 0)))
+        if(difference > 0) this.addPowerUps(container, Array(difference).fill(new PowerUpBody({ x: 0, y: 0 }, 0)))
         else if(difference < 0) this.removeSprite(container, this.powerUps, -difference)
 
         if(difference != 0) powerUps.forEach((powerUp, i) => {
@@ -303,6 +330,20 @@ export default class BodiesDrawer {
         })
 
         powerUps.forEach((powerUp, i) => this.powerUps[i].position.set(powerUp.position.x, powerUp.position.y))
+    }
+    /**
+     * Przesuwa punkty do zebrania w pojemniku gry.
+     * 
+     * @param container - Pojemnik w którym jest wyświetlana gra
+     * @param points - Bonusy obecnie w poziomie
+     */
+    updatePoints(container: Container, points: Array<PointBody>) {
+        const difference = points.length - this.points.length
+
+        if(difference > 0) this.addPoints(container, Array(difference).fill(new PointBody({ x: 0, y: 0 }, 0)))
+        else if(difference < 0) this.removeSprite(container, this.points, -difference)
+
+        points.forEach((point, i) => this.points[i].position.set(point.position.x, point.position.y))
     }
     /**
      * Odświeża platformy w pojemniku gry.

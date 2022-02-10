@@ -46,6 +46,7 @@ export enum ImagePath {
     HOURGLASS_POWER_UP = 'hourglass.png',
     CLOCK_POWER_UP = 'pause.png',
     DYNAMITE_POWER_UP = 'dynamite.png',
+    POINT = 'points.png',
     BACKGROUND = 'background.png'
 }
 /**
@@ -148,6 +149,7 @@ export enum ZIndex {
     LADDER,
     BALL,
     POWER_UP,
+    POINT,
     PLAYER,
     BULLET,
     PAUSE_MENU

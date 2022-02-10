@@ -36,7 +36,7 @@ let level: Level
  * Pokazuje postęp ładowania domyślnego zestawu zasobów.
  */
 const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '', async () => {
-    level = getLevel(await loadLevel('test'))
+    level = getLevel(await loadLevel('test')).level
 
     BitmapFont.from('buttonLabelFont', {
         fontFamily: 'Noto Sans',

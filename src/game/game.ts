@@ -2,7 +2,7 @@ import { Container } from 'pixi.js'
 import { BallSize, GameState, GAME_SIZE, Guns, ImagePath, PowerUp, RENDERER_SIZE, ZIndex } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
-import { BallBody, LadderBody, PlatformBody } from './physics/objects'
+import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
@@ -39,6 +39,10 @@ export default class Game {
      * Czas trwania rozgrywki.
      */
     time: number = 0
+    /**
+     * Punkty zebrane podczas rozgrywki.
+     */
+    score: number = 0
     
     /**
      * Lista postaci w grze.
@@ -69,6 +73,10 @@ export default class Game {
      * Lista bonusów w grze.
      */
     powerUps: Array<PowerUpBody>
+    /**
+     * Lista punktów do zebrania w grze.
+     */
+    points: Array<PointBody>
 
     /**
      * Czas który pozostał do zakończenia się bonusu spowolnienia czasu.
@@ -116,6 +124,7 @@ export default class Game {
         this.platforms = level.platforms || [  ]
         this.ladders = level.ladders || [  ]
         this.powerUps = level.powerUps || [  ]
+        this.points = level.points || [  ]
 
         this.players.forEach(player => player.shoot = () => {
             if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody({ x: player.position.x, y: player.position.y }))
@@ -290,6 +299,14 @@ export default class Game {
                     powerUp.timeLeft = 0
                 }
             })
+
+            this.points = this.points.filter(point => {
+                if(player.isColliding(point)) {
+                    this.score += point.value
+
+                    return false
+                } else return true
+            })
         })
 
         // Usuwa pociski które trafiły jakiś obiekt.
@@ -298,6 +315,9 @@ export default class Game {
         // Usuwa bonusy które zostały podniesione.
         this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
         this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
+
+        // Odświeża punkty do zebrania.
+        this.points.forEach(point => point.update(delta, [ this.borders[1] ].concat(this.platforms)))
 
         // Zwiększa czas który bonusy są już na planszy.
         if(this.hourglassTimeLeft > 0) this.hourglassTimeLeft -= delta
@@ -319,6 +339,7 @@ export default class Game {
                 balls: this.balls,
                 bullets: this.bullets,
                 powerUps: this.powerUps,
+                points: this.points,
                 platforms: this.platforms,
                 ladders: this.ladders
             } as Level
@@ -327,6 +348,7 @@ export default class Game {
         this.sideMenu.updateInfo(
             {
                 time: this.time,
+                points: this.score,
                 clockTimeLeft: this.clockTimeLeft,
                 hourglassTimeLeft: this.hourglassTimeLeft,
                 lives: this.players[0].lives,
