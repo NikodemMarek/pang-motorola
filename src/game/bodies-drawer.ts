@@ -113,7 +113,7 @@ export default class BodiesDrawer {
             const newForceField = new Sprite(ImagesProvider.Instance().getTexture(ImagePath.FORCE_FIELD))
             newForceField.anchor.set(0.5, 0.5)
             newForceField.position.set(0, -5)
-            newForceField.width = PLAYER_SIZE.x + 20
+            newForceField.width = PLAYER_SIZE.x + 40
             newForceField.height = PLAYER_SIZE.y + 10
             newForceField.visible = false
 
@@ -121,7 +121,7 @@ export default class BodiesDrawer {
 
             const newPlayer = new AnimatedSprite([ ImagesProvider.Instance().getTexture(ImagePath.PLAYER)! ])
             newPlayer.anchor.set(0.5, 0.5)
-            newPlayer.width = PLAYER_SIZE.x
+            newPlayer.width = PLAYER_SIZE.x + 20
             newPlayer.height = PLAYER_SIZE.y
             newPlayer.animationSpeed = 0.1
 

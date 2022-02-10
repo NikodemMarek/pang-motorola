@@ -73,7 +73,7 @@ export enum GameState {
  * Wartość określająca wymiary postaci.
  */
 export const PLAYER_SIZE: XYVar = {
-    x: 70,
+    x: 50,
     y: 100
 }
 
