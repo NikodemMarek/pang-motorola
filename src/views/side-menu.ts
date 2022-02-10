@@ -17,11 +17,6 @@ export default class SideMenu extends Container {
 
         this.levelName = levelName
 
-        const name = new BitmapText(levelName, { fontName: 'buttonLabelFont', tint: 0x00ff00, maxWidth: RENDERER_SIZE.x - GAME_SIZE.x })
-        name.anchor.set(0.5)
-        name.position.set(100, 20)
-        this.addChild(name)
-
         window.addEventListener('keydown', event => { if(event.key == 'Escape') pause() })
         const pauseButton = new Button(
             pause,
@@ -34,12 +29,17 @@ export default class SideMenu extends Container {
                 hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER)
             }
         )
-        pauseButton.position.set(100, 120)
+        pauseButton.position.set(100, 25)
         this.addChild(pauseButton)
+
+        const name = new BitmapText(levelName, { fontName: 'buttonLabelFont', tint: 0x00ff00, maxWidth: RENDERER_SIZE.x - GAME_SIZE.x })
+        name.anchor.set(0.5)
+        name.position.set(100, 100)
+        this.addChild(name)
 
         this.infoContainer = new Container()
         this.infoContainer.pivot.set(100, 0)
-        this.infoContainer.position.set(110, 200)
+        this.infoContainer.position.set(110, 160)
 
         ;([
             new BitmapText(`${(Math.floor(info.time || 0)).toString()}s`, { fontName: 'buttonLabelFont', tint: 0x00ff00 }),

@@ -95,6 +95,6 @@ function dummyGame() {
     const drawer = new BodiesDrawer()
     drawer.setLevel(_this, level)
 
-    const game = new Game(_this, drawer, level)
+    const game = new Game(_this, drawer, level, 'super easy cheesy level')
     game.start(60)
 }

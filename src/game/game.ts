@@ -106,7 +106,8 @@ export default class Game {
     constructor(
         container: Container,
         bodiesDrawer: BodiesDrawer,
-        level: Level
+        level: Level,
+        levelName: string
     ) {
         this.container = container
         this.bodiesDrawer = bodiesDrawer
@@ -133,7 +134,7 @@ export default class Game {
         })
 
         this.sideMenu = new SideMenu(
-            'test',
+            levelName,
             {
                 lives: 0,
                 clockTimeLeft: this.clockTimeLeft,
