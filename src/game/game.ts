@@ -326,6 +326,9 @@ export default class Game {
         else this.clockTimeLeft = 0
         if(this.splitCooldown > 0) this.splitCooldown -= delta
         else this.splitCooldown = 0
+
+        // Sprawdza czy wszystkie piłki zostały zestrzelone przez gracza.
+        if(this.balls.length < 1) this.finish()
     }
 
     /**
