@@ -1,5 +1,5 @@
 import { getImagesSetsList, ImagesProvider } from '../assets-provider'
-import { ImagePath } from '../const'
+import { Colors, ImagePath } from '../const'
 import Menu from './menu'
 
 export default class OptionsMenu extends Menu {
@@ -30,8 +30,8 @@ export default class OptionsMenu extends Menu {
             {
                 texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                 hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                labelColor: 0x666666,
-                labelHoverColor: 0x111111,
+                labelColor: Colors.MENU_BUTTON,
+                labelHoverColor: Colors.MENU_BUTTON_HOVER,
                 size: {
                     x: 400,
                     y: 50

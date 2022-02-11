@@ -1,6 +1,6 @@
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
-import { ImagePath, RENDERER_SIZE } from './const'
+import { Colors, ImagePath, RENDERER_SIZE } from './const'
 import BodiesDrawer from './game/bodies-drawer'
 import Game from './game/game'
 import { getLevel, loadLevel } from './levels-provider'
@@ -89,8 +89,8 @@ async function mainMenu() {
             size: { x: 200, y: 50 },
             texture: imagesProvider.getTexture(ImagePath.MENU_BUTTON),
             hoverTexture: imagesProvider.getTexture(ImagePath.MENU_BUTTON_HOVER),
-            labelColor: 0x666666,
-            labelHoverColor: 0x111111
+            labelColor: Colors.MENU_BUTTON,
+            labelHoverColor: Colors.MENU_BUTTON_HOVER
         },
         false
     )

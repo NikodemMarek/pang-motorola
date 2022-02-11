@@ -1,5 +1,5 @@
 import { Container } from 'pixi.js'
-import { BallSize, GameState, GAME_SIZE, Guns, ImagePath, PowerUp, RENDERER_SIZE, ZIndex } from '../const'
+import { BallSize, Colors, GameState, GAME_SIZE, Guns, ImagePath, PowerUp, RENDERER_SIZE, ZIndex } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
@@ -195,8 +195,8 @@ export default class Game {
                     size: { x: 200, y: 50 },
                     texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                     hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                    labelColor: 0x666666,
-                    labelHoverColor: 0x111111
+                    labelColor: Colors.MENU_BUTTON,
+                    labelHoverColor: Colors.MENU_BUTTON_HOVER
                 }
             )
             pauseMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
