@@ -42,13 +42,13 @@ export default class SideMenu extends Container {
         this.infoContainer.position.set(110, 160)
 
         ;([
-            new BitmapText(`${(Math.floor(info.time || 0)).toString()}s`, { fontName: 'buttonLabelFont', tint: 0x000000 }),
-            new BitmapText(`${(info.points || 0).toString()} ${info.points == 1? 'point': 'points'}`, { fontName: 'buttonLabelFont', tint: 0x000000 }),
-            new BitmapText(`${(((info.lives || 0) > 0? info.lives: 0) || 0).toString()} ${info.lives == 1? 'live': 'lives'}`, { fontName: 'buttonLabelFont', tint: 0x000000 }),
-            new BitmapText([ 'Harpoon', 'Double Harpoon', 'Power Wire', 'Vulcan Missile' ][info.gun || 0], { fontName: 'buttonLabelFont', tint: 0x000000 }),
-            new BitmapText(`${Math.ceil(info.clockTimeLeft || 0)?.toString()}s Clock`, { fontName: 'buttonLabelFont', tint: 0x000000 }),
-            new BitmapText(`${Math.ceil(info.hourglassTimeLeft || 0)?.toString()}s Hourglass`, { fontName: 'buttonLabelFont', tint: 0x000000 }),
-            new BitmapText(`${Math.ceil(info.forceFieldTimeLeft || 0)?.toString()}s ${info.forceFields || 0} Shield`, { fontName: 'buttonLabelFont', tint: 0x000000 }),
+            new BitmapText(`${(Math.floor(info.time || 0)).toString()}s`, { fontName: 'buttonLabelFont', tint: 0x666666 }),
+            new BitmapText(`${(info.points || 0).toString()} ${info.points == 1? 'point': 'points'}`, { fontName: 'buttonLabelFont', tint: 0x666666 }),
+            new BitmapText(`${(((info.lives || 0) > 0? info.lives: 0) || 0).toString()} ${info.lives == 1? 'live': 'lives'}`, { fontName: 'buttonLabelFont', tint: 0x666666 }),
+            new BitmapText([ 'Harpoon', 'Double Harpoon', 'Power Wire', 'Vulcan Missile' ][info.gun || 0], { fontName: 'buttonLabelFont', tint: 0x666666 }),
+            new BitmapText(`${Math.ceil(info.clockTimeLeft || 0)?.toString()}s Clock`, { fontName: 'buttonLabelFont', tint: 0x666666 }),
+            new BitmapText(`${Math.ceil(info.hourglassTimeLeft || 0)?.toString()}s Hourglass`, { fontName: 'buttonLabelFont', tint: 0x666666 }),
+            new BitmapText(`${Math.ceil(info.forceFieldTimeLeft || 0)?.toString()}s ${info.forceFields || 0} Shield`, { fontName: 'buttonLabelFont', tint: 0x666666 }),
         ] as Array<BitmapText>).forEach((text, i) => {
             text.position.set(0, i * 40 + (i > 3? 20: 0))
             this.infoContainer.addChild(text)

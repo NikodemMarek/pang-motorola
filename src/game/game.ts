@@ -195,8 +195,8 @@ export default class Game {
                     size: { x: 200, y: 50 },
                     texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                     hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                    labelColor: 0x00ff00,
-                    labelHoverColor: 0x00ff00
+                    labelColor: 0x666666,
+                    labelHoverColor: 0x111111
                 }
             )
             pauseMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
