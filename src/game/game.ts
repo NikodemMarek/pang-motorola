@@ -242,7 +242,14 @@ export default class Game {
                 new BallBody({ x: ball.position.x - 10, y: ball.position.y }, newSize, { x: (ball.speed.x > 0? -ball.speed.x: ball.speed.x) - 50, y: ball.speed.y })
             )
 
-            // this.bodiesDrawer.addBalls(this.container, [ ballsToAdd[0] ])
+            if(Math.random() * 3 < 1) {
+                this.powerUps.push(
+                    new PowerUpBody(
+                        ball.position,
+                        Math.floor(Math.random() * 7)
+                    )
+                )
+            }
         }
 
         // Sprawdza czy bonus, dynamit, został podniesiony i rozbija piłki.
