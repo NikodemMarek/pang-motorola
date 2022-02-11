@@ -37,15 +37,15 @@ export default class Menu extends Container {
                 size: option.properties.size || properties.size || { x: 200 ,y: 50 },
                 texture: option.properties.texture || properties.texture,
                 hoverTexture: option.properties.hoverTexture || properties.hoverTexture,
-                labelColor: option.properties.labelColor || properties.labelColor || 0xffffff,
-                labelHoverColor: option.properties.labelHoverColor || properties.labelHoverColor || option.properties.labelColor || properties.labelColor || 0xffffff
+                labelColor: option.properties.labelColor || properties.labelColor || 0x000000,
+                labelHoverColor: option.properties.labelHoverColor || properties.labelHoverColor || option.properties.labelColor || properties.labelColor || 0x000000
             }: {
                 label: properties.label || '',
                 size: properties.size || { x: 200 ,y: 50 },
                 texture: properties.texture,
                 hoverTexture: properties.hoverTexture,
-                labelColor: properties.labelColor || 0xffffff,
-                labelHoverColor: properties.labelHoverColor || properties.labelColor || 0xffffff
+                labelColor: properties.labelColor || 0x000000,
+                labelHoverColor: properties.labelHoverColor || properties.labelColor || 0x000000
             }
 
             const optionButton = new Button(

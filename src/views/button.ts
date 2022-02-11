@@ -43,7 +43,7 @@ export default class Button extends Container {
 
         const buttonLabel: BitmapText = new BitmapText(properties.label || '', {
             fontName: 'buttonLabelFont',
-            tint: properties.labelColor || 0xffffff
+            tint: properties.labelColor || 0x000000
         })
         buttonLabel.anchor.set(0.5, 0.5)
         buttonLabel.position.set(size.x / 2, size.y / 2)
@@ -51,7 +51,7 @@ export default class Button extends Container {
 
         if(properties.labelHoverColor != undefined) {
             this.on('mouseover', () => buttonLabel.tint = properties.labelHoverColor!!)
-            this.on('mouseout', () => buttonLabel.tint = properties.labelColor || 0xffffff)
+            this.on('mouseout', () => buttonLabel.tint = properties.labelColor || 0x000000)
         }
     }
 }
