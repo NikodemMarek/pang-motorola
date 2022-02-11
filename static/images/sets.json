@@ -1,5 +1,4 @@
 [
-    { "name": "programmer-art", "path": "programmer-art/" },
     { "name": "modern", "path": "modern/" },
     { "name": "Motorola Special", "path": "motorola-special/" }
 ]

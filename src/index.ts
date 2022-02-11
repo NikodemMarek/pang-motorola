@@ -1,4 +1,4 @@
-import { Application, BitmapFont } from 'pixi.js'
+import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { ImagePath, RENDERER_SIZE } from './const'
 import BodiesDrawer from './game/bodies-drawer'
@@ -7,6 +7,7 @@ import { getLevel, loadLevel } from './levels-provider'
 import { Level } from './types'
 import Loading from './views/loading'
 import Menu from './views/menu'
+import OptionsMenu from './views/options-menu'
 
 /**
  * Tworzy aplikację we wskazanym kontenerze i określa dodatkowe parametry aplikacji.
@@ -35,23 +36,29 @@ let level: Level
 /**
  * Pokazuje postęp ładowania domyślnego zestawu zasobów.
  */
-const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '', async () => {
-    level = getLevel(await loadLevel('test')).level
+const preload = (onComplete: () => void) => {
+    Loader.shared.reset()
 
-    BitmapFont.from('buttonLabelFont', {
-        fontFamily: 'Noto Sans',
-        fill: 0xffffff,
-        fontSize: 30
+    const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '', async () => {
+        level = getLevel(await loadLevel('test')).level
+    
+        BitmapFont.from('buttonLabelFont', {
+            fontFamily: 'Noto Sans',
+            fill: 0xffffff,
+            fontSize: 30
+        })
     })
-})
-assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
-_this.addChild(assetsLoader)
+    assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
+    _this.addChild(assetsLoader)
+}
+
+preload(mainMenu)
 
 /**
  * Funkcja która zostanie wykonana po załadowaniu zasobów.
  * Wyświetla główne menu gry.
  */
-async function onComplete() {
+async function mainMenu() {
     const menu = new Menu(
         [
             {
@@ -61,15 +68,20 @@ async function onComplete() {
                 }
             },
             {
-                onClick: () => console.log('options'),
+                onClick: () => {
+                    const refresh = () => {
+                        const optionsMenu = new OptionsMenu(
+                            () => preload(refresh),
+                            mainMenu
+                        )
+                        optionsMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
+                        _this.addChild(optionsMenu)
+                    }
+
+                    refresh()
+                },
                 properties: {
                     label: 'Options',
-                }
-            },
-            {
-                onClick: () => console.log('exit'),
-                properties: {
-                    label: 'Exit',
                 }
             }
         ],
