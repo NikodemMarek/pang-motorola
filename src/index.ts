@@ -77,8 +77,8 @@ async function onComplete() {
             size: { x: 200, y: 50 },
             texture: imagesProvider.getTexture(ImagePath.MENU_BUTTON),
             hoverTexture: imagesProvider.getTexture(ImagePath.MENU_BUTTON_HOVER),
-            labelColor: 0x407ff9,
-            labelHoverColor: 0xff7ff9
+            labelColor: 0x666666,
+            labelHoverColor: 0x111111
         },
         false
     )
