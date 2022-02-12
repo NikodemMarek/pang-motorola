@@ -234,13 +234,7 @@ export default class Game {
         const ballsToAdd: Array<BallBody> = [  ]
         // Dzieli piłki.
         const splitBall = (ball: BallBody) => {
-            const newSize = ball.radius > BallSize.MEDIUM? ball.radius > BallSize.BIG? BallSize.BIG: BallSize.MEDIUM: ball.radius > BallSize.SMALL? BallSize.SMALL: 0
-
-            ball.radius = 0
-            ballsToAdd.push(
-                new BallBody({ x: ball.position.x + 10, y: ball.position.y }, newSize, { x: (ball.speed.x > 0? ball.speed.x: -ball.speed.x) + 50, y: ball.speed.y }),
-                new BallBody({ x: ball.position.x - 10, y: ball.position.y }, newSize, { x: (ball.speed.x > 0? -ball.speed.x: ball.speed.x) - 50, y: ball.speed.y })
-            )
+            this.score += ball.radius * 50
 
             if(Math.random() * 3 < 1) {
                 this.powerUps.push(
@@ -250,6 +244,14 @@ export default class Game {
                     )
                 )
             }
+            
+            const newSize = ball.radius > BallSize.MEDIUM? ball.radius > BallSize.BIG? BallSize.BIG: BallSize.MEDIUM: ball.radius > BallSize.SMALL? BallSize.SMALL: 0
+
+            ball.radius = 0
+            ballsToAdd.push(
+                new BallBody({ x: ball.position.x + 10, y: ball.position.y }, newSize, { x: (ball.speed.x > 0? ball.speed.x: -ball.speed.x) + 50, y: ball.speed.y }),
+                new BallBody({ x: ball.position.x - 10, y: ball.position.y }, newSize, { x: (ball.speed.x > 0? -ball.speed.x: ball.speed.x) - 50, y: ball.speed.y })
+            )
         }
 
         // Sprawdza czy bonus, dynamit, został podniesiony i rozbija piłki.
