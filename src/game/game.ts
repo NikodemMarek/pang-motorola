@@ -148,6 +148,9 @@ export default class Game {
      * @param delta - Czas który upłynął od ostatniego odświeżenia
      */
     update(delta: number) {
+        // Zwiększa czas który upłynął w grze.
+        this.time += delta
+
         // Odświeża pozycję pocisków.
         this.bullets.forEach(bullet => bullet.update(delta))
 
