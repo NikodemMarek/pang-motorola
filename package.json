@@ -17,6 +17,7 @@
         "docs": "typedoc"
     },
     "dependencies": {
+        "pixi-scenes": "^1.4.0",
         "pixi.js": "^6.2.0"
     },
     "devDependencies": {

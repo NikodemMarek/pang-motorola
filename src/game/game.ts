@@ -1,15 +1,10 @@
-import { Container } from 'pixi.js'
-import { BallSize, Colors, GameState, GAME_SIZE, Guns, ImagePath, PowerUp, RENDERER_SIZE, ZIndex } from '../const'
+import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
-import BodiesDrawer from './bodies-drawer'
-import SideMenu from '../views/side-menu'
-import Menu from '../views/menu'
-import { ImagesProvider } from '../assets-provider'
 
 /**
  * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
@@ -18,18 +13,6 @@ import { ImagesProvider } from '../assets-provider'
  * 
  */
 export default class Game {
-    /**
-     * Pojemnik w którym będzie wyświetlała się gra.
-     */
-    container: Container
-    /**
-     * Klasa pozwalająca na wyświetlanie gry.
-     */
-    bodiesDrawer: BodiesDrawer
-    /**
-     * Menu z informacjami na temat rozgrywki.
-     */
-    sideMenu: SideMenu
     /**
      * Obecny stan gry.
      */
@@ -43,40 +26,45 @@ export default class Game {
      * Punkty zebrane podczas rozgrywki.
      */
     score: number = 0
+
+    /**
+     * Funkcja która wykona sie w przypadku wygranej lub przegranej.
+     */
+    finish: (won: boolean) => void
     
     /**
      * Lista postaci w grze.
      */
-    players: Array<PlayerBody>
+    players: Array<PlayerBody> = [  ]
     /**
      * Lista piłek w grze.
      */
-    balls: Array<BallBody>
+    balls: Array<BallBody> = [  ]
     /**
      * Lista pocisków w grze.
      */
-    bullets: Array<BulletBody>
+    bullets: Array<BulletBody> = [  ]
 
     /**
      * Granice przestrzeni gry.
      */
-    borders: Array<RectangularBody>
+    borders: Array<RectangularBody> = [  ]
     /**
      * Lista platform w grze.
      */
-    platforms: Array<PlatformBody>
+    platforms: Array<PlatformBody> = [  ]
     /**
      * Lista drabin w grze.
      */
-    ladders: Array<LadderBody>
+    ladders: Array<LadderBody> = [  ]
     /**
      * Lista bonusów w grze.
      */
-    powerUps: Array<PowerUpBody>
+    powerUps: Array<PowerUpBody> = [  ]
     /**
      * Lista punktów do zebrania w grze.
      */
-    points: Array<PointBody>
+    points: Array<PointBody> = [  ]
 
     /**
      * Czas który pozostał do zakończenia się bonusu spowolnienia czasu.
@@ -103,15 +91,11 @@ export default class Game {
      * @param bodiesDrawer - Obiekt rysujący grę
      * @param level - Dane poziomu
      */
-    constructor(
-        container: Container,
-        bodiesDrawer: BodiesDrawer,
-        level: Level,
-        levelName: string
-    ) {
-        this.container = container
-        this.bodiesDrawer = bodiesDrawer
+    constructor(onFinish: (won: boolean) => void) {
+        this.finish = onFinish
+    }
 
+    setLevel(level: Level) {
         this.players = level.players
         this.balls = level.balls || [  ]
         this.bullets = level.bullets || [  ]
@@ -132,23 +116,6 @@ export default class Game {
             else if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
             else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
         })
-
-        this.sideMenu = new SideMenu(
-            levelName,
-            {
-                lives: 0,
-                clockTimeLeft: this.clockTimeLeft,
-                hourglassTimeLeft: this.hourglassTimeLeft,
-                gun: this.players[0].gun,
-                forceFields: this.players[0].forceFields,
-                forceFieldTimeLeft: this.players[0].forceFieldsTimeLeft,
-            },
-            this.pause
-        )
-        this.sideMenu.position.set(GAME_SIZE.x, 0)
-        container.addChild(this.sideMenu)
-
-        this.draw()
     }
 
     /**
@@ -170,46 +137,8 @@ export default class Game {
                 this.time += frameTime / 1000
 
                 this.update(frameTime / 1000)
-                this.draw()
             }
         }, frameTime)
-    }
-
-    /**
-     * Zatrzymuje grę i wyświetla menu pauzy.
-     */
-    pause = () => {
-        if(this.state != GameState.PAUSED) {
-            this.state = GameState.PAUSED
-    
-            const pauseMenu = new Menu(
-                [
-                    {
-                        onClick: () => this.state = GameState.RUNNING,
-                        properties: {
-                            label: 'Continue',
-                        }
-                    }
-                ],
-                {
-                    size: { x: 200, y: 50 },
-                    texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                    hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                    labelColor: Colors.MENU_BUTTON,
-                    labelHoverColor: Colors.MENU_BUTTON_HOVER
-                }
-            )
-            pauseMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
-            pauseMenu.zIndex = ZIndex.PAUSE_MENU
-            this.container.addChild(pauseMenu)
-        }
-    }
-
-    /**
-     * Zakańcza grę.
-     */
-    finish() {
-        this.state = GameState.FINISHED
     }
 
     /**
@@ -283,9 +212,9 @@ export default class Game {
                     if(player.forceFields > 0) player.forceFields --
                     else if(player.lives > 0) {
                         player.lives -= ball.radius / BallSize.SMALL
-                        if(player.lives <= 0) this.finish()
+                        if(player.lives <= 0) this.finish(false)
                     }
-                    else this.finish()
+                    else this.finish(false)
 
                     return false
                 } else return true
@@ -341,37 +270,6 @@ export default class Game {
         else this.splitCooldown = 0
 
         // Sprawdza czy wszystkie piłki zostały zestrzelone przez gracza.
-        if(this.balls.length < 1) this.finish()
-    }
-
-    /**
-     * Wyświetla grę i statystyki.
-     */
-    draw() {
-        this.bodiesDrawer.update(
-            this.container,
-            {
-                players: this.players,
-                balls: this.balls,
-                bullets: this.bullets,
-                powerUps: this.powerUps,
-                points: this.points,
-                platforms: this.platforms,
-                ladders: this.ladders
-            } as Level
-        )
-
-        this.sideMenu.updateInfo(
-            {
-                time: this.time,
-                points: this.score,
-                clockTimeLeft: this.clockTimeLeft,
-                hourglassTimeLeft: this.hourglassTimeLeft,
-                lives: this.players[0].lives,
-                gun: this.players[0].gun,
-                forceFields: this.players[0].forceFields,
-                forceFieldTimeLeft: this.players[0].forceFieldsTimeLeft,
-            }
-        )
+        if(this.balls.length < 1) this.finish(true)
     }
 }

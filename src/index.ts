@@ -1,13 +1,11 @@
+import { SceneManager } from 'pixi-scenes'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
-import { Colors, ImagePath, RENDERER_SIZE } from './const'
-import BodiesDrawer from './game/bodies-drawer'
-import Game from './game/game'
+import { RENDERER_SIZE } from './const'
 import { getLevel, loadLevel } from './levels-provider'
-import { Level } from './types'
-import Loading from './views/loading'
-import Menu from './views/menu'
-import OptionsMenu from './views/options-menu'
+import GameScene from './views/scenes/game-scene'
+import MainMenuScene from './views/scenes/main-menu-scene'
+import OptionsMenuScene from './views/scenes/options-menu-scene'
 
 /**
  * Tworzy aplikację we wskazanym kontenerze i określa dodatkowe parametry aplikacji.
@@ -21,92 +19,54 @@ const app = new Application({
     height: RENDERER_SIZE.y
 })
 
-const _this = app.stage
-
-/**
- * Wczytuje domyślny zestaw zasobów.
- */
-const imagesProvider: ImagesProvider = ImagesProvider.Instance(1)
-
-/**
- * Wczytany poziom.
- */
-let level: Level
-
-/**
- * Pokazuje postęp ładowania domyślnego zestawu zasobów.
- */
-const preload = (onComplete: () => void) => {
-    Loader.shared.reset()
-
-    const assetsLoader: Loading = new Loading([ { path: imagesProvider.path!! } ], onComplete, '', async () => {
-        level = getLevel(await loadLevel('test')).level
-    
-        BitmapFont.from('buttonLabelFont', {
-            fontFamily: 'Noto Sans',
-            fill: 0xffffff,
-            fontSize: 30
-        })
+const load = async (set: number) => {
+    BitmapFont.from('buttonLabelFont', {
+        fontFamily: 'Noto Sans',
+        fill: 0xffffff,
+        fontSize: 30
     })
-    assetsLoader.position.set(app.view.width / 2, app.view.height / 2)
-    _this.addChild(assetsLoader)
+
+    const provider = ImagesProvider.Instance()
+    provider.loadSet(set)
+
+    const assets = () => new Promise((resolve, reject) => {
+        const loader = Loader.shared
+        loader.add(provider.path!)
+        loader.load()
+
+        loader.onComplete.once(() => resolve(true))
+        loader.onError.once(() => reject(false))
+    })
+    await assets()
+    
+    const level = getLevel(await loadLevel('test')).level
+    return level
 }
 
-preload(mainMenu)
+const scenes = new SceneManager(app)
 
-/**
- * Funkcja która zostanie wykonana po załadowaniu zasobów.
- * Wyświetla główne menu gry.
- */
-async function mainMenu() {
-    const menu = new Menu(
-        [
-            {
-                onClick: () => dummyGame(),
-                properties: {
-                    label: 'Play',
-                }
-            },
-            {
-                onClick: () => {
-                    const refresh = () => {
-                        const optionsMenu = new OptionsMenu(
-                            () => preload(refresh),
-                            mainMenu
-                        )
-                        optionsMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
-                        _this.addChild(optionsMenu)
-                    }
+const mainMenu = () => { scenes.start('main-menu') }
 
-                    refresh()
-                },
-                properties: {
-                    label: 'Options',
-                }
-            }
-        ],
-        {
-            size: { x: 200, y: 50 },
-            texture: imagesProvider.getTexture(ImagePath.MENU_BUTTON),
-            hoverTexture: imagesProvider.getTexture(ImagePath.MENU_BUTTON_HOVER),
-            labelColor: Colors.MENU_BUTTON,
-            labelHoverColor: Colors.MENU_BUTTON_HOVER
-        },
-        false
-    )
-    menu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
-    _this.addChild(menu)
+const init = async () => {
+    const level = await load(0)
+
+    const mainMenuScene = new MainMenuScene(option => {
+        switch(option) {
+            case 0:
+                scenes.start('game')
+            break
+            case 1:
+                scenes.start('options-menu')
+            break
+        }
+    })
+    const optionsMenuScene = new OptionsMenuScene(init, () => scenes.start('main-menu'))
+    const gameScene = new GameScene(() => scenes.start('main-menu'))
+    gameScene.setLevel(level, 'how you doin')
+
+    scenes.add('main-menu', mainMenuScene)
+    scenes.add('options-menu', optionsMenuScene)
+    scenes.add('game', gameScene)
 }
 
-///////////////////////////////////////////////////////
-// Tymczasowa prosta gra.
-// TODO: Remove this.
-function dummyGame() {
-    _this.sortableChildren = true
-
-    const drawer = new BodiesDrawer()
-    drawer.setLevel(_this, level)
-
-    const game = new Game(_this, drawer, level, 'super easy cheesy level')
-    game.start(60)
-}
+init().finally(mainMenu)

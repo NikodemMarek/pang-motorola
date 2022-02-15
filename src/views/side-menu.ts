@@ -5,7 +5,7 @@ import { LevelInfo } from '../types'
 import Button from './button'
 
 export default class SideMenu extends Container {
-    levelName: string
+    levelName: BitmapText
     infoContainer: Container
     
     constructor(
@@ -14,8 +14,6 @@ export default class SideMenu extends Container {
         pause: () => void
     ) {
         super()
-
-        this.levelName = levelName
 
         window.addEventListener('keydown', event => { if(event.key == 'Escape') pause() })
         const pauseButton = new Button(
@@ -32,10 +30,10 @@ export default class SideMenu extends Container {
         pauseButton.position.set(100, 25)
         this.addChild(pauseButton)
 
-        const name = new BitmapText(levelName, { fontName: 'buttonLabelFont', tint: 0x000000, maxWidth: RENDERER_SIZE.x - GAME_SIZE.x })
-        name.anchor.set(0.5)
-        name.position.set(100, 100)
-        this.addChild(name)
+        this.levelName = new BitmapText(levelName, { fontName: 'buttonLabelFont', tint: 0x000000, maxWidth: RENDERER_SIZE.x - GAME_SIZE.x })
+        this.levelName.anchor.set(0.5)
+        this.levelName.position.set(100, 100)
+        this.addChild(this.levelName)
 
         this.infoContainer = new Container()
         this.infoContainer.pivot.set(100, 0)
