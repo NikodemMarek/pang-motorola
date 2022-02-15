@@ -45,13 +45,14 @@ export default class MainMenuScene extends Scene {
                 }
             ],
             {
-                size: { x: 200, y: 50 },
+                size: { x: 300, y: 50 },
                 texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                 hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                 labelColor: Colors.MENU_BUTTON,
                 labelHoverColor: Colors.MENU_BUTTON_HOVER
             },
-            false
+            false,
+            5
         )
         menu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
         this.addChild(menu)
