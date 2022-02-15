@@ -35,12 +35,12 @@ const loadAssets = async (set: number) => {
 }
 const loadGameLevel = async (mode: string, levelName: string) => getLevel(await loadLevel(mode, levelName))
 
-const mainMenu = () => { scenes.start('main-menu') }
+const mainMenu = () => scenes.start('main-menu')
 
 const addGame = async (mode: string, levelName: string) => {
     scenes.remove('game')
 
-    const gameScene = new GameScene(() => scenes.start('main-menu'))
+    const gameScene = new GameScene(mainMenu)
     gameScene.setLevel((await loadGameLevel(mode, levelName)).level, levelName)
     scenes.add('game', gameScene)
 }
@@ -69,11 +69,11 @@ const init = async () => {
             break
         }
     })
-    const optionsMenuScene = new OptionsMenuScene(init, () => scenes.start('main-menu'))
+    const optionsMenuScene = new OptionsMenuScene(init, mainMenu)
     const levelChoiceScene = new LevelChoiceScene(async (difficulty: string, levelName: string) => {
         await addGame(difficulty, levelName)
         scenes.start('game')
-    })
+    }, mainMenu)
 
     scenes.add('main-menu', mainMenuScene)
     scenes.add('options-menu', optionsMenuScene)
