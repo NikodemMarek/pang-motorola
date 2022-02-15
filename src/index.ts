@@ -4,6 +4,7 @@ import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
 import { getLevel, getLevelsList, loadLevel } from './levels-provider'
 import GameScene from './views/scenes/game-scene'
+import LevelChoiceScene from './views/scenes/level-choice-scene'
 import MainMenuScene from './views/scenes/main-menu-scene'
 import OptionsMenuScene from './views/scenes/options-menu-scene'
 
@@ -40,7 +41,7 @@ const addGame = async (mode: string, levelName: string) => {
     scenes.remove('game')
 
     const gameScene = new GameScene(() => scenes.start('main-menu'))
-    gameScene.setLevel((await loadGameLevel(mode, levelName)).level, 'how you doin')
+    gameScene.setLevel((await loadGameLevel(mode, levelName)).level, levelName)
     scenes.add('game', gameScene)
 }
 
@@ -53,9 +54,11 @@ const init = async () => {
     })
     await loadAssets(0)
 
-    const mainMenuScene = new MainMenuScene(async (option) => {
+    const mainMenuScene = new MainMenuScene(async option => {
         switch(option) {
             case 0:
+                scenes.start('level-choice')
+            break
             case 1:
             case 2:
                 await addGame('easy', getLevelsList('easy')[0].name)
@@ -67,9 +70,14 @@ const init = async () => {
         }
     })
     const optionsMenuScene = new OptionsMenuScene(init, () => scenes.start('main-menu'))
+    const levelChoiceScene = new LevelChoiceScene(async (difficulty: string, levelName: string) => {
+        await addGame(difficulty, levelName)
+        scenes.start('game')
+    })
 
     scenes.add('main-menu', mainMenuScene)
     scenes.add('options-menu', optionsMenuScene)
+    scenes.add('level-choice', levelChoiceScene)
 }
 
 init().finally(mainMenu)

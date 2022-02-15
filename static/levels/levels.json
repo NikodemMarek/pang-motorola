@@ -1,12 +1,13 @@
 {
     "easy": [
-        { "name": "level choice test", "path": "test-level.json" }
+        { "name": "easy 0", "path": "test-level.json" }
     ],
     "medium": [
-
+        { "name": "medium 0", "path": "test-level.json" },
+        { "name": "medium 1", "path": "test-level.json" }
     ],
     "hard": [
-
+        { "name": "hard 0", "path": "test-level.json" }
     ],
     "campaign": [
         { "name": "campaign test", "path": "test-level.json" }
