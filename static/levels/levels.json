@@ -1,3 +1,17 @@
-[
-    { "name": "test", "path": "test-level.json" }
-]
+{
+    "easy": [
+        { "name": "level choice test", "path": "test-level.json" }
+    ],
+    "medium": [
+
+    ],
+    "hard": [
+
+    ],
+    "campaign": [
+        { "name": "campaign test", "path": "test-level.json" }
+    ],
+    "bonus": [
+        { "name": "bonus levels test", "path": "test-level.json" }
+    ]
+}

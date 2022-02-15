@@ -2,7 +2,7 @@ import { SceneManager } from 'pixi-scenes'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
-import { getLevel, loadLevel } from './levels-provider'
+import { getLevel, getLevelsList, loadLevel } from './levels-provider'
 import GameScene from './views/scenes/game-scene'
 import MainMenuScene from './views/scenes/main-menu-scene'
 import OptionsMenuScene from './views/scenes/options-menu-scene'
@@ -32,15 +32,15 @@ const loadAssets = async (set: number) => {
         loader.onError.once(() => reject(false))
     })
 }
-const loadGameLevel = async (level: string) => getLevel(await loadLevel(level))
+const loadGameLevel = async (mode: string, levelName: string) => getLevel(await loadLevel(mode, levelName))
 
 const mainMenu = () => { scenes.start('main-menu') }
 
-const addGame = async (levelName: string) => {
+const addGame = async (mode: string, levelName: string) => {
     scenes.remove('game')
 
     const gameScene = new GameScene(() => scenes.start('main-menu'))
-    gameScene.setLevel((await loadGameLevel(levelName)).level, 'how you doin')
+    gameScene.setLevel((await loadGameLevel(mode, levelName)).level, 'how you doin')
     scenes.add('game', gameScene)
 }
 
@@ -58,7 +58,7 @@ const init = async () => {
             case 0:
             case 1:
             case 2:
-                await addGame('test')
+                await addGame('easy', getLevelsList('easy')[0].name)
                 scenes.start('game')
             break
             case 3:

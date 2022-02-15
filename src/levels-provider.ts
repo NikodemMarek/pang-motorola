@@ -7,20 +7,22 @@ import PowerUpBody from './game/physics/power-ups'
 import { Level } from './types'
 
 /**
- * Pobiera listę domyślnych poziomów do gry.
+ * Pobiera listę poziomów z podanego trybu.
  * 
- * @returns Tablica obiektów z nazwami i ścieżkami do plików
+ * @param mode - Tryb w którym dostępny jest poziom
+ * @returns Tablica obiektów z nazwami i ścieżkami do poziomów
  */
-export const getLevelsList = () => levels
+export const getLevelsList = (mode: string): Array<{ name: string, path: string }> => (levels as any)[mode]
 
 /**
- * Wczytuje plik JSON z poziomem i zwraca go jako Promise.
+ * Wczytuje i zwraca plik JSON z poziomem.
  * 
+ * @param mode - Tryb w którym dostępny jest poziom
  * @param name - Nazwa poziomu do wczytania
- * @returns Promise z poziomem w surowej formie
+ * @returns Poziom w surowej formie
  */
-export const loadLevel = async (name: string): Promise<Object | undefined> => {
-    const levelData = levels.find((level) => level.name == name)
+export const loadLevel = async (mode: string, name: string): Promise<Object | undefined> => {
+    const levelData = getLevelsList(mode).find(level => level.name == name)
 
     if(levelData != undefined) return await fetch(`${BasePath.LEVELS}${levelData.path}`).then(response => response.json())
     else return undefined
