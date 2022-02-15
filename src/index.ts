@@ -1,4 +1,3 @@
-import clone from 'clone'
 import { SceneManager } from 'pixi-scenes'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
@@ -37,6 +36,14 @@ const loadGameLevel = async (level: string) => getLevel(await loadLevel(level))
 
 const mainMenu = () => { scenes.start('main-menu') }
 
+const addGame = async (levelName: string) => {
+    scenes.remove('game')
+
+    const gameScene = new GameScene(() => scenes.start('main-menu'))
+    gameScene.setLevel((await loadGameLevel(levelName)).level, 'how you doin')
+    scenes.add('game', gameScene)
+}
+
 const scenes = new SceneManager(app)
 const init = async () => {
     BitmapFont.from('buttonLabelFont', {
@@ -45,14 +52,16 @@ const init = async () => {
         fontSize: 30
     })
     await loadAssets(0)
-    const level = await loadGameLevel('test')
 
-    const mainMenuScene = new MainMenuScene(option => {
+    const mainMenuScene = new MainMenuScene(async (option) => {
         switch(option) {
             case 0:
+            case 1:
+            case 2:
+                await addGame('test')
                 scenes.start('game')
             break
-            case 1:
+            case 3:
                 scenes.start('options-menu')
             break
         }
@@ -61,18 +70,6 @@ const init = async () => {
 
     scenes.add('main-menu', mainMenuScene)
     scenes.add('options-menu', optionsMenuScene)
-
-    const resetGame = () => {
-        scenes.remove('game')
-
-        const gameScene = new GameScene(() => {
-            resetGame()
-            scenes.start('main-menu')
-        })
-        gameScene.setLevel(clone(level.level), 'how you doin')
-        scenes.add('game', gameScene)
-    }
-    resetGame()
 }
 
 init().finally(mainMenu)

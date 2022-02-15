@@ -18,12 +18,26 @@ export default class MainMenuScene extends Scene {
                 {
                     onClick: () => this.clicked(0),
                     properties: {
-                        label: 'Play',
+                        label: 'Level Choice',
                     },
                     hideMenuOnClick: false
                 },
                 {
                     onClick: () => this.clicked(1),
+                    properties: {
+                        label: 'Campaign',
+                    },
+                    hideMenuOnClick: false
+                },
+                {
+                    onClick: () => this.clicked(2),
+                    properties: {
+                        label: 'Bonus Levels',
+                    },
+                    hideMenuOnClick: false
+                },
+                {
+                    onClick: () => this.clicked(3),
                     properties: {
                         label: 'Options',
                     },
