@@ -1,3 +1,4 @@
+import clone from 'clone'
 import { SceneManager } from 'pixi-scenes'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
@@ -19,17 +20,11 @@ const app = new Application({
     height: RENDERER_SIZE.y
 })
 
-const load = async (set: number) => {
-    BitmapFont.from('buttonLabelFont', {
-        fontFamily: 'Noto Sans',
-        fill: 0xffffff,
-        fontSize: 30
-    })
-
+const loadAssets = async (set: number) => {
     const provider = ImagesProvider.Instance()
     provider.loadSet(set)
 
-    const assets = () => new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const loader = Loader.shared
         loader.add(provider.path!)
         loader.load()
@@ -37,18 +32,20 @@ const load = async (set: number) => {
         loader.onComplete.once(() => resolve(true))
         loader.onError.once(() => reject(false))
     })
-    await assets()
-    
-    const level = getLevel(await loadLevel('test')).level
-    return level
 }
-
-const scenes = new SceneManager(app)
+const loadGameLevel = async (level: string) => getLevel(await loadLevel(level))
 
 const mainMenu = () => { scenes.start('main-menu') }
 
+const scenes = new SceneManager(app)
 const init = async () => {
-    const level = await load(0)
+    BitmapFont.from('buttonLabelFont', {
+        fontFamily: 'Noto Sans',
+        fill: 0xffffff,
+        fontSize: 30
+    })
+    await loadAssets(0)
+    const level = await loadGameLevel('test')
 
     const mainMenuScene = new MainMenuScene(option => {
         switch(option) {
@@ -61,12 +58,21 @@ const init = async () => {
         }
     })
     const optionsMenuScene = new OptionsMenuScene(init, () => scenes.start('main-menu'))
-    const gameScene = new GameScene(() => scenes.start('main-menu'))
-    gameScene.setLevel(level, 'how you doin')
 
     scenes.add('main-menu', mainMenuScene)
     scenes.add('options-menu', optionsMenuScene)
-    scenes.add('game', gameScene)
+
+    const resetGame = () => {
+        scenes.remove('game')
+
+        const gameScene = new GameScene(() => {
+            resetGame()
+            scenes.start('main-menu')
+        })
+        gameScene.setLevel(clone(level.level), 'how you doin')
+        scenes.add('game', gameScene)
+    }
+    resetGame()
 }
 
 init().finally(mainMenu)

@@ -1,4 +1,4 @@
-import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
+import { BallSize, GAME_SIZE, Guns, PowerUp } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
@@ -13,11 +13,6 @@ import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics
  * 
  */
 export default class Game {
-    /**
-     * Obecny stan gry.
-     */
-    state = GameState.INIT
-
     /**
      * Czas trwania rozgrywki.
      */
@@ -116,29 +111,6 @@ export default class Game {
             else if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
             else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
         })
-    }
-
-    /**
-     * Rozpoczyna grę.
-     * Zmienia stan gry, oblicza czas na odświeżenie gry i uruchamia pętlę gry.
-     * 
-     * @param graphics - Obiekt pozwalający na rysowanie kształtów
-     * @param FPS - Oczekiwana ilość odświeżeń i klatek na sekundę
-     */
-    start(FPS: number = 30) {
-        const frameTime = 1000 / FPS
-
-        this.state = GameState.RUNNING
-        
-        this.time = 0
-
-        setInterval(() => {
-            if(this.state == GameState.RUNNING) {
-                this.time += frameTime / 1000
-
-                this.update(frameTime / 1000)
-            }
-        }, frameTime)
     }
 
     /**

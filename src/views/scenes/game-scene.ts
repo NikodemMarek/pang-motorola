@@ -19,16 +19,20 @@ export default class GameScene extends Scene {
     state: GameState = GameState.INIT
     game: Game
 
+    finish: () => void
+
     constructor(onFinish: () => void) {
         super()
 
         this.sortableChildren = true
-    
-        this.bodiesDrawer = new BodiesDrawer()
-        this.game = new Game(() => {
+
+        this.finish = () => {
             this.state = GameState.FINISHED
             onFinish()
-        })
+        }
+    
+        this.bodiesDrawer = new BodiesDrawer()
+        this.game = new Game(this.finish)
 
         this.sideMenu = new SideMenu(
             '',
@@ -66,6 +70,12 @@ export default class GameScene extends Scene {
                         onClick: () => this.state = GameState.RUNNING,
                         properties: {
                             label: 'Continue',
+                        }
+                    },
+                    {
+                        onClick: this.finish,
+                        properties: {
+                            label: 'Exit',
                         }
                     }
                 ],
