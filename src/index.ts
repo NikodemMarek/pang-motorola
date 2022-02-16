@@ -3,6 +3,7 @@ import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
 import { getLevel, getLevelsList, loadLevel } from './levels-provider'
+import CampaignLevelsScene from './views/scenes/campaign-levels-scene'
 import GameScene from './views/scenes/game-scene'
 import LevelChoiceScene from './views/scenes/level-choice-scene'
 import MainMenuScene from './views/scenes/main-menu-scene'
@@ -60,6 +61,8 @@ const init = async () => {
                 scenes.start('level-choice')
             break
             case 1:
+                scenes.start('campaign-levels')
+            break
             case 2:
                 await addGame('easy', getLevelsList('easy')[0].name)
                 scenes.start('game')
@@ -74,10 +77,15 @@ const init = async () => {
         await addGame(difficulty, levelName)
         scenes.start('game')
     }, mainMenu)
+    const campaignLevelsScene = new CampaignLevelsScene(async levelName => {
+        await addGame('campaign', levelName)
+        scenes.start('game')
+    }, mainMenu)
 
     scenes.add('main-menu', mainMenuScene)
     scenes.add('options-menu', optionsMenuScene)
     scenes.add('level-choice', levelChoiceScene)
+    scenes.add('campaign-levels', campaignLevelsScene)
 }
 
 init().finally(mainMenu)
