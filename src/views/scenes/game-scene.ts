@@ -50,10 +50,14 @@ export default class GameScene extends Scene {
         this.addChild(this.sideMenu)
     }
 
-    setLevel(level: Level, levelName: string) {
+    setLevel(level: Level, levelInfo: any, levelName: string) {
         this.game.setLevel(level)
         this.bodiesDrawer.setLevel(this, level)
 
+        this.game.time = levelInfo.time
+        this.game.score = levelInfo.score
+        this.game.clockTimeLeft = levelInfo.clockTimeLeft
+        this.game.hourglassTimeLeft = levelInfo.hourglassTimeLeft
         this.sideMenu.levelName.text = levelName
     }
 

@@ -6,6 +6,7 @@
                 {"name": "gravity", "vector": {"x": 0, "y": 100}}
             ],
             "position": {"x": 100, "y": 230},
+            "lives": 3,
             "shotTwoTimes": false,
             "forceFields": 0,
             "forceFieldsTimeLeft": 0,
@@ -62,5 +63,11 @@
             "position": {"x": 550, "y": 300},
             "value": 1000
         }
-    ]
+    ],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    }
 }

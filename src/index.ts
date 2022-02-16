@@ -42,8 +42,10 @@ const mainMenu = () => scenes.start('main-menu')
 const addGame = async (mode: string, levelName: string) => {
     scenes.remove('game')
 
+    const level = await loadGameLevel(mode, levelName)
+
     const gameScene = new GameScene(mainMenu)
-    gameScene.setLevel((await loadGameLevel(mode, levelName)).level, levelName)
+    gameScene.setLevel(level.level, level.info, levelName)
     scenes.add('game', gameScene)
 }
 

@@ -32,13 +32,14 @@ export const loadLevel = async (mode: string, name: string): Promise<Object | un
  * Konwertuje surowy poziom na {@link Level}.
  * 
  * @param rawLevel - Poziom w surowej postaci
- * @returns Poziom w postaci {@link Level}
+ * @returns Poziom w postaci {@link Level}, oraz informacje o rozgrywce
  */
-export const getLevel = (rawLevel: any): { level: Level } => {
+export const getLevel = (rawLevel: any): { level: Level, info: any } => {
     return {
         level: {
             players: (rawLevel.players as Array<PlayerBody>).map(player => {
                 const newPlayer = new PlayerBody(player.position)
+                newPlayer.lives = player.lives
                 newPlayer.shotTwoTimes = player.shotTwoTimes
                 newPlayer.forceFields = player.forceFields
                 newPlayer.forceFieldsTimeLeft = player.forceFieldsTimeLeft
@@ -76,6 +77,12 @@ export const getLevel = (rawLevel: any): { level: Level } => {
     
                 return newPoint
             })
-        } as Level
+        } as Level,
+        info: {
+            time: rawLevel.info.time,
+            score: rawLevel.info.score,
+            clockTimeLeft: rawLevel.info.clockTimeLeft,
+            hourglassTimeLeft: rawLevel.info.hourglassTimeLeft
+        }
     }
 }
