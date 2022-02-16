@@ -1,13 +1,24 @@
 {
     "easy": [
-        { "name": "easy 0", "path": "test-level.json" }
+        { "name": "easy 0", "path": "test-level.json" },
+        { "name": "easy 1", "path": "test-level.json" },
+        { "name": "easy 2", "path": "test-level.json" },
+        { "name": "easy 3", "path": "test-level.json" },
+        { "name": "easy 4", "path": "test-level.json" }
     ],
     "medium": [
         { "name": "medium 0", "path": "test-level.json" },
-        { "name": "medium 1", "path": "test-level.json" }
+        { "name": "medium 1", "path": "test-level.json" },
+        { "name": "medium 2", "path": "test-level.json" },
+        { "name": "medium 3", "path": "test-level.json" },
+        { "name": "medium 4", "path": "test-level.json" }
     ],
     "hard": [
-        { "name": "hard 0", "path": "test-level.json" }
+        { "name": "hard 0", "path": "test-level.json" },
+        { "name": "hard 1", "path": "test-level.json" },
+        { "name": "hard 2", "path": "test-level.json" },
+        { "name": "hard 3", "path": "test-level.json" },
+        { "name": "hard 4", "path": "test-level.json" }
     ],
     "campaign": [
         { "name": "1", "path": "test-level.json" },

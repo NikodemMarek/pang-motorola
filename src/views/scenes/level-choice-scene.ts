@@ -20,6 +20,7 @@ export default class LevelChoiceScene extends Scene {
     }
 
     override init(): void {
+        const easyLevelsData = getLevelsList('easy')
         const easyLevels = new Menu(
             [
                 {
@@ -29,7 +30,18 @@ export default class LevelChoiceScene extends Scene {
                     },
                     hideMenuOnClick: false
                 },
-                ... getLevelsList('easy').map(levelData => {
+                {
+                    onClick: () => this.levelChosen('easy', easyLevelsData[Math.floor(Math.random() * easyLevelsData.length)].name),
+                    properties: {
+                        label: 'Random',
+                        texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                        hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                        labelColor: Colors.MENU_BUTTON_HOVER,
+                        labelHoverColor: Colors.MENU_BUTTON
+                    },
+                    hideMenuOnClick: false
+                },
+                ... easyLevelsData.map(levelData => {
                     return {
                         onClick: () => this.levelChosen('easy', levelData.name),
                         properties: {
@@ -49,6 +61,8 @@ export default class LevelChoiceScene extends Scene {
             false,
             5
         )
+
+        const mediumLevelsData = getLevelsList('medium')
         const mediumLevels = new Menu(
             [
                 {
@@ -58,7 +72,18 @@ export default class LevelChoiceScene extends Scene {
                     },
                     hideMenuOnClick: false
                 },
-                ... getLevelsList('medium').map(levelData => {
+                {
+                    onClick: () => this.levelChosen('medium', mediumLevelsData[Math.floor(Math.random() * mediumLevelsData.length)].name),
+                    properties: {
+                        label: 'Random',
+                        texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                        hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                        labelColor: Colors.MENU_BUTTON_HOVER,
+                        labelHoverColor: Colors.MENU_BUTTON
+                    },
+                    hideMenuOnClick: false
+                },
+                ... mediumLevelsData.map(levelData => {
                     return {
                         onClick: () => this.levelChosen('medium', levelData.name),
                         properties: {
@@ -78,6 +103,8 @@ export default class LevelChoiceScene extends Scene {
             false,
             5
         )
+
+        const hardLevelsData = getLevelsList('hard')
         const hardLevels = new Menu(
             [
                 {
@@ -87,7 +114,18 @@ export default class LevelChoiceScene extends Scene {
                     },
                     hideMenuOnClick: false
                 },
-                ... getLevelsList('hard').map(levelData => {
+                {
+                    onClick: () => this.levelChosen('hard', hardLevelsData[Math.floor(Math.random() * hardLevelsData.length)].name),
+                    properties: {
+                        label: 'Random',
+                        texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                        hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                        labelColor: Colors.MENU_BUTTON_HOVER,
+                        labelHoverColor: Colors.MENU_BUTTON
+                    },
+                    hideMenuOnClick: false
+                },
+                ... hardLevelsData.map(levelData => {
                     return {
                         onClick: () => this.levelChosen('hard', levelData.name),
                         properties: {
