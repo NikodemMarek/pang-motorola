@@ -39,8 +39,7 @@
             "position": {"x": 500, "y": 200},
             "radius": 40,
             "isFalling": true,
-            "lastHeight": 200,
-            "peakHeight": 200
+            "lastHeight": 200
         }
     ],
     "ladders": [
@@ -51,7 +50,6 @@
     ],
     "powerUps": [
         {
-            "speed": {"x": 0, "y": 0},
             "position": {"x": 400, "y": 300},
             "timeLeft": 15,
             "type": 6

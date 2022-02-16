@@ -57,7 +57,7 @@ export const getLevel = (rawLevel: any): { level: Level, info: any } => {
                 return newBall
             }),
             bullets: (rawLevel.bullets as Array<any>).map(bullet => {
-                const newBullet = bullet.gun == 3? new VulcanMissile(bullet.position): bullet.gun == 2? new PowerWireBody(bullet.position): new HarpoonBody(bullet.position)
+                const newBullet = bullet.gun == 2? new VulcanMissile(bullet.position): bullet.gun == 1? new PowerWireBody(bullet.position): new HarpoonBody(bullet.position)
                 newBullet.position = bullet.position
 
                 return newBullet
@@ -66,17 +66,11 @@ export const getLevel = (rawLevel: any): { level: Level, info: any } => {
             ladders: (rawLevel.ladders as Array<LadderBody>).map(ladder => new LadderBody(ladder.position, ladder.size.y)),
             powerUps: (rawLevel.powerUps as Array<PowerUpBody>).map(powerUp => {
                 const newPowerUp = new PowerUpBody(powerUp.position, powerUp.type)
-                newPowerUp.speed = powerUp.speed
                 newPowerUp.timeLeft = powerUp.timeLeft
 
                 return newPowerUp
             }),
-            points: (rawLevel.points as Array<PointBody>).map(point => {
-                const newPoint = new PointBody(point.position, point.value)
-                newPoint.speed = point.speed
-    
-                return newPoint
-            })
+            points: (rawLevel.points as Array<PointBody>).map(point => new PointBody(point.position, point.value))
         } as Level,
         info: {
             time: rawLevel.info.time,
@@ -85,4 +79,82 @@ export const getLevel = (rawLevel: any): { level: Level, info: any } => {
             hourglassTimeLeft: rawLevel.info.hourglassTimeLeft
         }
     }
+}
+
+/**
+ * Konwertuje poziom z gry na jego surową formę.
+ * Zmniejsza ilość danych potrzebnych do zapisania stanu poziomu.
+ * 
+ * @param level - Informacje o stanie obiektów w grze
+ * @param info - Ogólne informacje o poziomie
+ * @returns Poziom w surowej formie
+ */
+export const rawLevel = (level: Level, info: any) => {
+    const players = level.players.map(player => {
+        return {
+            accelerators: player.accelerators,
+            position: player.position,
+            lives: player.lives,
+            shotTwoTimes: player.shotTwoTimes,
+            forceFields: player.forceFields,
+            forceFieldsTimeLeft: player.forceFieldsTimeLeft,
+            gun: player.gun,
+            cooldown: player.cooldown
+        }
+    })
+    const balls = level.balls.map(ball => {
+        return {
+            speed: ball.speed,
+            position: ball.position,
+            radius: ball.radius,
+            isFalling: ball.isFalling,
+            lastHeight: ball.lastHeight
+        }
+    })
+    const bullets = level.bullets.map(bullet => {
+        return {
+            position: bullet.position,
+            size: bullet.size,
+            gun: bullet instanceof VulcanMissile? 2: bullet instanceof PowerWireBody? 1: 0
+        }
+    })
+    const powerUps = level.powerUps.map(powerUp => {
+        return {
+            position: powerUp.position,
+            timeLeft: powerUp.timeLeft,
+            type: powerUp.type
+        }
+    })
+    const points = level.points.map(point => {
+        return {
+            position: point.position,
+            value: point.value,
+        }
+    })
+
+    const platforms = level.platforms.map(platform => {
+        return {
+            position: platform.position,
+            size: platform.size,
+            isBreakable: platform.isBreakable
+        }
+    })
+    const ladders = level.ladders.map(ladder => {
+        return {
+            position: ladder.position,
+            size: ladder.size
+        }
+    })
+
+    return {
+        players: players,
+        balls: balls,
+        bullets: bullets,
+        powerUps: powerUps,
+        points: points,
+        platforms: platforms,
+        ladders: ladders,
+        info: info
+    }
+    
 }
