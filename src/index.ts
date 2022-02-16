@@ -2,7 +2,8 @@ import { SceneManager } from 'pixi-scenes'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
-import { getLevel, getLevelsList, loadLevel } from './levels-provider'
+import { getLevel, loadLevel } from './levels-provider'
+import BonusLevelsScene from './views/scenes/bonus-levels-scene'
 import CampaignLevelsScene from './views/scenes/campaign-levels-scene'
 import GameScene from './views/scenes/game-scene'
 import LevelChoiceScene from './views/scenes/level-choice-scene'
@@ -64,8 +65,7 @@ const init = async () => {
                 scenes.start('campaign-levels')
             break
             case 2:
-                await addGame('easy', getLevelsList('easy')[0].name)
-                scenes.start('game')
+                scenes.start('bonus-levels')
             break
             case 3:
                 scenes.start('options-menu')
@@ -81,11 +81,16 @@ const init = async () => {
         await addGame('campaign', levelName)
         scenes.start('game')
     }, mainMenu)
+    const bonusLevelsScene = new BonusLevelsScene(async levelName => {
+        await addGame('bonus', levelName)
+        scenes.start('game')
+    }, mainMenu)
 
     scenes.add('main-menu', mainMenuScene)
     scenes.add('options-menu', optionsMenuScene)
     scenes.add('level-choice', levelChoiceScene)
     scenes.add('campaign-levels', campaignLevelsScene)
+    scenes.add('bonus-levels', bonusLevelsScene)
 }
 
 init().finally(mainMenu)

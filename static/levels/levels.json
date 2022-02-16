@@ -27,6 +27,10 @@
         { "name": "15", "path": "test-level.json" }
     ],
     "bonus": [
-        { "name": "bonus levels test", "path": "test-level.json" }
+        { "name": "bonus level 1", "path": "test-level.json" },
+        { "name": "bonus level 2", "path": "test-level.json" },
+        { "name": "bonus level 3", "path": "test-level.json" },
+        { "name": "bonus level 4", "path": "test-level.json" },
+        { "name": "bonus level 5", "path": "test-level.json" }
     ]
 }
