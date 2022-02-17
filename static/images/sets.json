@@ -1,3 +1,5 @@
 [
-    { "name": "modern", "path": "modern/" }
+    { "name": "modern", "path": "modern/" },
+    { "name": "motorola special", "path": "motorola-special/" }
+    { "name": "underwater", "path": "underwater/" }
 ]
