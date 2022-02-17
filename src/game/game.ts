@@ -1,4 +1,4 @@
-import { BallSize, GAME_SIZE, Guns, PowerUp } from '../const'
+import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
@@ -22,6 +22,10 @@ export default class Game {
      */
     score: number = 0
 
+    /**
+     * Stan rozgrywki.
+     */
+    state: GameState = GameState.INIT
     /**
      * Funkcja która wykona sie w przypadku wygranej lub przegranej.
      */
@@ -87,7 +91,10 @@ export default class Game {
      * @param level - Dane poziomu
      */
     constructor(onFinish: (won: boolean) => void) {
-        this.finish = onFinish
+        this.finish = (won: boolean) => {
+            this.state = GameState.FINISHED
+            onFinish(won)
+        }
     }
 
     setLevel(level: Level) {
@@ -111,6 +118,8 @@ export default class Game {
             else if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
             else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
         })
+
+        this.state = GameState.INIT
     }
 
     /**
@@ -226,25 +235,27 @@ export default class Game {
             })
         })
 
-        // Usuwa pociski które trafiły jakiś obiekt.
-        this.bullets = this.bullets.filter(bullet => bullet instanceof PowerWireBody? bullet.timeLeft > 0: bullet.speed.y < 0)
-
-        // Usuwa bonusy które zostały podniesione.
-        this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
-        this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
-
-        // Odświeża punkty do zebrania.
-        this.points.forEach(point => point.update(delta, [ this.borders[1] ].concat(this.platforms)))
-
-        // Zwiększa czas który bonusy są już na planszy.
-        if(this.hourglassTimeLeft > 0) this.hourglassTimeLeft -= delta
-        else this.hourglassTimeLeft = 0
-        if(this.clockTimeLeft > 0) this.clockTimeLeft -= delta
-        else this.clockTimeLeft = 0
-        if(this.splitCooldown > 0) this.splitCooldown -= delta
-        else this.splitCooldown = 0
-
-        // Sprawdza czy wszystkie piłki zostały zestrzelone przez gracza.
-        if(this.balls.length < 1) this.finish(true)
+        if(this.state == GameState.RUNNING) {
+            // Usuwa pociski które trafiły jakiś obiekt.
+            this.bullets = this.bullets.filter(bullet => bullet instanceof PowerWireBody? bullet.timeLeft > 0: bullet.speed.y < 0)
+    
+            // Usuwa bonusy które zostały podniesione.
+            this.powerUps = this.powerUps.filter(powerUp => powerUp.timeLeft > 0)
+            this.powerUps.forEach(powerUp => powerUp.update(delta, [ this.borders[1] ].concat(this.platforms)))
+    
+            // Odświeża punkty do zebrania.
+            this.points.forEach(point => point.update(delta, [ this.borders[1] ].concat(this.platforms)))
+    
+            // Zwiększa czas który bonusy są już na planszy.
+            if(this.hourglassTimeLeft > 0) this.hourglassTimeLeft -= delta
+            else this.hourglassTimeLeft = 0
+            if(this.clockTimeLeft > 0) this.clockTimeLeft -= delta
+            else this.clockTimeLeft = 0
+            if(this.splitCooldown > 0) this.splitCooldown -= delta
+            else this.splitCooldown = 0
+    
+            // Sprawdza czy wszystkie piłki zostały zestrzelone przez gracza.
+            if(this.balls.length < 1) this.finish(true)
+        }
     }
 }
