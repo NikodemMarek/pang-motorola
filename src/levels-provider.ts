@@ -72,12 +72,7 @@ export const getLevel = (rawLevel: any): { level: Level, info: any } => {
             }),
             points: (rawLevel.points as Array<PointBody>).map(point => new PointBody(point.position, point.value))
         } as Level,
-        info: {
-            time: rawLevel.info.time,
-            score: rawLevel.info.score,
-            clockTimeLeft: rawLevel.info.clockTimeLeft,
-            hourglassTimeLeft: rawLevel.info.hourglassTimeLeft
-        }
+        info: rawLevel.info
     }
 }
 
