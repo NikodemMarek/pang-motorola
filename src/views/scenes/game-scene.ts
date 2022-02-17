@@ -32,7 +32,7 @@ export default class GameScene extends Scene {
         }
     
         this.bodiesDrawer = new BodiesDrawer()
-        this.game = new Game(this.finish)
+        this.game = new Game(won => this.gameOver(won))
 
         this.sideMenu = new SideMenu(
             '',
@@ -84,7 +84,7 @@ export default class GameScene extends Scene {
                     }
                 ],
                 {
-                    size: { x: 200, y: 50 },
+                    size: { x: 300, y: 50 },
                     texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                     hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                     labelColor: Colors.MENU_BUTTON,
@@ -95,6 +95,40 @@ export default class GameScene extends Scene {
             pauseMenu.zIndex = ZIndex.PAUSE_MENU
             this.addChild(pauseMenu)
         }
+    }
+
+    gameOver(won: boolean) {
+        this.state = GameState.FINISHED
+
+        const gameOverMenu = new Menu(
+            [
+                {
+                    onClick: () => {
+                        console.log(won);
+                    },
+                    properties: {
+                        label: won? 'You Won!': 'You Lost',
+                        labelColor: Colors.MENU_BUTTON_HOVER
+                    }
+                },
+                {
+                    onClick: this.finish,
+                    properties: {
+                        label: 'Exit',
+                        texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                        hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                        labelColor: Colors.MENU_BUTTON,
+                        labelHoverColor: Colors.MENU_BUTTON_HOVER
+                    }
+                }
+            ],
+            {
+                size: { x: 300, y: 50 },
+            }
+        )
+        gameOverMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
+        gameOverMenu.zIndex = ZIndex.PAUSE_MENU
+        this.addChild(gameOverMenu)
     }
 
     /**
@@ -143,7 +177,9 @@ export default class GameScene extends Scene {
     }
 
     override update(delta: number): void {
-        if(this.state == GameState.RUNNING) {
+        this.game.state = GameState.RUNNING
+
+        if(this.state == GameState.RUNNING && this.game.state == GameState.RUNNING) {
             this.game.update(delta / 1000)
             this.draw()
         }
