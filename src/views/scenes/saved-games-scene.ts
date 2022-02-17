@@ -1,35 +1,40 @@
 import { Scene } from 'pixi-scenes'
 import { ImagesProvider } from '../../assets-provider'
 import { Colors, ImagePath, RENDERER_SIZE } from '../../const'
-import { getLevelsList } from '../../levels-provider'
+import { savedGamesList } from '../../levels-provider'
 import Button from '../button'
 import Menu from '../menu'
 
-export default class BonusLevelsScene extends Scene {
-    levelChosen: (levelName: string) => void
-    saved: () => void
+export default class SavedGamesScene extends Scene {
+    mode: string
+
+    gameChosen: (gameName: string) => void
     exit: () => void
 
     constructor(
-        onLevelChosen: (levelName: string) => void,
-        onSaved: () => void,
+        mode: string,
+        onGameChosen: (gameName: string) => void,
         onExit: () => void
     ) {
         super()
 
-        this.levelChosen = onLevelChosen
-        this.saved = onSaved
+        this.mode = mode
+
+        this.gameChosen = onGameChosen
         this.exit = onExit
     }
 
-    override init(): void {
-        const levels = new Menu(
+    override start(): void {
+        this.removeChildren(0, this.children.length)
+        
+        const savedGames = savedGamesList(this.mode)
+        const games = new Menu(
             [
-                ... getLevelsList('bonus').map(levelData => {
+                ... savedGames.map(gameName => {
                     return {
-                        onClick: () => this.levelChosen(levelData.name),
+                        onClick: () => this.gameChosen(gameName),
                         properties: {
-                            label: levelData.name,
+                            label: gameName,
                             texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                             hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                             labelColor: Colors.MENU_BUTTON,
@@ -45,22 +50,8 @@ export default class BonusLevelsScene extends Scene {
             false,
             5
         )
-        levels.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
-        this.addChild(levels)
-
-        const loadGameButton = new Button(
-            this.saved,
-            {
-                label: 'Saved Games',
-                size: { x: 300, y: 50 },
-                texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                labelColor: Colors.MENU_BUTTON,
-                labelHoverColor: Colors.MENU_BUTTON_HOVER
-            }
-        )
-        loadGameButton.position.set(RENDERER_SIZE.x / 4 - 50, RENDERER_SIZE.y - 50)
-        this.addChild(loadGameButton)
+        games.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
+        this.addChild(games)
 
         const exitButton = new Button(
             this.exit,

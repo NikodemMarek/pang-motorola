@@ -7,15 +7,18 @@ import Menu from '../menu'
 
 export default class CampaignLevelsScene extends Scene {
     levelChosen: (levelName: string) => void
+    saved: () => void
     exit: () => void
 
     constructor(
         onLevelChosen: (levelName: string) => void,
+        onSaved: () => void,
         onExit: () => void
     ) {
         super()
 
         this.levelChosen = onLevelChosen
+        this.saved = onSaved
         this.exit = onExit
     }
 
@@ -96,6 +99,20 @@ export default class CampaignLevelsScene extends Scene {
         this.addChild(easyLevels)
         this.addChild(mediumLevels)
         this.addChild(hardLevels)
+
+        const loadGameButton = new Button(
+            this.saved,
+            {
+                label: 'Saved Games',
+                size: { x: 300, y: 50 },
+                texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                labelColor: Colors.MENU_BUTTON,
+                labelHoverColor: Colors.MENU_BUTTON_HOVER
+            }
+        )
+        loadGameButton.position.set(RENDERER_SIZE.x / 4 - 50, RENDERER_SIZE.y - 50)
+        this.addChild(loadGameButton)
 
         const exitButton = new Button(
             this.exit,
