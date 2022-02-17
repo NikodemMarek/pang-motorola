@@ -2,15 +2,13 @@ import { SceneManager } from 'pixi-scenes'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
-import { getLevel, loadLevel, readGame } from './levels-provider'
+import { getLevel, getLevelsList, loadLevel, readGame, savedGamesList } from './levels-provider'
 import { Level } from './types'
-import BonusLevelsScene from './views/scenes/bonus-levels-scene'
-import CampaignLevelsScene from './views/scenes/campaign-levels-scene'
 import GameScene from './views/scenes/game-scene'
 import LevelChoiceScene from './views/scenes/level-choice-scene'
+import LevelsMenuScene from './views/scenes/levels-menu-scene'
 import MainMenuScene from './views/scenes/main-menu-scene'
 import OptionsMenuScene from './views/scenes/options-menu-scene'
-import SavedGamesScene from './views/scenes/saved-games-scene'
 
 /**
  * Tworzy aplikację we wskazanym kontenerze i określa dodatkowe parametry aplikacji.
@@ -64,9 +62,11 @@ const init = async () => {
                 scenes.start('level-choice')
             break
             case 1:
+                refreshCampaignLevelsScene()
                 scenes.start('campaign-levels')
             break
             case 2:
+                refreshBonusLevelsScene()
                 scenes.start('bonus-levels')
             break
             case 3:
@@ -83,48 +83,82 @@ const init = async () => {
         },
         mainMenu
     )
-    const campaignLevelsScene = new CampaignLevelsScene(
-        async levelName => {
-        const level = await loadGameLevel('campaign', levelName)
-            await addGame(level, levelName)
-            scenes.start('game')
-        },
-        () => scenes.start('campaign-saved'),
-        mainMenu
-    )
-    const bonusLevelsScene = new BonusLevelsScene(
-        async levelName => {
-            await addGame(await loadGameLevel('bonus', levelName), levelName)
-            scenes.start('game')
-        },
-        () => scenes.start('bonus-saved'),
-        mainMenu
-    )
 
-    const savedCampaignGamesScene = new SavedGamesScene(
-        'campaign',
-        async gameName => {
-            await addGame(getLevel(readGame('campaign', gameName)), gameName)
-            scenes.start('game')
-        },
-        mainMenu
-    )
-    const savedBonusGamesScene = new SavedGamesScene(
-        'bonus',
-        async gameName => {
-            await addGame(getLevel(readGame('bonus', gameName)), gameName)
-            scenes.start('game')
-        },
-        mainMenu
-    )
+    const refreshCampaignLevelsScene = () => {
+        scenes.remove('campaign-levels')
+
+        const campaignLevelsScene = new LevelsMenuScene(
+            getLevelsList('campaign').map(levelData => levelData.name),
+            async levelName => {
+                await addGame(await loadGameLevel('campaign', levelName), levelName)
+                scenes.start('game')
+            },
+            mainMenu,
+            savedGamesList('campaign').length > 0? () => {
+                refreshCampaignSavedGamesScene()
+                scenes.start('campaign-saved')
+            }: undefined
+        )
+
+        scenes.add('campaign-levels', campaignLevelsScene)
+    }
+    const refreshBonusLevelsScene = () => {
+        scenes.remove('bonus-levels')
+
+        const bonusLevelsScene = new LevelsMenuScene(
+            getLevelsList('bonus').map(levelData => levelData.name),
+            async levelName => {
+                await addGame(await loadGameLevel('bonus', levelName), levelName)
+                scenes.start('game')
+            },
+            mainMenu,
+            savedGamesList('bonus').length > 0? () => {
+                refreshBonusSavedGamesScene()
+                scenes.start('bonus-saved')
+            }: undefined
+        )
+
+        scenes.add('bonus-levels', bonusLevelsScene)
+    }
+
+    const refreshCampaignSavedGamesScene = () => {
+        scenes.remove('campaign-saved')
+
+        const savedCampaignGamesScene = new LevelsMenuScene(
+            savedGamesList('campaign'),
+            async gameName => {
+                await addGame(getLevel(readGame('campaign', gameName)), gameName)
+                scenes.start('game')
+            },
+            mainMenu
+        )
+
+        scenes.add('campaign-saved', savedCampaignGamesScene)
+    }
+    const refreshBonusSavedGamesScene = () => {
+        scenes.remove('bonus-saved')
+
+        const savedBonusGamesScene = new LevelsMenuScene(
+            savedGamesList('bonus'),
+            async gameName => {
+                await addGame(getLevel(readGame('bonus', gameName)), gameName)
+                scenes.start('game')
+            },
+            mainMenu
+        )
+
+        scenes.add('bonus-saved', savedBonusGamesScene)
+    }
 
     scenes.add('main-menu', mainMenuScene)
     scenes.add('options-menu', optionsMenuScene)
     scenes.add('level-choice', levelChoiceScene)
-    scenes.add('campaign-levels', campaignLevelsScene)
-    scenes.add('bonus-levels', bonusLevelsScene)
-    scenes.add('campaign-saved', savedCampaignGamesScene)
-    scenes.add('bonus-saved', savedBonusGamesScene)
+
+    refreshCampaignLevelsScene()
+    refreshBonusLevelsScene()
+
+    refreshCampaignSavedGamesScene()
+    refreshBonusSavedGamesScene()
 }
 
 init().finally(mainMenu)

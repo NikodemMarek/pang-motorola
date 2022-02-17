@@ -1,21 +1,25 @@
 import { Scene } from 'pixi-scenes'
 import { ImagesProvider } from '../../assets-provider'
 import { Colors, ImagePath, RENDERER_SIZE } from '../../const'
-import { getLevelsList } from '../../levels-provider'
 import Button from '../button'
 import Menu from '../menu'
 
-export default class CampaignLevelsScene extends Scene {
+export default class LevelsMenuScene extends Scene {
+    levelNames: Array<string>
+
     levelChosen: (levelName: string) => void
-    saved: () => void
+    saved: (() => void) | undefined
     exit: () => void
 
     constructor(
+        levelNames: Array<string>,
         onLevelChosen: (levelName: string) => void,
-        onSaved: () => void,
-        onExit: () => void
+        onExit: () => void,
+        onSaved?: () => void
     ) {
         super()
+        
+        this.levelNames = levelNames
 
         this.levelChosen = onLevelChosen
         this.saved = onSaved
@@ -23,15 +27,14 @@ export default class CampaignLevelsScene extends Scene {
     }
 
     override init(): void {
-        const campaignLevels = getLevelsList('campaign')
-
+        const columnLength = Math.ceil(this.levelNames.length / 3)
         const easyLevels = new Menu(
             [
-                ... campaignLevels.slice(0, campaignLevels.length / 3).map(levelData => {
+                ... this.levelNames.slice(0, columnLength).map(levelName => {
                     return {
-                        onClick: () => this.levelChosen(levelData.name),
+                        onClick: () => this.levelChosen(levelName),
                         properties: {
-                            label: levelData.name,
+                            label: levelName,
                             texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                             hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                             labelColor: Colors.MENU_BUTTON,
@@ -49,11 +52,11 @@ export default class CampaignLevelsScene extends Scene {
         )
         const mediumLevels = new Menu(
             [
-                ... campaignLevels.slice(campaignLevels.length / 3, campaignLevels.length / 3 * 2).map(levelData => {
+                ... this.levelNames.slice(columnLength, columnLength * 2).map(levelData => {
                     return {
-                        onClick: () => this.levelChosen(levelData.name),
+                        onClick: () => this.levelChosen(levelData),
                         properties: {
-                            label: levelData.name,
+                            label: levelData,
                             texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                             hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                             labelColor: Colors.MENU_BUTTON,
@@ -71,11 +74,11 @@ export default class CampaignLevelsScene extends Scene {
         )
         const hardLevels = new Menu(
             [
-                ... campaignLevels.slice(campaignLevels.length / 3 * 2, campaignLevels.length).map(levelData => {
+                ... this.levelNames.slice(columnLength * 2, columnLength * 3).map(levelData => {
                     return {
-                        onClick: () => this.levelChosen(levelData.name),
+                        onClick: () => this.levelChosen(levelData),
                         properties: {
-                            label: levelData.name,
+                            label: levelData,
                             texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                             hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                             labelColor: Colors.MENU_BUTTON,
@@ -100,20 +103,6 @@ export default class CampaignLevelsScene extends Scene {
         this.addChild(mediumLevels)
         this.addChild(hardLevels)
 
-        const loadGameButton = new Button(
-            this.saved,
-            {
-                label: 'Saved Games',
-                size: { x: 300, y: 50 },
-                texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                labelColor: Colors.MENU_BUTTON,
-                labelHoverColor: Colors.MENU_BUTTON_HOVER
-            }
-        )
-        loadGameButton.position.set(RENDERER_SIZE.x / 4 - 50, RENDERER_SIZE.y - 50)
-        this.addChild(loadGameButton)
-
         const exitButton = new Button(
             this.exit,
             {
@@ -127,5 +116,21 @@ export default class CampaignLevelsScene extends Scene {
         )
         exitButton.position.set(RENDERER_SIZE.x / 4 * 3 + 50, RENDERER_SIZE.y - 50)
         this.addChild(exitButton)
+
+        if(this.saved != undefined) {
+            const loadGameButton = new Button(
+                this.saved,
+                {
+                    label: 'Saved Games',
+                    size: { x: 300, y: 50 },
+                    texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                    hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                    labelColor: Colors.MENU_BUTTON,
+                    labelHoverColor: Colors.MENU_BUTTON_HOVER
+                }
+            )
+            loadGameButton.position.set(RENDERER_SIZE.x / 4 - 50, RENDERER_SIZE.y - 50)
+            this.addChild(loadGameButton)
+        }
     }
 }
