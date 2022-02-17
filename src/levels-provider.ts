@@ -156,26 +156,30 @@ export const rawLevel = (level: Level, info: any) => {
 /**
  * Zwraca listę gier zapisanych w local storage.
  * 
+ * @param mode - Tryb gry w którym rozgrywana była gry których szukamy
  * @returns Lista kluczy do zapisanych gier
  */
-export const savedGamesList = (): Array<string> => [ ... Array(window.localStorage.length).keys() ].map(key => window.localStorage.key(key) || '')
+export const savedGamesList = (mode: string): Array<string> => [ ... Array(window.localStorage.length).keys() ].map(key => window.localStorage.key(key) || '').filter(key => key.startsWith(mode + '/')).map(key => key.replace(mode + '/', ''))
 /**
  * Zapisuje stan rozgrywki do local sotrage pod kluczem / nazwą zapisu.
  * 
+ * @param mode - Tryb gry w którym rozgrywana jest zapisana gra
  * @param saveName - Klucz i nazwa pod którym będzie zapisana rozgrywka
  * @param rawLevel - Stan rozgrywki zapisany w surowej formie, jak z {@link rawLevel}
  */
-export const saveGame = (saveName: string, rawLevel: any) => { window.localStorage.setItem(saveName, JSON.stringify(rawLevel)) }
+export const saveGame = (mode: string, saveName: string, rawLevel: any) => { window.localStorage.setItem(mode + '/' + saveName, JSON.stringify(rawLevel)) }
 /**
  * Wczytuje poziom z local storage.
  * 
+ * @param mode - Tryb gry w którym rozgrywana była zapisana gra
  * @param saveName - Klucz i nazwa pod którym jest zapisana rozgrywka
  * @returns Poziom w surowej postaci
  */
-export const readGame = (saveName: string) => JSON.parse(window.localStorage.getItem(saveName) || '')
+export const readGame = (mode: string, saveName: string) => JSON.parse(window.localStorage.getItem(mode + '/' + saveName) || '')
 /**
  * Usuwa zapisaną grę z local sotrage.
  * 
+ * @param mode - Tryb gry w którym rozgrywana była zapisana gra
  * @param saveName - Klucz i nazwa pod którym jest zapisana rozgrywka
  */
-export const removeGame = (saveName: string) => { window.localStorage.removeItem(saveName) }
+export const removeGame = (mode: string, saveName: string) => { window.localStorage.removeItem(mode + '/' + saveName) }
