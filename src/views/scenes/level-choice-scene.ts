@@ -157,7 +157,7 @@ export default class LevelChoiceScene extends Scene {
         const exitButton = new Button(
             this.exit,
             {
-                label: 'Exit',
+                label: 'Back',
                 size: { x: 300, y: 50 },
                 texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                 hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),

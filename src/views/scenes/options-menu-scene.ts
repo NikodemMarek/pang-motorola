@@ -34,7 +34,7 @@ export default class OptionsMenuScene extends Scene {
                 {
                     onClick: this.exit,
                     properties: {
-                        label: 'Exit'
+                        label: 'Back'
                     },
                     hideMenuOnClick: false
                 }

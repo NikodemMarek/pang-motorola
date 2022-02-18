@@ -79,7 +79,7 @@ export default class GameScene extends Scene {
                     {
                         onClick: this.finish,
                         properties: {
-                            label: 'Exit',
+                            label: 'Back',
                         }
                     }
                 ],
@@ -114,7 +114,7 @@ export default class GameScene extends Scene {
                 {
                     onClick: this.finish,
                     properties: {
-                        label: 'Exit',
+                        label: 'Back',
                         texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                         hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                         labelColor: Colors.MENU_BUTTON,
