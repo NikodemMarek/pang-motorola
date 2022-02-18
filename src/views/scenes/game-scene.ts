@@ -81,7 +81,11 @@ export default class GameScene extends Scene {
         if(this.state != GameState.PAUSED) {
             this.state = GameState.PAUSED
     
-            const options = [
+            const options: Array<{
+            onClick: (() => void) | undefined,
+            properties: ButtonProperties,
+            hideMenuOnClick?: boolean
+        }> = [
                 {
                     onClick: () => { this.state = GameState.RUNNING },
                     properties: {
@@ -108,6 +112,16 @@ export default class GameScene extends Scene {
                     hideMenuOnClick: true
                 }
             )
+            if(this.nextLevel != undefined) options.splice(2, 0, {
+                onClick: () => { this.finish() },
+                properties: {
+                    label: 'Finish',
+                    texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                    hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                    labelColor: Colors.MENU_BUTTON,
+                    labelHoverColor: Colors.MENU_BUTTON_HOVER
+                }
+            })
 
             const pauseMenu = new Menu(
                 options,
@@ -127,7 +141,7 @@ export default class GameScene extends Scene {
 
     gameOver(won: boolean) {
         this.state = GameState.FINISHED
-        this.totalScore += this.game.score - Math.floor(this.game.time)
+        this.totalScore = this.getScore()
 
         const options: Array<{
             onClick: (() => void) | undefined,
@@ -182,6 +196,8 @@ export default class GameScene extends Scene {
         gameOverMenu.zIndex = ZIndex.PAUSE_MENU
         this.addChild(gameOverMenu)
     }
+
+    getScore() { return this.totalScore + this.game.score - Math.floor(this.game.time) }
 
     /**
      * Wyświetla grę i statystyki.

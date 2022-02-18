@@ -48,7 +48,14 @@ const addGame = async (levelData: LevelData, saveTo?: string) => {
     const labels = [ 'Julka', 'Zuzia', 'Iza', 'Nikodem', 'Krzysiu', 'Motorola' ]
 
     const gameScene = new GameScene(
-        () => { scenes.pop() },
+        () => {
+            scenes.pop()
+
+            if(saveTo != undefined && saveTo == 'campaign') {
+                addToScoreboard('campaign', labels[Math.floor(Math.random() * labels.length)], gameScene.getScore())
+                refreshScoreboard()
+            }
+        },
         saveTo != undefined? game => {
             scenes.remove('save-game')
     
@@ -92,7 +99,7 @@ const addGame = async (levelData: LevelData, saveTo?: string) => {
                 scenes.start('main-menu')
             } else {
                 const level = await loadGameLevel('campaign', getLevelsList('campaign')[nextLevelNumber].name)
-                level.totalScore += gameScene.game.score
+                level.totalScore = gameScene.getScore()
                 
                 addGame(level, 'campaign')
                 scenes.start('game')
