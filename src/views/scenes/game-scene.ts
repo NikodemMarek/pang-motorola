@@ -127,7 +127,7 @@ export default class GameScene extends Scene {
 
     gameOver(won: boolean) {
         this.state = GameState.FINISHED
-        this.totalScore += this.game.score
+        this.totalScore += this.game.score - Math.floor(this.game.time)
 
         const options: Array<{
             onClick: (() => void) | undefined,
