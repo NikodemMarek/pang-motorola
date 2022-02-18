@@ -20,7 +20,7 @@ export default class Menu extends Container {
      */
     public constructor(
         options: Array<{
-            onClick: Function,
+            onClick: (() => void) | undefined,
             properties: ButtonProperties,
             hideMenuOnClick?: boolean
         }>,
@@ -52,7 +52,7 @@ export default class Menu extends Container {
                 () => {
                     if(option.hideMenuOnClick != undefined? option.hideMenuOnClick: true) this.parent.removeChild(this)
                     
-                    option.onClick()
+                    if(option.onClick != undefined) option.onClick()
                 },
                 buttonProperties
             )
