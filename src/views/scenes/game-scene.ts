@@ -3,7 +3,7 @@ import { ImagesProvider } from '../../assets-provider'
 import { Colors, GameState, GAME_SIZE, ImagePath, RENDERER_SIZE, ZIndex } from '../../const'
 import BodiesDrawer from '../../game/bodies-drawer'
 import Game from '../../game/game'
-import { Level, LevelData } from '../../types'
+import { ButtonProperties, Level, LevelData } from '../../types'
 import Menu from '../menu'
 import SideMenu from '../side-menu'
 
@@ -18,6 +18,8 @@ export default class GameScene extends Scene {
     sideMenu: SideMenu
     state: GameState = GameState.INIT
     game: Game
+
+    totalScore: number = 0
 
     finish: () => void
     save: ((game: Game) => void) | undefined
@@ -67,6 +69,8 @@ export default class GameScene extends Scene {
         this.game.clockTimeLeft = levelData.info.clockTimeLeft
         this.game.hourglassTimeLeft = levelData.info.hourglassTimeLeft
         this.sideMenu.levelName.text = levelData.name
+
+        this.totalScore = levelData.totalScore || 0
     }
 
     /**
@@ -122,16 +126,28 @@ export default class GameScene extends Scene {
 
     gameOver(won: boolean) {
         this.state = GameState.FINISHED
+        this.totalScore += this.game.score
 
-        const options = [
+        const options: Array<{
+            onClick: (() => void) | undefined,
+            properties: ButtonProperties,
+            hideMenuOnClick?: boolean
+        }> = [
             {
-                onClick: () => {
-                    console.log(won);
-                },
+                onClick: undefined,
                 properties: {
                     label: won? 'You Won!': 'You Lost',
                     labelColor: Colors.MENU_BUTTON_HOVER
-                }
+                },
+                hideMenuOnClick: false
+            },
+            {
+                onClick: undefined,
+                properties: {
+                    label: `${this.totalScore} points`,
+                    labelColor: Colors.MENU_BUTTON_HOVER
+                },
+                hideMenuOnClick: false
             },
             {
                 onClick: this.finish,
@@ -144,7 +160,7 @@ export default class GameScene extends Scene {
                 }
             }
         ]
-        if(won && this.nextLevel != undefined) options.splice(1, 0, {
+        if(won && this.nextLevel != undefined) options.splice(2, 0, {
             onClick: () => { this.nextLevel!() },
             properties: {
                 label: 'Next Level',

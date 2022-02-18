@@ -79,9 +79,10 @@ const addGame = async (levelData: LevelData, saveTo?: string) => {
             scenes.start('save-game')
         }: undefined,
         saveTo != undefined && saveTo == 'campaign'? async () => {
-            const nextLevelName = getLevelsList('campaign')[parseInt(levelData.name.slice(0, 2))].name
-            
-            addGame(await loadGameLevel('campaign', nextLevelName), 'campaign')
+            const level = await loadGameLevel('campaign', getLevelsList('campaign')[parseInt(levelData.name.slice(0, 2))].name)
+            level.totalScore += gameScene.game.score
+
+            addGame(level, 'campaign')
             scenes.start('game')
         }: undefined
     )
