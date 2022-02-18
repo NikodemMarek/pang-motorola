@@ -67,5 +67,7 @@
         "score": 0,
         "clockTimeLeft": 0,
         "hourglassTimeLeft": 0
-    }
+    },
+    "levelName": "3",
+    "total-score": 10000
 }

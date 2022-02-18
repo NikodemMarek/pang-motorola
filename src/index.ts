@@ -2,7 +2,7 @@ import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
 import { getLevel, getLevelsList, loadLevel, rawLevel, readGame, removeGame, savedGamesList, saveGame } from './levels-provider'
-import { Level } from './types'
+import { Level, LevelData } from './types'
 import GameScene from './views/scenes/game-scene'
 import LevelChoiceScene from './views/scenes/level-choice-scene'
 import LevelsMenuScene from './views/scenes/levels-menu-scene'
@@ -35,9 +35,9 @@ const loadAssets = async (set: number) => {
         loader.onError.once(() => reject(false))
     })
 }
-const loadGameLevel = async (mode: string, levelName: string) => getLevel(await loadLevel(mode, levelName))
+const loadGameLevel = async (mode: string, levelName: string): Promise<LevelData> => getLevel(await loadLevel(mode, levelName))
 
-const addGame = async (level: { level: Level, info: any }, levelName: string, saveTo?: string) => {
+const addGame = async (levelData: LevelData, saveTo?: string) => {
     scenes.remove('game')
 
     const gameScene = new GameScene(
@@ -51,8 +51,8 @@ const addGame = async (level: { level: Level, info: any }, levelName: string, sa
                 labels,
                 async saveName => {
                     removeGame(saveTo, saveName)
-                    saveGame(saveTo, saveName.replace(' empty', ''), rawLevel(
-                        {
+                    saveGame(saveTo, saveName.replace(' empty', ''), rawLevel({
+                        level: {
                             players: game.players,
                             balls: game.balls,
                             bullets: game.bullets,
@@ -61,13 +61,14 @@ const addGame = async (level: { level: Level, info: any }, levelName: string, sa
                             platforms: game.platforms,
                             ladders: game.ladders
                         } as Level,
-                        {
+                        info: {
                             time: game.time,
                             score: game.score,
-                            clockTimeLeft: game.clockTimeLeft,
-                            hourglassTimeLeft: game.hourglassTimeLeft
-                        }
-                    ))
+                            hourglassTimeLeft: game.hourglassTimeLeft,
+                            clockTimeLeft: game.clockTimeLeft
+                        },
+                        name: levelData.name
+                    } as LevelData))
 
                     scenes.pop()
                 },
@@ -78,13 +79,13 @@ const addGame = async (level: { level: Level, info: any }, levelName: string, sa
             scenes.start('save-game')
         }: undefined,
         saveTo != undefined && saveTo == 'campaign'? async () => {
-            const nextLevelName = getLevelsList('campaign')[parseInt(levelName.slice(0, 2))].name
+            const nextLevelName = getLevelsList('campaign')[parseInt(levelData.name.slice(0, 2))].name
             
-            addGame(await loadGameLevel('campaign', nextLevelName), nextLevelName, 'campaign')
+            addGame(await loadGameLevel('campaign', nextLevelName), 'campaign')
             scenes.start('game')
         }: undefined
     )
-    gameScene.setLevel(level.level, level.info, levelName)
+    gameScene.setLevel(levelData)
     scenes.add('game', gameScene)
     gameScene.startGame()
 }
@@ -97,7 +98,7 @@ const refreshCampaignLevelsScene = () => {
     const campaignLevelsScene = new LevelsMenuScene(
         getLevelsList('campaign').map(levelData => levelData.name),
         async levelName => {
-            await addGame(await loadGameLevel('campaign', levelName), levelName, 'campaign')
+            await addGame(await loadGameLevel('campaign', levelName), 'campaign')
             scenes.start('game')
         },
         () => { scenes.pop() },
@@ -115,7 +116,7 @@ const refreshBonusLevelsScene = () => {
     const bonusLevelsScene = new LevelsMenuScene(
         getLevelsList('bonus').map(levelData => levelData.name),
         async levelName => {
-            await addGame(await loadGameLevel('bonus', levelName), levelName, 'bonus')
+            await addGame(await loadGameLevel('bonus', levelName), 'bonus')
             scenes.start('game')
         },
         () => { scenes.pop() },
@@ -133,7 +134,7 @@ const refreshCampaignSavedGamesScene = () => {
     const savedCampaignGamesScene = new LevelsMenuScene(
         savedGamesList('campaign'),
         async gameName => {
-            await addGame(getLevel(readGame('campaign', gameName)), gameName, 'campaign')
+            await addGame(getLevel(readGame('campaign', gameName)), 'campaign')
             scenes.start('game')
         },
         () => { scenes.pop() }
@@ -147,7 +148,7 @@ const refreshBonusSavedGamesScene = () => {
     const savedBonusGamesScene = new LevelsMenuScene(
         savedGamesList('bonus'),
         async gameName => {
-            await addGame(getLevel(readGame('bonus', gameName)), gameName, 'bonus')
+            await addGame(getLevel(readGame('bonus', gameName)), 'bonus')
             scenes.start('game')
         },
         () => { scenes.pop() }
@@ -186,7 +187,9 @@ const init = async () => {
 
     const levelChoiceScene = new LevelChoiceScene(
         async (difficulty: string, levelName: string) => {
-            await addGame(await loadGameLevel(difficulty, levelName), levelName)
+            const level = await loadGameLevel(difficulty, levelName)
+            
+            await addGame(level)
             scenes.start('game')
         },
         () => { scenes.pop() }

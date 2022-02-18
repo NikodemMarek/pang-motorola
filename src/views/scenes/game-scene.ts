@@ -3,7 +3,7 @@ import { ImagesProvider } from '../../assets-provider'
 import { Colors, GameState, GAME_SIZE, ImagePath, RENDERER_SIZE, ZIndex } from '../../const'
 import BodiesDrawer from '../../game/bodies-drawer'
 import Game from '../../game/game'
-import { Level } from '../../types'
+import { Level, LevelData } from '../../types'
 import Menu from '../menu'
 import SideMenu from '../side-menu'
 
@@ -46,28 +46,27 @@ export default class GameScene extends Scene {
         this.sideMenu = new SideMenu(
             '',
             {
-                lives: 0,
+                score: 0,
+                time: 0,
                 clockTimeLeft: 0,
-                hourglassTimeLeft: 0,
-                gun: 0,
-                forceFields: 0,
-                forceFieldTimeLeft: 0,
+                hourglassTimeLeft: 0
             },
+            0, 0, 0, 0,
             this.pause
         )
         this.sideMenu.position.set(GAME_SIZE.x, 0)
         this.addChild(this.sideMenu)
     }
 
-    setLevel(level: Level, levelInfo: any, levelName: string) {
-        this.game.setLevel(level)
-        this.bodiesDrawer.setLevel(this, level)
+    setLevel(levelData: LevelData) {
+        this.game.setLevel(levelData.level)
+        this.bodiesDrawer.setLevel(this, levelData.level)
 
-        this.game.time = levelInfo.time
-        this.game.score = levelInfo.score
-        this.game.clockTimeLeft = levelInfo.clockTimeLeft
-        this.game.hourglassTimeLeft = levelInfo.hourglassTimeLeft
-        this.sideMenu.levelName.text = levelName
+        this.game.time = levelData.info.time
+        this.game.score = levelData.info.score
+        this.game.clockTimeLeft = levelData.info.clockTimeLeft
+        this.game.hourglassTimeLeft = levelData.info.hourglassTimeLeft
+        this.sideMenu.levelName.text = levelData.name
     }
 
     /**
@@ -145,7 +144,7 @@ export default class GameScene extends Scene {
                 }
             }
         ]
-        if(this.nextLevel != undefined) options.splice(1, 0, {
+        if(won && this.nextLevel != undefined) options.splice(1, 0, {
             onClick: () => { this.nextLevel!() },
             properties: {
                 label: 'Next Level',
@@ -187,14 +186,14 @@ export default class GameScene extends Scene {
         this.sideMenu.updateInfo(
             {
                 time: this.game.time,
-                points: this.game.score,
+                score: this.game.score,
                 clockTimeLeft: this.game.clockTimeLeft,
-                hourglassTimeLeft: this.game.hourglassTimeLeft,
-                lives: this.game.players[0].lives,
-                gun: this.game.players[0].gun,
-                forceFields: this.game.players[0].forceFields,
-                forceFieldTimeLeft: this.game.players[0].forceFieldsTimeLeft,
-            }
+                hourglassTimeLeft: this.game.hourglassTimeLeft
+            },
+            this.game.players[0].lives,
+            this.game.players[0].gun,
+            this.game.players[0].forceFields,
+            this.game.players[0].forceFieldsTimeLeft,
         )
     }
 

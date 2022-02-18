@@ -4,7 +4,7 @@ import { HarpoonBody, PowerWireBody, VulcanMissile } from './game/physics/bullet
 import { BallBody, LadderBody, PlatformBody, PointBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
-import { Level } from './types'
+import { Level, LevelData } from './types'
 
 /**
  * Pobiera listę poziomów z podanego trybu.
@@ -32,9 +32,9 @@ export const loadLevel = async (mode: string, name: string): Promise<Object | un
  * Konwertuje surowy poziom na {@link Level}.
  * 
  * @param rawLevel - Poziom w surowej postaci
- * @returns Poziom w postaci {@link Level}, oraz informacje o rozgrywce
+ * @returns Poziom w postaci {@link LevelData}
  */
-export const getLevel = (rawLevel: any): { level: Level, info: any } => {
+export const getLevel = (rawLevel: any): LevelData => {
     return {
         level: {
             players: (rawLevel.players as Array<PlayerBody>).map(player => {
@@ -72,7 +72,9 @@ export const getLevel = (rawLevel: any): { level: Level, info: any } => {
             }),
             points: (rawLevel.points as Array<PointBody>).map(point => new PointBody(point.position, point.value))
         } as Level,
-        info: rawLevel.info
+        info: rawLevel.info,
+        name: rawLevel.levelName || '',
+        totalScore: rawLevel.totalScore
     }
 }
 
@@ -80,12 +82,14 @@ export const getLevel = (rawLevel: any): { level: Level, info: any } => {
  * Konwertuje poziom z gry na jego surową formę.
  * Zmniejsza ilość danych potrzebnych do zapisania stanu poziomu.
  * 
- * @param level - Informacje o stanie obiektów w grze
+ * @param levelData - Informacje o stanie obiektów w grze
  * @param info - Ogólne informacje o poziomie
+ * @param levelName - Nazwa poziomu
+ * @param totalScore - Wszystkie punkty uzyskane podczas rozgrywki
  * @returns Poziom w surowej formie
  */
-export const rawLevel = (level: Level, info: any) => {
-    const players = level.players.map(player => {
+export const rawLevel = (levelData: LevelData) => {
+    const players = levelData.level.players.map(player => {
         return {
             accelerators: player.accelerators,
             position: player.position,
@@ -97,7 +101,7 @@ export const rawLevel = (level: Level, info: any) => {
             cooldown: player.cooldown
         }
     })
-    const balls = level.balls.map(ball => {
+    const balls = levelData.level.balls.map(ball => {
         return {
             speed: ball.speed,
             position: ball.position,
@@ -106,35 +110,35 @@ export const rawLevel = (level: Level, info: any) => {
             lastHeight: ball.lastHeight
         }
     })
-    const bullets = level.bullets.map(bullet => {
+    const bullets = levelData.level.bullets.map(bullet => {
         return {
             position: bullet.position,
             size: bullet.size,
             gun: bullet instanceof VulcanMissile? 2: bullet instanceof PowerWireBody? 1: 0
         }
     })
-    const powerUps = level.powerUps.map(powerUp => {
+    const powerUps = levelData.level.powerUps.map(powerUp => {
         return {
             position: powerUp.position,
             timeLeft: powerUp.timeLeft,
             type: powerUp.type
         }
     })
-    const points = level.points.map(point => {
+    const points = levelData.level.points.map(point => {
         return {
             position: point.position,
             value: point.value,
         }
     })
 
-    const platforms = level.platforms.map(platform => {
+    const platforms = levelData.level.platforms.map(platform => {
         return {
             position: platform.position,
             size: platform.size,
             isBreakable: platform.isBreakable
         }
     })
-    const ladders = level.ladders.map(ladder => {
+    const ladders = levelData.level.ladders.map(ladder => {
         return {
             position: ladder.position,
             size: ladder.size
@@ -149,7 +153,9 @@ export const rawLevel = (level: Level, info: any) => {
         points: points,
         platforms: platforms,
         ladders: ladders,
-        info: info
+        info: levelData.info,
+        totalScore: levelData.totalScore,
+        levelName: levelData.name
     } 
 }
 
