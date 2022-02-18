@@ -2,6 +2,7 @@ import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
 import { getLevel, getLevelsList, loadLevel, rawLevel, readGame, removeGame, savedGamesList, saveGame } from './levels-provider'
+import { addToScoreboard, readScoreboard } from './scoreboard'
 import { Level, LevelData } from './types'
 import GameScene from './views/scenes/game-scene'
 import LevelChoiceScene from './views/scenes/level-choice-scene'
@@ -40,15 +41,15 @@ const loadGameLevel = async (mode: string, levelName: string): Promise<LevelData
 const addGame = async (levelData: LevelData, saveTo?: string) => {
     scenes.remove('game')
 
+    const labels = [ 'Julka', 'Zuzia', 'Iza', 'Nikodem', 'Krzysiu', 'Motorola' ]
+
     const gameScene = new GameScene(
         () => { scenes.pop() },
         saveTo != undefined? game => {
             scenes.remove('save-game')
-
-            const labels = [ 'Julka', 'Zuzia', 'Iza', 'Nikodem', 'Krzysiu', 'Motorola' ].map(label => label + (!savedGamesList(saveTo).some(save => save == label)? ' empty': ''))
     
             const saveGamesScene = new LevelsMenuScene(
-                labels,
+                labels.map(label => label + (!savedGamesList(saveTo).some(save => save == label)? ' empty': '')),
                 async saveName => {
                     removeGame(saveTo, saveName)
                     saveGame(saveTo, saveName.replace(' empty', ''), rawLevel({
@@ -79,11 +80,19 @@ const addGame = async (levelData: LevelData, saveTo?: string) => {
             scenes.start('save-game')
         }: undefined,
         saveTo != undefined && saveTo == 'campaign'? async () => {
-            const level = await loadGameLevel('campaign', getLevelsList('campaign')[parseInt(levelData.name.slice(0, 2))].name)
-            level.totalScore += gameScene.game.score
+            const nextLevelNumber = parseInt(levelData.name.slice(0, 2))
 
-            addGame(level, 'campaign')
-            scenes.start('game')
+            if(nextLevelNumber >= getLevelsList('campaign').length) {
+                addToScoreboard('campaign', labels[Math.floor(Math.random() * labels.length)], gameScene.totalScore)
+                refreshScoreboard()
+                scenes.start('main-menu')
+            } else {
+                const level = await loadGameLevel('campaign', getLevelsList('campaign')[nextLevelNumber].name)
+                level.totalScore += gameScene.game.score
+                
+                addGame(level, 'campaign')
+                scenes.start('game')
+            }
         }: undefined
     )
     gameScene.setLevel(levelData)
@@ -158,6 +167,18 @@ const refreshBonusSavedGamesScene = () => {
     scenes.add('bonus-saved', savedBonusGamesScene)
 }
 
+const refreshScoreboard = () => {
+    scenes.remove('scoreboard')
+
+    const scoreboardScene = new LevelsMenuScene(
+        readScoreboard('campaign').map(score => score.name + ' ' + score.score),
+        undefined,
+        () => { scenes.pop() }
+    )
+
+    scenes.add('scoreboard', scoreboardScene)
+}
+
 const init = async () => {
     BitmapFont.from('buttonLabelFont', {
         fontFamily: 'Noto Sans',
@@ -180,6 +201,9 @@ const init = async () => {
                 scenes.start('bonus-levels')
             break
             case 3:
+                scenes.start('scoreboard')
+            break
+            case 4:
                 scenes.start('options-menu')
             break
         }
@@ -206,6 +230,8 @@ const init = async () => {
 
     refreshCampaignSavedGamesScene()
     refreshBonusSavedGamesScene()
+
+    refreshScoreboard()
 }
 
 init().finally(() => scenes.start('main-menu'))

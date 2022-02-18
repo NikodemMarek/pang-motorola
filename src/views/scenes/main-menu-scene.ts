@@ -39,6 +39,13 @@ export default class MainMenuScene extends Scene {
                 {
                     onClick: () => this.clicked(3),
                     properties: {
+                        label: 'Scoreboard',
+                    },
+                    hideMenuOnClick: false
+                },
+                {
+                    onClick: () => this.clicked(4),
+                    properties: {
                         label: 'Options',
                     },
                     hideMenuOnClick: false

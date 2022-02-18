@@ -3,6 +3,7 @@ import { ImagesProvider } from '../../assets-provider'
 import { Colors, GameState, GAME_SIZE, ImagePath, RENDERER_SIZE, ZIndex } from '../../const'
 import BodiesDrawer from '../../game/bodies-drawer'
 import Game from '../../game/game'
+import { getLevelsList } from '../../levels-provider'
 import { ButtonProperties, Level, LevelData } from '../../types'
 import Menu from '../menu'
 import SideMenu from '../side-menu'
@@ -163,7 +164,7 @@ export default class GameScene extends Scene {
         if(won && this.nextLevel != undefined) options.splice(2, 0, {
             onClick: () => { this.nextLevel!() },
             properties: {
-                label: 'Next Level',
+                label: parseInt(this.sideMenu.levelName.text.slice(0, 2)) >= getLevelsList('campaign').length? 'Finish': 'Next Level',
                 texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
                 hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
                 labelColor: Colors.MENU_BUTTON,

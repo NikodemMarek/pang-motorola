@@ -7,13 +7,13 @@ import Menu from '../menu'
 export default class LevelsMenuScene extends Scene {
     levelNames: Array<string>
 
-    levelChosen: (levelName: string) => void
+    levelChosen: ((levelName: string) => void) | undefined
     saved: (() => void) | undefined
     exit: () => void
 
     constructor(
         levelNames: Array<string>,
-        onLevelChosen: (levelName: string) => void,
+        onLevelChosen: ((levelName: string) => void) | undefined,
         onExit: () => void,
         onSaved?: () => void
     ) {
@@ -32,7 +32,7 @@ export default class LevelsMenuScene extends Scene {
             [
                 ... this.levelNames.slice(0, columnLength).map(levelName => {
                     return {
-                        onClick: () => this.levelChosen(levelName),
+                        onClick: () => { if(this.levelChosen != undefined) this.levelChosen(levelName) },
                         properties: {
                             label: levelName,
                             texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
@@ -54,7 +54,7 @@ export default class LevelsMenuScene extends Scene {
             [
                 ... this.levelNames.slice(columnLength, columnLength * 2).map(levelData => {
                     return {
-                        onClick: () => this.levelChosen(levelData),
+                        onClick: () => { if(this.levelChosen != undefined) this.levelChosen(levelData) },
                         properties: {
                             label: levelData,
                             texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
@@ -76,7 +76,7 @@ export default class LevelsMenuScene extends Scene {
             [
                 ... this.levelNames.slice(columnLength * 2, columnLength * 3).map(levelData => {
                     return {
-                        onClick: () => this.levelChosen(levelData),
+                        onClick: () => { if(this.levelChosen != undefined) this.levelChosen(levelData) },
                         properties: {
                             label: levelData,
                             texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
