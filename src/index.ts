@@ -1,3 +1,4 @@
+import { clearTextureCache } from '@pixi/utils'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
 import { RENDERER_SIZE } from './const'
@@ -24,11 +25,14 @@ const app = new Application({
 })
 
 const loadAssets = async (set: number) => {
+    clearTextureCache()
+    
     const provider = ImagesProvider.Instance()
     provider.loadSet(set)
 
     return new Promise((resolve, reject) => {
         const loader = Loader.shared
+        loader.reset()
         loader.add(provider.path!)
         loader.load()
 
@@ -100,8 +104,64 @@ const addGame = async (levelData: LevelData, saveTo?: string) => {
     gameScene.startGame()
 }
 
-const scenes = new ScenesNavigator(app)
+let scenes = new ScenesNavigator(app)
 
+const refreshMainMenu = () => {
+    scenes.remove('main-menu')
+
+    const mainMenuScene = new MainMenuScene(async option => {
+        switch(option) {
+            case 0:
+                scenes.start('level-choice')
+            break
+            case 1:
+                refreshCampaignLevelsScene()
+                scenes.start('campaign-levels')
+            break
+            case 2:
+                refreshBonusLevelsScene()
+                scenes.start('bonus-levels')
+            break
+            case 3:
+                scenes.start('scoreboard')
+            break
+            case 4:
+                scenes.start('options-menu')
+            break
+        }
+    })
+
+    scenes.add('main-menu', mainMenuScene)
+}
+const refreshOptionsMenu = () => {
+    scenes.remove('options-menu')
+
+    const optionsMenuScene = new OptionsMenuScene((set: number) => {
+        scenes.pop()
+        scenes.sceneNames.forEach(name => scenes.remove(name))
+        scenes = new ScenesNavigator(app)
+        
+        init(set).finally(() => scenes.start('main-menu'))
+    }, () => { scenes.pop() })
+
+    scenes.add('options-menu', optionsMenuScene)
+}
+
+const refreshLevelChoiceScene = () => {
+    scenes.remove('level-choice')
+
+    const levelChoiceScene = new LevelChoiceScene(
+        async (difficulty: string, levelName: string) => {
+            const level = await loadGameLevel(difficulty, levelName)
+            
+            await addGame(level)
+            scenes.start('game')
+        },
+        () => { scenes.pop() }
+    )
+
+    scenes.add('level-choice', levelChoiceScene)
+}
 const refreshCampaignLevelsScene = () => {
     scenes.remove('campaign-levels')
 
@@ -179,52 +239,18 @@ const refreshScoreboard = () => {
     scenes.add('scoreboard', scoreboardScene)
 }
 
-const init = async () => {
+const init = async (assets: number) => {
     BitmapFont.from('buttonLabelFont', {
         fontFamily: 'Noto Sans',
         fill: 0xffffff,
         fontSize: 30
     })
-    await loadAssets(0)
+    await loadAssets(assets)
 
-    const mainMenuScene = new MainMenuScene(async option => {
-        switch(option) {
-            case 0:
-                scenes.start('level-choice')
-            break
-            case 1:
-                refreshCampaignLevelsScene()
-                scenes.start('campaign-levels')
-            break
-            case 2:
-                refreshBonusLevelsScene()
-                scenes.start('bonus-levels')
-            break
-            case 3:
-                scenes.start('scoreboard')
-            break
-            case 4:
-                scenes.start('options-menu')
-            break
-        }
-    })
-    const optionsMenuScene = new OptionsMenuScene(init, () => { scenes.pop() })
+    refreshMainMenu()
+    refreshOptionsMenu()
 
-    const levelChoiceScene = new LevelChoiceScene(
-        async (difficulty: string, levelName: string) => {
-            const level = await loadGameLevel(difficulty, levelName)
-            
-            await addGame(level)
-            scenes.start('game')
-        },
-        () => { scenes.pop() }
-    )
-
-    scenes.add('main-menu', mainMenuScene)
-
-    scenes.add('options-menu', optionsMenuScene)
-    scenes.add('level-choice', levelChoiceScene)
-
+    refreshLevelChoiceScene()
     refreshCampaignLevelsScene()
     refreshBonusLevelsScene()
 
@@ -234,4 +260,4 @@ const init = async () => {
     refreshScoreboard()
 }
 
-init().finally(() => scenes.start('main-menu'))
+init(1).finally(() => scenes.start('main-menu'))

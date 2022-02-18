@@ -4,11 +4,11 @@ import { Colors, ImagePath, RENDERER_SIZE } from '../../const'
 import Menu from '../menu'
 
 export default class OptionsMenuScene extends Scene {
-    load: (setNumber: number, onComplete: () => void) => void
+    load: (setNumber: number) => void
     exit: () => void
 
     constructor(
-        load: (setNumber: number, onComplete: () => void) => void,
+        load: (setNumber: number) => void,
         onExit: () => void
     ) {
         super()
@@ -20,11 +20,9 @@ export default class OptionsMenuScene extends Scene {
     override init(): void {
         const menu = new Menu(
             [
-                ... getImagesSetsList().map(set => {
+                ... getImagesSetsList().map((set, i) => {
                     return {
-                        onClick: () => {
-                            // FIXME: Load and reload textures.
-                        },
+                        onClick: () => this.load(i),
                         properties: {
                             label: set.name
                         },
