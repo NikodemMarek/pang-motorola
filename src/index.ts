@@ -76,6 +76,12 @@ const addGame = async (level: { level: Level, info: any }, levelName: string, sa
     
             scenes.add('save-game', saveGamesScene)
             scenes.start('save-game')
+        }: undefined,
+        saveTo != undefined && saveTo == 'campaign'? async () => {
+            const nextLevelName = getLevelsList('campaign')[parseInt(levelName.slice(0, 2))].name
+            
+            addGame(await loadGameLevel('campaign', nextLevelName), nextLevelName, 'campaign')
+            scenes.start('game')
         }: undefined
     )
     gameScene.setLevel(level.level, level.info, levelName)

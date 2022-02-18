@@ -21,8 +21,13 @@ export default class GameScene extends Scene {
 
     finish: () => void
     save: ((game: Game) => void) | undefined
+    nextLevel: (() => void) | undefined
 
-    constructor(onFinish: () => void, onSave?: (game: Game) => void) {
+    constructor(
+        onFinish: () => void,
+        onSave?: (game: Game) => void,
+        onNextLevel?: () => void
+    ) {
         super()
 
         this.sortableChildren = true
@@ -33,6 +38,7 @@ export default class GameScene extends Scene {
         }
 
         this.save = onSave
+        this.nextLevel = onNextLevel
     
         this.bodiesDrawer = new BodiesDrawer()
         this.game = new Game(won => this.gameOver(won))
@@ -118,28 +124,40 @@ export default class GameScene extends Scene {
     gameOver(won: boolean) {
         this.state = GameState.FINISHED
 
-        const gameOverMenu = new Menu(
-            [
-                {
-                    onClick: () => {
-                        console.log(won);
-                    },
-                    properties: {
-                        label: won? 'You Won!': 'You Lost',
-                        labelColor: Colors.MENU_BUTTON_HOVER
-                    }
+        const options = [
+            {
+                onClick: () => {
+                    console.log(won);
                 },
-                {
-                    onClick: this.finish,
-                    properties: {
-                        label: 'Back',
-                        texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                        hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                        labelColor: Colors.MENU_BUTTON,
-                        labelHoverColor: Colors.MENU_BUTTON_HOVER
-                    }
+                properties: {
+                    label: won? 'You Won!': 'You Lost',
+                    labelColor: Colors.MENU_BUTTON_HOVER
                 }
-            ],
+            },
+            {
+                onClick: this.finish,
+                properties: {
+                    label: 'Back',
+                    texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                    hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                    labelColor: Colors.MENU_BUTTON,
+                    labelHoverColor: Colors.MENU_BUTTON_HOVER
+                }
+            }
+        ]
+        if(this.nextLevel != undefined) options.splice(1, 0, {
+            onClick: () => { this.nextLevel!() },
+            properties: {
+                label: 'Next Level',
+                texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
+                hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
+                labelColor: Colors.MENU_BUTTON,
+                labelHoverColor: Colors.MENU_BUTTON_HOVER
+            }
+        })
+
+        const gameOverMenu = new Menu(
+            options,
             {
                 size: { x: 300, y: 50 },
             }
