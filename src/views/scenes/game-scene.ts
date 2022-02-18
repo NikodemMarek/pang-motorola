@@ -20,8 +20,9 @@ export default class GameScene extends Scene {
     game: Game
 
     finish: () => void
+    save: ((game: Game) => void) | undefined
 
-    constructor(onFinish: () => void) {
+    constructor(onFinish: () => void, onSave?: (game: Game) => void) {
         super()
 
         this.sortableChildren = true
@@ -30,6 +31,8 @@ export default class GameScene extends Scene {
             this.state = GameState.FINISHED
             onFinish()
         }
+
+        this.save = onSave
     
         this.bodiesDrawer = new BodiesDrawer()
         this.game = new Game(won => this.gameOver(won))
@@ -68,21 +71,36 @@ export default class GameScene extends Scene {
         if(this.state != GameState.PAUSED) {
             this.state = GameState.PAUSED
     
-            const pauseMenu = new Menu(
-                [
-                    {
-                        onClick: () => this.state = GameState.RUNNING,
-                        properties: {
-                            label: 'Continue',
-                        }
+            const options = [
+                {
+                    onClick: () => { this.state = GameState.RUNNING },
+                    properties: {
+                        label: 'Continue',
                     },
-                    {
-                        onClick: this.finish,
-                        properties: {
-                            label: 'Back',
-                        }
-                    }
-                ],
+                    hideMenuOnClick: true
+                }
+            ]
+            if(this.save != undefined) options.push(
+                {
+                    onClick: () => { this.save!(this.game) },
+                    properties: {
+                        label: 'Save',
+                    },
+                    hideMenuOnClick: false
+                }
+            )
+            options.push(
+                {
+                    onClick: this.finish,
+                    properties: {
+                        label: 'Back',
+                    },
+                    hideMenuOnClick: true
+                }
+            )
+
+            const pauseMenu = new Menu(
+                options,
                 {
                     size: { x: 300, y: 50 },
                     texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
@@ -165,9 +183,7 @@ export default class GameScene extends Scene {
     /**
      * Rozpoczyna grę.
      */
-    override start(): void {
-        this.state = GameState.RUNNING
-    }
+    startGame() { this.state = GameState.RUNNING }
 
     /**
      * Zakańcza grę.
