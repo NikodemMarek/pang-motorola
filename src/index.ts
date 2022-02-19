@@ -271,18 +271,22 @@ const onNicknameConfirm = (nickname: string) => {
 }
 
 const enterListener = (event: any) => {
-    if(event.key == 'Enter') {
-        event.preventDefault()
+    event.preventDefault()
 
+    const nickname = (document.getElementById('name-input-field') as HTMLInputElement).value
+    if(event.key == 'Enter' && nickname != '') {
         hideNicknameInput()
-        onNicknameConfirm((document.getElementById('name-input-field') as HTMLInputElement).value)
+        onNicknameConfirm(nickname)
     }
 }
 window.addEventListener('keyup', enterListener)
 
 document.getElementById('name-input-button')!.addEventListener('click', () => {
-    hideNicknameInput()
-    onNicknameConfirm((document.getElementById('name-input-field') as HTMLInputElement).value)
+    const nickname = (document.getElementById('name-input-field') as HTMLInputElement).value
+    if(nickname != '') {
+        hideNicknameInput()
+        onNicknameConfirm(nickname)
+    }
 })
 
 const hideNicknameInput = () => {
