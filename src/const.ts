@@ -129,7 +129,8 @@ export enum PowerUp {
     FORCE_FIELD,
     HOURGLASS,
     CLOCK,
-    DYNAMITE
+    DYNAMITE,
+    LIVE
 }
 
 /**

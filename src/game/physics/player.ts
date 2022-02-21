@@ -188,6 +188,9 @@ export default class PlayerBody extends RectangularBody {
                 this.forceFields ++
                 this.forceFieldsTimeLeft += 20
             break;
+            case PowerUp.LIVE:
+                this.lives ++
+            break;
         }
     }
 }

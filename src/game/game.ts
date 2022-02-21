@@ -153,7 +153,7 @@ export default class Game {
                 this.powerUps.push(
                     new PowerUpBody(
                         ball.position,
-                        Math.floor(Math.random() * 7)
+                        Math.floor(Math.floor(Math.random() * (Object.keys(PowerUp).length / 2)))
                     )
                 )
             }

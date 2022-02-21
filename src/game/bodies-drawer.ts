@@ -190,7 +190,8 @@ export default class BodiesDrawer {
                     ImagePath.FORCE_FIELD_POWER_UP,
                     ImagePath.HOURGLASS_POWER_UP,
                     ImagePath.CLOCK_POWER_UP,
-                    ImagePath.DYNAMITE_POWER_UP
+                    ImagePath.DYNAMITE_POWER_UP,
+                    ImagePath.LIVE
                 ][powerUp.type]
             ))
             newPowerUp.position.set(powerUp.position.x, powerUp.position.y)
@@ -330,7 +331,8 @@ export default class BodiesDrawer {
                     ImagePath.FORCE_FIELD_POWER_UP,
                     ImagePath.HOURGLASS_POWER_UP,
                     ImagePath.CLOCK_POWER_UP,
-                    ImagePath.DYNAMITE_POWER_UP
+                    ImagePath.DYNAMITE_POWER_UP,
+                    ImagePath.LIVE
                 ][powerUp.type]
             )!
         })
