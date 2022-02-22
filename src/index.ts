@@ -5,6 +5,7 @@ import { RENDERER_SIZE } from './const'
 import { getLevel, getLevelsList, loadLevel, rawLevel, readGame, removeGame, savedGamesList, saveGame } from './levels-provider'
 import { addToScoreboard, readScoreboard } from './scoreboard'
 import { Level, LevelData } from './types'
+import GameOverScene from './views/scenes/game-over-scene'
 import GameScene from './views/scenes/game-scene'
 import LevelChoiceScene from './views/scenes/level-choice-scene'
 import LevelsMenuScene from './views/scenes/levels-menu-scene'
@@ -43,27 +44,48 @@ const onNicknameConfirm = (nickname: string) => {
     }
     const loadGameLevel = async (mode: string, levelName: string): Promise<LevelData> => getLevel(await loadLevel(mode, levelName))
     
-    const addGame = async (levelData: LevelData, saveTo?: string) => {
+    const addGame = async (levelData: LevelData, mode: string) => {
         scenes.remove('game')
         
         const gameScene = new GameScene(
-            () => {
-                scenes.pop()
-    
-                if(saveTo != undefined && saveTo == 'campaign') {
+            (won?: boolean) => {    
+                if(mode == 'campaign') {
                     addToScoreboard('campaign', nickname, gameScene.getScore())
                     refreshScoreboard()
                 }
+
+                scenes.remove('game-over')
+                const gameOverScene = new GameOverScene(
+                    () => { scenes.pop() },
+                    gameScene.getScore(),
+                    won,
+                    mode == 'campaign' && parseInt(levelData.name.slice(0, 2)) < getLevelsList('campaign').length? async () => {
+                        const nextLevelNumber = parseInt(levelData.name.slice(0, 2))
+
+                        const level = await loadGameLevel('campaign', getLevelsList('campaign')[nextLevelNumber].name)
+                        level.totalScore = gameScene.getScore()
+                        
+                        addGame(level, 'campaign')
+                        scenes.start('game')
+                    }: undefined,
+                    mode == 'campaign'? () => {
+                        addToScoreboard('campaign', nickname, gameScene.getScore())
+                        refreshScoreboard()
+                    }: undefined
+                )
+                scenes.pop()
+                scenes.add('game-over', gameOverScene)
+                scenes.start('game-over')
             },
-            saveTo != undefined? game => {
+            mode == 'campaign' || mode == 'bonus'? game => {
                 scenes.remove('save-game')
 
-                const savedGames = savedGamesList(saveTo)
+                const savedGames = savedGamesList(mode)
                 const saveGamesScene = new LevelsMenuScene(
                     Array(9).fill('').map((_, i) => savedGames[i] || 'empty'),
                     async saveName => {
-                        removeGame(saveTo, saveName)
-                        saveGame(saveTo, nickname, rawLevel({
+                        removeGame(mode, saveName)
+                        saveGame(mode, nickname, rawLevel({
                             level: {
                                 players: game.players,
                                 balls: game.balls,
@@ -81,29 +103,14 @@ const onNicknameConfirm = (nickname: string) => {
                             },
                             name: levelData.name
                         } as LevelData))
-    
+
                         scenes.pop()
                     },
                     () => { scenes.pop() }
                 )
-        
+                
                 scenes.add('save-game', saveGamesScene)
                 scenes.start('save-game')
-            }: undefined,
-            saveTo != undefined && saveTo == 'campaign'? async () => {
-                const nextLevelNumber = parseInt(levelData.name.slice(0, 2))
-    
-                if(nextLevelNumber >= getLevelsList('campaign').length) {
-                    addToScoreboard('campaign', nickname, gameScene.totalScore)
-                    refreshScoreboard()
-                    scenes.start('main-menu')
-                } else {
-                    const level = await loadGameLevel('campaign', getLevelsList('campaign')[nextLevelNumber].name)
-                    level.totalScore = gameScene.getScore()
-                    
-                    addGame(level, 'campaign')
-                    scenes.start('game')
-                }
             }: undefined
         )
         gameScene.setLevel(levelData)
@@ -161,7 +168,7 @@ const onNicknameConfirm = (nickname: string) => {
             async (difficulty: string, levelName: string) => {
                 const level = await loadGameLevel(difficulty, levelName)
                 
-                await addGame(level)
+                await addGame(level, difficulty)
                 scenes.start('game')
             },
             () => { scenes.pop() }

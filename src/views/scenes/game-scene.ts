@@ -3,7 +3,6 @@ import { ImagesProvider } from '../../assets-provider'
 import { Colors, GameState, GAME_SIZE, ImagePath, RENDERER_SIZE, ZIndex } from '../../const'
 import BodiesDrawer from '../../game/bodies-drawer'
 import Game from '../../game/game'
-import { getLevelsList } from '../../levels-provider'
 import { ButtonProperties, Level, LevelData } from '../../types'
 import Menu from '../menu'
 import SideMenu from '../side-menu'
@@ -21,30 +20,27 @@ export default class GameScene extends Scene {
     game: Game
 
     totalScore: number = 0
-
-    finish: () => void
+    
+    finish: (won?: boolean) => void
     save: ((game: Game) => void) | undefined
-    nextLevel: (() => void) | undefined
 
     constructor(
-        onFinish: () => void,
-        onSave?: (game: Game) => void,
-        onNextLevel?: () => void
+        onFinish: (won?: boolean) => void,
+        onSave?: (game: Game) => void
     ) {
         super()
 
         this.sortableChildren = true
 
-        this.finish = () => {
+        this.finish = (won?: boolean) => {
             this.state = GameState.FINISHED
-            onFinish()
+            onFinish(won)
         }
 
         this.save = onSave
-        this.nextLevel = onNextLevel
     
         this.bodiesDrawer = new BodiesDrawer()
-        this.game = new Game(won => this.gameOver(won))
+        this.game = new Game(won => this.finish(won))
 
         this.sideMenu = new SideMenu(
             '',
@@ -92,36 +88,25 @@ export default class GameScene extends Scene {
                         label: 'Continue',
                     },
                     hideMenuOnClick: true
-                }
-            ]
-            if(this.save != undefined) options.push(
-                {
+                },
+                this.save != undefined? {
                     onClick: () => { this.save!(this.game) },
                     properties: {
                         label: 'Save',
                     },
                     hideMenuOnClick: false
-                }
-            )
-            options.push(
+                }: undefined,
                 {
-                    onClick: this.finish,
+                    onClick: () => this.finish(undefined),
                     properties: {
-                        label: 'Back',
-                    },
-                    hideMenuOnClick: true
+                        label: 'Finish'
+                    }
                 }
-            )
-            if(this.nextLevel != undefined) options.splice(2, 0, {
-                onClick: () => { this.finish() },
-                properties: {
-                    label: 'Finish',
-                    texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                    hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                    labelColor: Colors.MENU_BUTTON,
-                    labelHoverColor: Colors.MENU_BUTTON_HOVER
-                }
-            })
+            ].filter(option => option != undefined) as Array<{
+                onClick: (() => void) | undefined,
+                properties: ButtonProperties,
+                hideMenuOnClick?: boolean
+            }>
 
             const pauseMenu = new Menu(
                 options,
@@ -137,64 +122,6 @@ export default class GameScene extends Scene {
             pauseMenu.zIndex = ZIndex.PAUSE_MENU
             this.addChild(pauseMenu)
         }
-    }
-
-    gameOver(won: boolean) {
-        this.state = GameState.FINISHED
-        this.totalScore = this.getScore()
-
-        const options: Array<{
-            onClick: (() => void) | undefined,
-            properties: ButtonProperties,
-            hideMenuOnClick?: boolean
-        }> = [
-            {
-                onClick: undefined,
-                properties: {
-                    label: won? 'You Won!': 'You Lost',
-                    labelColor: Colors.MENU_BUTTON_HOVER
-                },
-                hideMenuOnClick: false
-            },
-            {
-                onClick: undefined,
-                properties: {
-                    label: `${this.totalScore} points`,
-                    labelColor: Colors.MENU_BUTTON_HOVER
-                },
-                hideMenuOnClick: false
-            },
-            {
-                onClick: this.finish,
-                properties: {
-                    label: 'Back',
-                    texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                    hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                    labelColor: Colors.MENU_BUTTON,
-                    labelHoverColor: Colors.MENU_BUTTON_HOVER
-                }
-            }
-        ]
-        if(won && this.nextLevel != undefined) options.splice(2, 0, {
-            onClick: () => { this.nextLevel!() },
-            properties: {
-                label: parseInt(this.sideMenu.levelName.text.slice(0, 2)) >= getLevelsList('campaign').length? 'Finish': 'Next Level',
-                texture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON),
-                hoverTexture: ImagesProvider.Instance().getTexture(ImagePath.MENU_BUTTON_HOVER),
-                labelColor: Colors.MENU_BUTTON,
-                labelHoverColor: Colors.MENU_BUTTON_HOVER
-            }
-        })
-
-        const gameOverMenu = new Menu(
-            options,
-            {
-                size: { x: 300, y: 50 },
-            }
-        )
-        gameOverMenu.position.set(RENDERER_SIZE.x / 2, RENDERER_SIZE.y / 2)
-        gameOverMenu.zIndex = ZIndex.PAUSE_MENU
-        this.addChild(gameOverMenu)
     }
 
     getScore() { return this.totalScore + this.game.score - Math.floor(this.game.time) }
