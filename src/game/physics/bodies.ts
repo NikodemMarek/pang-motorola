@@ -1,5 +1,5 @@
 import { XYVar } from '../../types'
-import { addXYvars, distanceAB, divideXYVar, magnitude, multiplyXYVar, multiplyXYVars, normalize, rotate } from './utils'
+import { addXYvars, distanceAB, magnitude, multiplyXYVar, normalize, rotate } from './utils'
 
 /**
  * Interfejs definiujący podstawowe cechy i zachwania które musi posiadać 2 wymiarowe ciało.
@@ -116,18 +116,38 @@ export class RectangularBody implements Body {
         if(this.isCollidable) {
             colliders?.forEach(collider => {
                 if(collider instanceof RectangularBody && this.isColliding(collider)) {
-                    const nearestApex = {
-                        x: Math.max(collider.position.x - collider.size.x / 2, Math.min(this.position.x, collider.position.x + collider.size.x / 2)),
-                        y: Math.max(collider.position.y - collider.size.y / 2, Math.min(this.position.y, collider.position.y + collider.size.y / 2))
-                    }
-                    const distance: XYVar = { x: this.position.x - nearestApex.x, y: this.position.y - nearestApex.y }
-                
-                    const penetrationDepth = magnitude(multiplyXYVars(normalize(distance), divideXYVar(this.size, 2))) - magnitude(distance)
-                    const penetrationVector = multiplyXYVar(normalize(distance), penetrationDepth)
-                    this.position = addXYvars(this.position, penetrationVector)
+                    const distanceX = collider.position.x - this.position.x
+                    const distanceY = collider.position.y - this.position.y
+                    const minDistanceX = collider.size.x / 2 + this.size.x / 2
+                    const minDistanceY = collider.size.y / 2 + this.size.y / 2
 
-                    if(penetrationVector.x != 0) this.speed.x = 0
-                    if(penetrationVector.y != 0) this.speed.y = 0
+                    const intersection = Math.abs(distanceX) >= minDistanceX || Math.abs(distanceY) >= minDistanceY? {
+                        x: 0,
+                        y: 0
+                    }: {
+                        x: distanceX > 0 ? minDistanceX - distanceX : -minDistanceX - distanceX,
+                        y: distanceY > 0 ? minDistanceY - distanceY : -minDistanceY - distanceY
+                    }
+
+                    if(intersection.x !== 0 && intersection.y !== 0) {
+                        if (Math.abs(intersection.x) < Math.abs(intersection.y)) {
+                            // Kolizja z ciałem z prawej strony.
+                            if (Math.sign(intersection.x) < 0) this.position.x = collider.position.x + collider.size.x / 2 + this.size.x / 2
+                            // Kolizja z ciałem z lewej strony.
+                            else this.position.x = collider.position.x - collider.size.x / 2 - this.size.x / 2
+
+                            // Wyzerowanie prędkości w przypadku kolizji.
+                            this.speed.x = 0
+                        } else if (Math.abs(intersection.x) > Math.abs(intersection.y)) {
+                            // Kolizja z ciałem od dołu.
+                            if (Math.sign(intersection.y) < 0) this.position.y = collider.position.y + collider.size.y / 2 + this.size.y / 2
+                            // Kolizja z ciałem od góry
+                            else this.position.y = collider.position.y - collider.size.y / 2 - this.size.y / 2
+
+                            // Wyzerowanie prędkości w przypadku kolizji.
+                            this.speed.y = 0
+                        }
+                    }
                 }
             })
         }
