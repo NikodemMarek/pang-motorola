@@ -75,6 +75,7 @@ export default class PlayerBody extends RectangularBody {
         this.lives = 3
 
         this.accelerate('gravity', GRAVITY)
+        this.accelerate('movement', { x: 0, y: 0 })
 
         window.addEventListener('keydown', event => this.moves.add(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
         window.addEventListener('keyup', event => this.moves.delete(Object.entries(keymap).find(key => key[1].includes(event.key))?.[0]))
@@ -100,19 +101,32 @@ export default class PlayerBody extends RectangularBody {
             this.position.x + this.size.x / 2 < ladder.position.x + ladder.size.x / 2
 
         let collidingLadder = ladders?.find(ladder => isInsideLadder(ladder))
-        let isOnLadder = collidingLadder != undefined
+        let isOnLadder = collidingLadder != undefined && this.speed.x == 0
+
+        this.position.y += 1
+        const isOnIce = colliders?.some(collider => collider instanceof PlatformBody && collider.isIcy && this.isColliding(collider))
+        this.position.y -= 1
 
         if(isOnLadder) this.speed.y = 0
 
-        this.speed.x = 0
+        if(!this.moves.has('RIGHT') && !this.moves.has('LEFT')) {
+            this.decelerate('movement')
+            if(!isOnIce) this.speed.x = 0
+        }
+        if(Math.abs(this.speed.x) >= PLAYER_SPEED.x) this.decelerate('movement')
+
         this.moves.forEach(move => {
             switch(move) {
                 case 'UP':
-                    if(isOnLadder) this.speed.y = -PLAYER_SPEED.y
+                    if(isOnLadder && Math.abs(this.speed.x) < PLAYER_SPEED.x / 10) {
+                        this.speed.x = 0
+                        this.speed.y = -PLAYER_SPEED.y
+                    }
                 break;
                 case 'DOWN':
                     if(isOnLadder) this.speed.y = PLAYER_SPEED.y
-                    else {
+                    else if(Math.abs(this.speed.x) < PLAYER_SPEED.x / 10) {
+                        this.speed.x = 0
                         this.position.y += 1
 
                         collidingLadder = ladders?.find(ladder => isInsideLadder(ladder))
@@ -123,12 +137,30 @@ export default class PlayerBody extends RectangularBody {
                     }
                 break;
                 case 'LEFT':
-                    if(!isOnLadder) this.speed.x = -PLAYER_SPEED.x
-                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = -PLAYER_SPEED.x
+                    if(
+                        this.speed.x >= -PLAYER_SPEED.x && 
+                        !this.accelerators.some(acc => acc.name == 'movement' && acc.vector.x > 0) && (
+                            !isOnLadder ||
+                            isOnLadder && !colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider)
+                            && collidingLadder?.isColliding(collider))
+                        )
+                    ) {
+                        if(isOnIce) this.accelerate('movement', { x: -5, y: 0 })
+                        else this.accelerate('movement', { x: -PLAYER_SPEED.x, y: 0 })
+                    }
                 break;
                 case 'RIGHT':
-                    if(!isOnLadder) this.speed.x = PLAYER_SPEED.x
-                    else if(!colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider) && collidingLadder?.isColliding(collider))) this.speed.x = PLAYER_SPEED.x
+                    if(
+                        this.speed.x <= PLAYER_SPEED.x && 
+                        !this.accelerators.some(acc => acc.name == 'movement' && acc.vector.x < 0) && (
+                            !isOnLadder ||
+                            isOnLadder && !colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider)
+                            && collidingLadder?.isColliding(collider))
+                        )
+                    ) {
+                        if(isOnIce) this.accelerate('movement', { x: 5, y: 0 })
+                        else this.accelerate('movement', { x: PLAYER_SPEED.x, y: 0 })
+                    }
                 break;
                 case 'SHOOT':
                     if(this.cooldown <= 0) {

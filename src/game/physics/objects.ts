@@ -64,6 +64,10 @@ export class PlatformBody extends RectangularBody {
      * Czy platformę można zniszczyć pociskiem.
      */
     isBreakable: boolean
+    /**
+     * Czy platforma jest śliska.
+     */
+    isIcy: boolean
 
     /**
      * Tworzy platformę w kształcie {@link RectangularBody | prostokąta}, nadaje jej pozycję startową i wymiary.
@@ -72,15 +76,18 @@ export class PlatformBody extends RectangularBody {
      * @param position - Pozycja startowa platformy, umieszczona w jej centrum
      * @param size - Rozmiar platformy
      * @param isBreakable - Czy platformę można zniszczyć pociskiem
+     * @param isIcy - Czy platforma jest śliska
      */
     constructor(
         position: XYVar,
         size: XYVar,
-        isBreakable: boolean = false
+        isBreakable: boolean = false,
+        isIcy: boolean = false,
     ) {
         super(position, size, true)
 
         this.isBreakable = isBreakable
+        this.isIcy = isIcy
     }
 }
 

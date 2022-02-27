@@ -62,7 +62,7 @@ export const getLevel = (rawLevel: any): LevelData => {
 
                 return newBullet
             }),
-            platforms: (rawLevel.platforms as Array<PlatformBody>).map(platform => new PlatformBody(platform.position, platform.size, platform.isBreakable)),
+            platforms: (rawLevel.platforms as Array<PlatformBody>).map(platform => new PlatformBody(platform.position, platform.size, platform.isBreakable, platform.isIcy)),
             ladders: (rawLevel.ladders as Array<LadderBody>).map(ladder => new LadderBody(ladder.position, ladder.size.y)),
             powerUps: (rawLevel.powerUps as Array<PowerUpBody>).map(powerUp => {
                 const newPowerUp = new PowerUpBody(powerUp.position, powerUp.type)
@@ -135,7 +135,8 @@ export const rawLevel = (levelData: LevelData) => {
         return {
             position: platform.position,
             size: platform.size,
-            isBreakable: platform.isBreakable
+            isBreakable: platform.isBreakable,
+            isIcy: platform.isIcy
         }
     })
     const ladders = levelData.level.ladders.map(ladder => {
