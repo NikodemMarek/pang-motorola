@@ -6,13 +6,13 @@
     "license": "ISC",
     "scripts": {
         "start": "webpack serve --mode=development",
-        "nw-only": "nw dist/",
+        "nw-only": "nw dist",
         "run-nw": "run-s build nw-only",
-        "build": "run-s clean build-only get-manifest test",
+        "build": "run-s clean build-only get-manifest",
         "build-only": "webpack --mode=production",
-        "build-nw": "nwbuild -p linux64,win64 -o build/ dist/",
+        "build-nw": "nwbuild -p linux64,win64 -o build dist",
         "clean": "rimraf dist",
-        "get-manifest": "cp nw-package.json dist/package.json",
+        "get-manifest": "copy nw-package.json dist\\package.json",
         "test": "jest",
         "docs": "typedoc"
     },
