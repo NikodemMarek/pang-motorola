@@ -23,6 +23,7 @@
         "pixi.js": "^6.2.0"
     },
     "devDependencies": {
+        "@pixi/sound": "^4.2.0",
         "@types/jest": "^27.0.3",
         "@types/offscreencanvas": "^2019.6.4",
         "copy-webpack-plugin": "^9.1.0",

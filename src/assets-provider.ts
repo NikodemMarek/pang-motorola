@@ -75,3 +75,11 @@ export class ImagesProvider {
      */
     public getAnimation(name: string) { return this.path == undefined? undefined: Loader.shared.resources[this.path].spritesheet!!.animations[name] }
 }
+
+/**
+ * Zwraca dźwięk wczytany do gy.
+ * 
+ * @param name - Nazwa dźwięku
+ * @returns Dźwięk
+ */
+export const getSound = (name: string) => Loader.shared.resources[name].sound

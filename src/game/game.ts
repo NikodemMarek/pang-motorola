@@ -1,10 +1,11 @@
-import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
+import { BallSize, GameState, GAME_SIZE, Guns, PowerUp, SoundPath, VOLUME } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
 import { BallBody, LadderBody, PlatformBody, PointBody, PortalBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
+import { getSound } from '../assets-provider'
 
 /**
  * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
@@ -97,6 +98,13 @@ export default class Game {
     constructor(onFinish: (won: boolean) => void) {
         this.finish = (won: boolean) => {
             this.state = GameState.FINISHED
+
+            if(won) {
+                const sound = getSound(SoundPath.VICTORY)
+                sound!.volume = VOLUME
+                sound?.play()
+            }
+
             onFinish(won)
         }
     }
@@ -120,6 +128,10 @@ export default class Game {
         this.points = level.points || [  ]
 
         this.players.forEach(player => player.shoot = () => {
+            const sound = getSound(SoundPath.SHOT)
+            sound!.volume = VOLUME
+            sound?.play()
+
             if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody({ x: player.position.x, y: player.position.y }))
             else if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
             else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
@@ -186,7 +198,13 @@ export default class Game {
             const preSize = this.bullets.length
             this.bullets = this.bullets.filter(body => !(body instanceof BulletBody) || !ball.isColliding(body))
 
-            if(this.bullets.length < preSize) splitBall(ball)
+            if(this.bullets.length < preSize) {
+                const ballPop = getSound(SoundPath.BALL_POP)
+                ballPop!.volume = VOLUME
+                ballPop?.play()
+
+                splitBall(ball)
+            }
         })
         this.balls = this.balls.filter(ball => ball.radius > 0)
         this.balls.push(... ballsToAdd)
@@ -202,13 +220,17 @@ export default class Game {
 
             this.balls = this.balls.filter(ball => {
                 if(player.isColliding(ball)) {
+                    const sound = getSound(SoundPath.LIVE_LOST)
+                    sound!.volume = VOLUME
+                    sound?.play()
+
                     if(player.forceFields > 0) player.forceFields --
                     else if(player.lives > 0) {
                         player.lives -= ball.radius / BallSize.SMALL
                         if(player.lives <= 0) this.finish(false)
                     }
                     else this.finish(false)
-
+                    
                     return false
                 } else return true
             })
@@ -217,6 +239,16 @@ export default class Game {
             
             this.powerUps.forEach(powerUp => {
                 if(player.isColliding(powerUp)) {
+                    if(powerUp.type == PowerUp.LIVE) {
+                        const sound = getSound(SoundPath.BONUS_COLLECTED_2)
+                        sound!.volume = VOLUME
+                        sound?.play()
+                    } else {
+                        const sound = getSound(SoundPath.BONUS_COLLECTED_1)
+                        sound!.volume = VOLUME
+                        sound?.play()
+                    }
+
                     switch(powerUp.type) {
                         case PowerUp.HOURGLASS:
                             this.hourglassTimeLeft += 25
@@ -237,6 +269,10 @@ export default class Game {
 
             this.points = this.points.filter(point => {
                 if(player.isColliding(point)) {
+                    const sound = getSound(SoundPath.POINT_COLLECTED)
+                    sound!.volume = VOLUME
+                    sound?.play()
+
                     this.score += point.value + this.players[0].lives * 10
 
                     return false

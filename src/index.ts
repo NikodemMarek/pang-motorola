@@ -1,7 +1,8 @@
 import { clearTextureCache } from '@pixi/utils'
+import * as _ from '@pixi/sound'
 import { Application, BitmapFont, Loader } from 'pixi.js'
 import { ImagesProvider } from './assets-provider'
-import { RENDERER_SIZE } from './const'
+import { RENDERER_SIZE, SoundPath } from './const'
 import { getLevel, getLevelsList, loadLevel, rawLevel, readGame, removeGame, savedGamesList, saveGame } from './levels-provider'
 import { addToScoreboard, readScoreboard } from './scoreboard'
 import { Level, LevelData } from './types'
@@ -12,6 +13,10 @@ import LevelsMenuScene from './views/scenes/levels-menu-scene'
 import MainMenuScene from './views/scenes/main-menu-scene'
 import OptionsMenuScene from './views/scenes/options-menu-scene'
 import { ScenesNavigator } from './views/scenes/scenes-navigator'
+
+// Inaczej dźwięk nie działa (czemu? pojęcia nie mam).
+import { Sound } from '@pixi/sound'
+Sound
 
 const onNicknameConfirm = (nickname: string) => {
     /**
@@ -35,7 +40,18 @@ const onNicknameConfirm = (nickname: string) => {
         return new Promise((resolve, reject) => {
             const loader = Loader.shared
             loader.reset()
+
             loader.add(provider.path!)
+            ;[
+                SoundPath.BALL_POP,
+                SoundPath.LIVE_LOST,
+                SoundPath.SHOT,
+                SoundPath.VICTORY,
+                SoundPath.BONUS_COLLECTED_1,
+                SoundPath.BONUS_COLLECTED_2,
+                SoundPath.POINT_COLLECTED
+            ].forEach(sound => loader.add(sound, sound))
+
             loader.load()
     
             loader.onComplete.once(() => resolve(true))

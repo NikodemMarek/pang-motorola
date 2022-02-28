@@ -61,6 +61,19 @@ export enum AnimationPath {
 }
 
 /**
+ * Ścieżki do dźwięków w grze.
+ */
+export enum SoundPath {
+    BALL_POP = './sounds/ball-pop.mp3',
+    LIVE_LOST = './sounds/live-lost.mp3',
+    SHOT = './sounds/shot.mp3',
+    VICTORY = './sounds/victory.mp3',
+    BONUS_COLLECTED_1 = './sounds/bonus-collected-1.mp3',
+    BONUS_COLLECTED_2 = './sounds/bonus-collected-2.mp3',
+    POINT_COLLECTED = './sounds/point-collected.mp3'
+}
+
+/**
  * Stany gry.
  */
 export enum GameState {
@@ -165,3 +178,5 @@ export enum Colors {
     MENU_BUTTON = 0x666666,
     MENU_BUTTON_HOVER = 0x111111
 }
+
+export const VOLUME = 1
