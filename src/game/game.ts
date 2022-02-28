@@ -1,7 +1,7 @@
 import { BallSize, GameState, GAME_SIZE, Guns, PowerUp } from '../const'
 import { Level } from '../types'
 import { RectangularBody } from './physics/bodies'
-import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
+import { BallBody, LadderBody, PlatformBody, PointBody, PortalBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics/bullets'
@@ -57,6 +57,10 @@ export default class Game {
      */
     ladders: Array<LadderBody> = [  ]
     /**
+     * Lista portali w grze.
+     */
+    portals: Array<PortalBody> = [  ]
+    /**
      * Lista bonusów w grze.
      */
     powerUps: Array<PowerUpBody> = [  ]
@@ -110,6 +114,8 @@ export default class Game {
         ]
         this.platforms = level.platforms || [  ]
         this.ladders = level.ladders || [  ]
+        this.portals = level.portals || [  ]
+
         this.powerUps = level.powerUps || [  ]
         this.points = level.points || [  ]
 
@@ -188,9 +194,12 @@ export default class Game {
         // Odświeża pozycję piłek, zatrzymuje lub spowalnia je jeśli jest aktywny bonus zegar lub klepsydra.
         this.balls.forEach(ball => ball.update(this.clockTimeLeft > 0? 0: this.hourglassTimeLeft > 0? delta / 3: delta, this.borders.concat(this.platforms)))
 
+        // Sprawdza czy gracz znalazł się w portalu i jeśli tak, teleportuje go.
         // Sprawdza czy gracz został trafiony przez piłkę, kończy grę jeśli gracz nie ma aktywnego bonusu tarczy.
         // Aktywyje nowe, podniesione bonusy.
         this.players.forEach(player => {
+            this.portals.forEach(portal => { if(player.isColliding(portal)) player.position = portal.destination })
+
             this.balls = this.balls.filter(ball => {
                 if(player.isColliding(ball)) {
                     if(player.forceFields > 0) player.forceFields --

@@ -3,7 +3,7 @@ import { ImagesProvider } from '../assets-provider'
 import { AnimationPath, GAME_SIZE, ImagePath, PLAYER_SIZE, ZIndex } from '../const'
 import { Level } from '../types'
 import { BulletBody, PowerWireBody, VulcanMissile } from './physics/bullets'
-import { BallBody, LadderBody, PlatformBody, PointBody } from './physics/objects'
+import { BallBody, LadderBody, PlatformBody, PointBody, PortalBody } from './physics/objects'
 import PlayerBody from './physics/player'
 import PowerUpBody from './physics/power-ups'
 
@@ -40,6 +40,10 @@ export default class BodiesDrawer {
      * Drabiny na planszy.
      */
     private ladders: Array<TilingSprite> = [  ]
+    /**
+     * Portale na planszy.
+     */
+    private portals: Array<Sprite> = [  ]
 
     /**
      * Usuwa wszystkie obiekty z planszy.
@@ -58,6 +62,7 @@ export default class BodiesDrawer {
 
         this.removeSprite(container, this.platforms, this.platforms.length)
         this.removeSprite(container, this.ladders, this.ladders.length)
+        this.removeSprite(container, this.portals, this.portals.length)
 
         this.addPlayers(container, level.players)
         if(level.balls != undefined) this.addBalls(container, level.balls)
@@ -67,6 +72,7 @@ export default class BodiesDrawer {
 
         if(level.platforms != undefined) this.addPlatforms(container, level.platforms)
         if(level.ladders != undefined) this.addLadders(container, level.ladders)
+        if(level.portals != undefined) this.addPortals(container, level.portals)
 
         this.addBackground(container)
     }
@@ -392,6 +398,24 @@ export default class BodiesDrawer {
 
             container.addChild(newLadder)
             return newLadder
+        }))
+    }
+    /**
+     * Wyświetla portale na planszy.
+     * 
+     * @param container - Pojemnik w którym zostaną wyświetlone portale
+     * @param portals - Tablica z ciałami portali
+     */
+    addPortals(container: Container, portals: Array<PortalBody>) {
+        this.portals.push(... portals.map(portal => {
+            const newPortal = new Sprite(ImagesProvider.Instance().getTexture(ImagePath.PORTAL))
+            newPortal.position.set(portal.position.x, portal.position.y)
+            newPortal.anchor.set(0.5, 0.5)
+
+            newPortal.zIndex = ZIndex.PORTAL
+
+            container.addChild(newPortal)
+            return newPortal
         }))
     }
 

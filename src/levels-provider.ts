@@ -1,7 +1,7 @@
 import levels from '../static/levels/levels.json'
 import { BasePath } from './const'
 import { HarpoonBody, PowerWireBody, VulcanMissile } from './game/physics/bullets'
-import { BallBody, LadderBody, PlatformBody, PointBody } from './game/physics/objects'
+import { BallBody, LadderBody, PlatformBody, PointBody, PortalBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
 import { Level, LevelData } from './types'
@@ -64,6 +64,7 @@ export const getLevel = (rawLevel: any): LevelData => {
             }),
             platforms: (rawLevel.platforms as Array<PlatformBody>).map(platform => new PlatformBody(platform.position, platform.size, platform.isBreakable, platform.isIcy)),
             ladders: (rawLevel.ladders as Array<LadderBody>).map(ladder => new LadderBody(ladder.position, ladder.size.y)),
+            portals: (rawLevel.portals as Array<PortalBody>).map(portal => new PortalBody(portal.position, portal.destination)),
             powerUps: (rawLevel.powerUps as Array<PowerUpBody>).map(powerUp => {
                 const newPowerUp = new PowerUpBody(powerUp.position, powerUp.type)
                 newPowerUp.timeLeft = powerUp.timeLeft
@@ -82,10 +83,7 @@ export const getLevel = (rawLevel: any): LevelData => {
  * Konwertuje poziom z gry na jego surową formę.
  * Zmniejsza ilość danych potrzebnych do zapisania stanu poziomu.
  * 
- * @param levelData - Informacje o stanie obiektów w grze
- * @param info - Ogólne informacje o poziomie
- * @param levelName - Nazwa poziomu
- * @param totalScore - Wszystkie punkty uzyskane podczas rozgrywki
+ * @param levelData - Informacje o stanie gry
  * @returns Poziom w surowej formie
  */
 export const rawLevel = (levelData: LevelData) => {
@@ -145,6 +143,12 @@ export const rawLevel = (levelData: LevelData) => {
             size: ladder.size
         }
     })
+    const portals = levelData.level.portals.map(portal => {
+        return {
+            position: portal.position,
+            destination: portal.destination
+        }
+    })
 
     return {
         players: players,
@@ -154,6 +158,7 @@ export const rawLevel = (levelData: LevelData) => {
         points: points,
         platforms: platforms,
         ladders: ladders,
+        portals: portals,
         info: levelData.info,
         totalScore: levelData.totalScore,
         levelName: levelData.name

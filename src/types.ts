@@ -1,5 +1,5 @@
 import { Texture } from 'pixi.js'
-import { BallBody, LadderBody, PlatformBody, PointBody } from './game/physics/objects'
+import { BallBody, LadderBody, PlatformBody, PointBody, PortalBody } from './game/physics/objects'
 import PlayerBody from './game/physics/player'
 import PowerUpBody from './game/physics/power-ups'
 import { BulletBody } from './game/physics/bullets'
@@ -73,7 +73,11 @@ export interface XYVar {
    /**
     * Lista punktów do zebrania w grze.
     */
-   points: Array<PointBody>
+   points: Array<PointBody>,
+   /**
+    * Lista portali na planszy.
+    */
+   portals: Array<PortalBody>
 }
 /**
  * Informacje o rozgrywce.

@@ -136,3 +136,28 @@ export class PointBody extends RectangularBody {
         this.accelerate('gravity', GRAVITY)
     }
 }
+
+/**
+ * Klasa opisująca zachowanie portalu.
+ */
+export class PortalBody extends RectangularBody {
+    /**
+     * Pozycja do której zostanie przeteleportowany obiekt po zetknięciu.
+     */
+    destination: XYVar
+
+    /**
+     * Tworzy portal w kształcie {@link RectangularBody | prostokąta}, nadaje mu pozycję startową i wymiary.
+     * 
+     * @param position - Pozycja startowa portalu, umieszczona w jego centrum
+     * @param destination - Pozycja do której prowadzi portal
+     */
+     constructor(
+        position: XYVar,
+        destination: XYVar
+    ) {
+        super(position, { x: PLAYER_SIZE.x, y: PLAYER_SIZE.y }, true)
+
+        this.destination = destination
+    }
+}
