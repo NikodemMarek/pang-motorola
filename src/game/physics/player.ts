@@ -143,11 +143,7 @@ export default class PlayerBody extends RectangularBody {
                         && (
                             !this.accelerators.some(acc => acc.name == 'movement')
                             || this.accelerators.some(acc => acc.name == 'movement' && acc.vector.x > 0)
-                        ) && (
-                            !isOnLadder
-                            || isOnLadder && !colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider)
-                            && collidingLadder?.isColliding(collider))
-                        )
+                        ) && !isOnLadder
                     ) {
                         this.decelerate('movement')
 
@@ -161,11 +157,7 @@ export default class PlayerBody extends RectangularBody {
                         && (
                             !this.accelerators.some(acc => acc.name == 'movement')
                             || this.accelerators.some(acc => acc.name == 'movement' && acc.vector.x < 0)
-                        ) && (
-                            !isOnLadder ||
-                            isOnLadder && !colliders?.some(collider => collider instanceof PlatformBody && this.isColliding(collider)
-                            && collidingLadder?.isColliding(collider))
-                        )
+                        ) && !isOnLadder
                     ) {
                         this.decelerate('movement')
 
