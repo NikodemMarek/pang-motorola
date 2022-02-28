@@ -228,7 +228,7 @@ export default class Game {
 
             this.points = this.points.filter(point => {
                 if(player.isColliding(point)) {
-                    this.score += point.value
+                    this.score += point.value + this.players[0].lives * 10
 
                     return false
                 } else return true
