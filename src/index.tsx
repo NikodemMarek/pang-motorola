@@ -1,109 +1,60 @@
-import { Application, BitmapFont, Loader } from 'pixi.js'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { RENDERER_SIZE, SoundPath } from './const'
-import { getLevel, loadLevel, getLevelsList } from './levels-provider'
+import { Application, BitmapFont, Loader } from 'pixi.js'
 import { clearTextureCache } from '@pixi/utils'
+import { RENDERER_SIZE, SoundPath } from './const'
 import { ImagesProvider } from './assets-provider'
-import './style.css'
-import { SceneManager } from 'pixi-scenes'
-import GameScene from './views/game-scene'
 import { Menu } from './views/Menu'
+import { GameComponent } from './views/GameComponent'
+import './style.css'
 
 // Inaczej dźwięk nie działa (czemu? pojęcia nie mam).
 import { Sound } from '@pixi/sound'
 Sound
 
-class GameComponent extends React.Component<any, any> {
-    pixiCtx: any
-    app: Application
-    scenes: SceneManager
-
-    constructor(props: any) {
-        super(props)
-
-        this.pixiCtx = null
-        this.app = new Application({
-            view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
-            resolution: window.devicePixelRatio || 1,
-            autoDensity: true,
-            backgroundColor: 0xffffff,
-            width: RENDERER_SIZE.x,
-            height: RENDERER_SIZE.y
-        })
-        this.scenes = new SceneManager(this.app)
-    }
-
-    override render = () => { 
-        return <div ref={this.updatePixiCtx}></div>
-    }
-
-    updatePixiCtx = async (element: any) => {
-        this.pixiCtx = element
-
-        if(this.pixiCtx && this.pixiCtx.children.length<=0) await this.initialize()
-    }
-
-    initialize = async () => {
-        this.pixiCtx.appendChild(this.app.view)
-
-        const rawLevel = await loadLevel('easy', getLevelsList('easy')[0].name)
-        const level = getLevel(rawLevel)
-
-        const gameScene = new GameScene(
-            (won?: boolean) => {
-                console.log(won)
-            },
-        )
-        gameScene.setLevel(level)
-        this.scenes.add('game', gameScene)
-        this.scenes.start('game')
-        gameScene.startGame()
-    }
-}
-
 class UI extends React.Component<any, any> {
     constructor(props: any) {
         super(props)
         this.state = {
-            play: false
+            scene: 0
         }
 
-        this.switchPlay = this.switchPlay.bind(this)
+        this.changeScene = this.changeScene.bind(this)
     }
 
     override render = () => {
         return <div className='ui'>
             {
-                this.state.play
-                ? <GameComponent
-                    app={
-                        new Application({
-                            view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
-                            resolution: window.devicePixelRatio || 1,
-                            autoDensity: true,
-                            backgroundColor: 0xffffff,
-                            width: RENDERER_SIZE.x,
-                            height: RENDERER_SIZE.y
-                        })
-                    }
-                />
-                : <Menu
-                    buttons={[
-                        { label: 'Level Choice', onClick: this.switchPlay },
-                        { label: 'Campaign', onClick: this.switchPlay },
-                        { label: 'Bonus Levels', onClick: this.switchPlay },
-                        { label: 'Scoreboard', onClick: () => {  } },
-                        { label: 'Options', onClick: () => {  } }
-                    ]}
-                />
+                [
+                    <Menu
+                        buttons={[
+                            { label: 'Level Choice', onClick: () => this.changeScene(1) },
+                            { label: 'Campaign', onClick: () => this.changeScene(1) },
+                            { label: 'Bonus Levels', onClick: () => this.changeScene(1) },
+                            { label: 'Scoreboard', onClick: () => {  } },
+                            { label: 'Options', onClick: () => {  } }
+                        ]}
+                    />,
+                    <GameComponent
+                        app={
+                            new Application({
+                                view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
+                                resolution: window.devicePixelRatio || 1,
+                                autoDensity: true,
+                                backgroundColor: 0xffffff,
+                                width: RENDERER_SIZE.x,
+                                height: RENDERER_SIZE.y
+                            })
+                        }
+                    />
+                ][this.state.scene]
             }
         </div>
     }
 
-    switchPlay = () => {
+    changeScene = (newScene: number) => {
         this.setState({
-            play: !this.state.play
+            scene: newScene
         })
     }
 }
