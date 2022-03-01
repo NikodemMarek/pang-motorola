@@ -7,7 +7,7 @@ const TerserPlugin = require('terser-webpack-plugin')
 module.exports = (env, argv) => {
     return {
         stats: 'minimal', // Keep console output easy to read.
-        entry: './src/index.ts', // Your program entry point
+        entry: './src/index.tsx', // Your program entry point
 
         // Your build destination
         output: {
@@ -59,6 +59,13 @@ module.exports = (env, argv) => {
                     loader: 'ts-loader',
                     exclude: /node_modules/,
                 },
+                {
+                    test: /\.css$/,
+                    use: [
+                        'style-loader',
+                        'css-loader'
+                    ],
+                }
             ],
         },
         resolve: {

@@ -5,6 +5,7 @@
         "sourceMap": true,
         "target": "es2015",
         "module": "ESNext",
+        "jsx": "react",
 
         // Rules for your code
         "strict": true,
