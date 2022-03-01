@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Application, BitmapFont, Loader } from 'pixi.js'
+import { BitmapFont, Loader } from 'pixi.js'
 import { clearTextureCache } from '@pixi/utils'
-import { RENDERER_SIZE, SoundPath } from './const'
+import { SoundPath } from './const'
 import { ImagesProvider } from './assets-provider'
 import { Menu } from './views/Menu'
 import { GameComponent } from './views/GameComponent'
@@ -35,18 +35,7 @@ class UI extends React.Component<any, any> {
                             { label: 'Options', onClick: () => {  } }
                         ]}
                     />,
-                    <GameComponent
-                        app={
-                            new Application({
-                                view: document.getElementById('pixi-canvas') as HTMLCanvasElement,
-                                resolution: window.devicePixelRatio || 1,
-                                autoDensity: true,
-                                backgroundColor: 0xffffff,
-                                width: RENDERER_SIZE.x,
-                                height: RENDERER_SIZE.y
-                            })
-                        }
-                    />
+                    <GameComponent />
                 ][this.state.scene]
             }
         </div>

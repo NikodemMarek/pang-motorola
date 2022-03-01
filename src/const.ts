@@ -4,7 +4,7 @@ import { XYVar } from './types'
  * Wartość określająca wymiary okna.
  */
 export const RENDERER_SIZE: XYVar = {
-    x: 1200,
+    x: 1000,
     y: 700
 }
 /**

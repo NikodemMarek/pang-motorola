@@ -4,7 +4,7 @@
     "version": "^0.59.0",
     "window": {
         "resizable": false,
-        "width": 1200,
+        "width": 1250,
         "height": 700
     }
 }
