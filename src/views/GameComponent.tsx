@@ -2,8 +2,9 @@ import { SceneManager } from 'pixi-scenes'
 import { Application } from 'pixi.js'
 import React from 'react'
 import { GameState, RENDERER_SIZE } from '../const'
-import { getLevel, loadLevel } from '../levels-provider'
+import { getLevel, loadLevel, rawLevel, saveGame } from '../levels-provider'
 import { addToScoreboard } from '../scoreboard'
+import { Level, LevelData } from '../types'
 import { Button, ButtonProps } from './Button'
 import GameScene from './game-scene'
 import { Menu } from './Menu'
@@ -46,7 +47,9 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
         this.changeGameState = this.changeGameState.bind(this)
         this.finish = this.finish.bind(this)
+
         this.saveScore = this.saveScore.bind(this)
+        this.saveGameState = this.saveGameState.bind(this)
 
         this.pixiCtx = null
         this.app = new Application({
@@ -100,6 +103,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                                 elements={[
                                     { label: 'Continue', onClick: () => this.changeGameState(GameState.RUNNING) },
                                     { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) },
+                                    { hint: 'Save Game', onSubmit: (saveName: string) => this.saveGameState(saveName) },
                                     { label: 'Finish', onClick: () => this.changeGameState(GameState.FINISHED) }
                                 ]}
                             />,
@@ -177,5 +181,33 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
     saveScore = (nickname: string) => {
         addToScoreboard(this.props.mode, nickname, this.gameScene!.getScore())
+    }
+
+    saveGameState = (saveName: string) => {
+        saveGame(
+            this.props.mode,
+            saveName,
+            rawLevel(
+                {
+                    level: {
+                        players: this.gameScene?.game.players,
+                        balls: this.gameScene?.game.balls,
+                        bullets: this.gameScene?.game.bullets,
+                        powerUps: this.gameScene?.game.powerUps,
+                        points: this.gameScene?.game.points,
+                        platforms: this.gameScene?.game.platforms,
+                        ladders: this.gameScene?.game.ladders,
+                        portals: this.gameScene?.game.portals
+                    } as Level,
+                    info: {
+                        time: this.gameScene?.game.time,
+                        score: this.gameScene?.game.score,
+                        hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft,
+                        clockTimeLeft: this.gameScene?.game.clockTimeLeft
+                    },
+                    name: this.props.levelName
+                } as LevelData
+            )
+        )
     }
 }
