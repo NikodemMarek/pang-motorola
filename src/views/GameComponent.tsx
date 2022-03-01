@@ -8,12 +8,16 @@ import GameScene from './game-scene'
 import { Menu } from './Menu'
 import { Stats, StatsProps } from './Stats'
 
+interface GameComponentProps {
+    onFinish: () => void
+}
+
 interface GameComponentState {
     gameState: GameState,
     stats: StatsProps
 }
 
-export class GameComponent extends React.Component<any, GameComponentState> {
+export class GameComponent extends React.Component<GameComponentProps, GameComponentState> {
     pixiCtx: any
     app: Application
     scenes: SceneManager
@@ -37,6 +41,7 @@ export class GameComponent extends React.Component<any, GameComponentState> {
         }
 
         this.changeGameState = this.changeGameState.bind(this)
+        this.finish = this.finish.bind(this)
 
         this.pixiCtx = null
         this.app = new Application({
@@ -86,7 +91,9 @@ export class GameComponent extends React.Component<any, GameComponentState> {
                             <div></div>,
                             <Menu
                                 buttons={[
-                                    { label: 'Continue', onClick: () => this.changeGameState(GameState.RUNNING) }
+                                    { label: 'Continue', onClick: () => this.changeGameState(GameState.RUNNING) },
+                                    { label: 'Save', onClick: () => console.log('save') },
+                                    { label: 'Finish', onClick: this.finish }
                                 ]}
                             />
                         ][this.state.gameState]
@@ -138,5 +145,10 @@ export class GameComponent extends React.Component<any, GameComponentState> {
         })
 
         this.gameScene!.state = gameState
+    }
+
+    finish = () => {
+        this.app.ticker.destroy()
+        this.props.onFinish()
     }
 }

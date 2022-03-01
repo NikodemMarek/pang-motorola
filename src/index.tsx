@@ -35,7 +35,9 @@ class UI extends React.Component<any, any> {
                             { label: 'Options', onClick: () => {  } }
                         ]}
                     />,
-                    <GameComponent />
+                    <GameComponent
+                        onFinish={() => this.changeScene(0)}
+                    />
                 ][this.state.scene]
             }
         </div>
