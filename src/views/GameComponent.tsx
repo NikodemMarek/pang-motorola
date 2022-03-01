@@ -3,6 +3,7 @@ import { Application } from 'pixi.js'
 import React from 'react'
 import { GameState, RENDERER_SIZE } from '../const'
 import { getLevel, loadLevel } from '../levels-provider'
+import { addToScoreboard } from '../scoreboard'
 import { Button, ButtonProps } from './Button'
 import GameScene from './game-scene'
 import { Menu } from './Menu'
@@ -45,6 +46,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
         this.changeGameState = this.changeGameState.bind(this)
         this.finish = this.finish.bind(this)
+        this.saveScore = this.saveScore.bind(this)
 
         this.pixiCtx = null
         this.app = new Application({
@@ -88,16 +90,16 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                     {
                         [
                             <Menu
-                                buttons={[
+                                elements={[
                                     { label: 'Go!', onClick: () => this.changeGameState(GameState.RUNNING) },
                                     { label: 'Back', onClick: this.finish }
                                 ]}
                             />,
                             <div></div>,
                             <Menu
-                                buttons={[
+                                elements={[
                                     { label: 'Continue', onClick: () => this.changeGameState(GameState.RUNNING) },
-                                    { label: 'Save', onClick: () => console.log('save') },
+                                    { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) },
                                     { label: 'Finish', onClick: () => this.changeGameState(GameState.FINISHED) }
                                 ]}
                             />,
@@ -109,8 +111,8 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                                 }
                                 <span>{this.state.stats.score} Points</span>
                                 <Menu
-                                    buttons={[
-                                        this.won == undefined? { label: 'Save Score', onClick: () => console.log('save score') }: null,
+                                    elements={[
+                                        { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) },
                                         this.won? { label: 'Next Level', onClick: () => console.log('next level') }: null,
                                         { label: 'Finish', onClick: this.finish }
                                     ].filter(b => b != null) as Array<ButtonProps>}
@@ -171,5 +173,9 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
     finish = () => {
         this.app.ticker.destroy()
         this.props.onFinish()
+    }
+
+    saveScore = (nickname: string) => {
+        addToScoreboard('campaign', nickname, this.gameScene!.getScore())
     }
 }

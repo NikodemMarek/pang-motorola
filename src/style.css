@@ -103,6 +103,48 @@
     font-family: sans-serif;
 }
 
+.input-field {
+    padding: 0px 20px;
+    width: 210px;
+    height: 50px;
+
+    background-color: white;
+    color: black;
+
+    border: 2px solid black;
+    border-radius: 25px;
+
+    position: relative;
+}
+.input-field input[type=text] {
+    width: 170px;
+    height: 40px;
+
+    display: block;
+    box-sizing: border-box;
+
+    background-color: white;
+    color: black;
+
+    border: none;
+    border-bottom: 1px solid black;
+
+    font-size: 15px;
+
+    outline: none;
+}
+.input-field input[type=text]:focus {
+    border-bottom: 2px solid black;
+}
+.input-field img {
+    position: absolute;
+    bottom: 5px;
+    right: 15px;
+
+    width: 40px;
+    height: 40px;
+}
+
 .ui {
     display: flex;
     justify-content: center;

@@ -1,8 +1,9 @@
 import React from 'react'
 import { Button, ButtonProps } from './Button'
+import { InputField, InputFieldProps } from './InputField'
 
 export interface MenuProps {
-    buttons: Array<ButtonProps>
+    elements: Array<ButtonProps | InputFieldProps>
 }
 
 const MenuButton = (props: ButtonProps) => {
@@ -17,12 +18,18 @@ const MenuButton = (props: ButtonProps) => {
 export const Menu = (props: MenuProps) => {
     return <div className='menu'>
         {
-            props.buttons.map(
-                (button, i) => <MenuButton
-                    key={i}
-                    label={button.label}
-                    onClick={button.onClick}
-                />
+            props.elements.map(
+                (element, i) => (element as ButtonProps).label != undefined
+                    ? <MenuButton
+                        key={i}
+                        label={(element as ButtonProps).label}
+                        onClick={(element as ButtonProps).onClick}
+                    />
+                    : <InputField
+                        key={i}
+                        hint={(element as InputFieldProps).hint}
+                        onSubmit={(element as InputFieldProps).onSubmit}
+                    />
             )
         }
     </div>

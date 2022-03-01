@@ -32,7 +32,7 @@ class UI extends React.Component<any, any> {
                         levelName={'easy 0'}
                     />,
                     <Menu
-                        buttons={[
+                        elements={[
                             { label: 'Level Choice', onClick: () => this.changeScene(Scenes.GAME) },
                             { label: 'Campaign', onClick: () => this.changeScene(Scenes.GAME) },
                             { label: 'Bonus Levels', onClick: () => this.changeScene(Scenes.GAME) },
