@@ -68,6 +68,28 @@
     height: 700px;
 }
 
+.side-menu {
+    width: 250px;
+    overflow: hidden;
+
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    
+    border: 1px solid black;
+    border-top: none;
+}
+.stats {
+    margin-top: 20px;
+    margin-left: 20px;
+
+    width: auto;
+    height: auto;
+
+    font-size: 20px;
+    font-family: sans-serif;
+}
+
 .ui {
     display: flex;
     justify-content: center;

@@ -6,9 +6,11 @@ import { getLevel, getLevelsList, loadLevel } from '../levels-provider'
 import { Button } from './Button'
 import GameScene from './game-scene'
 import { Menu } from './Menu'
+import { Stats, StatsProps } from './Stats'
 
 interface GameComponentState {
-    gameState: GameState
+    gameState: GameState,
+    stats: StatsProps
 }
 
 export class GameComponent extends React.Component<any, GameComponentState> {
@@ -21,7 +23,17 @@ export class GameComponent extends React.Component<any, GameComponentState> {
         super(props)
 
         this.state = {
-            gameState: GameState.INIT
+            gameState: GameState.INIT,
+            stats: {
+                time: this.gameScene?.game.time || 0,
+                score: this.gameScene?.game.score || 0,
+                clockTimeLeft: this.gameScene?.game.clockTimeLeft || 0,
+                hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft || 0,
+                lives: this.gameScene?.game.players[0].lives || 0,
+                gun: this.gameScene?.game.players[0].gun || 0,
+                forceFields: this.gameScene?.game.players[0].forceFields || 0,
+                forceFieldsTimeLeft: this.gameScene?.game.players[0].forceFieldsTimeLeft || 0
+            }
         }
 
         this.changeGameState = this.changeGameState.bind(this)
@@ -42,10 +54,23 @@ export class GameComponent extends React.Component<any, GameComponentState> {
         return <div className='game'>
             <div className='game-running'>
                 <div className='pixi-container' ref={this.updatePixiCtx}></div>
-                <Button
-                    label={'Pause'}
-                    onClick={() => this.changeGameState(GameState.PAUSED)}
-                />
+
+                <div className='side-menu'>
+                    <Button
+                        label={'Pause'}
+                        onClick={() => this.changeGameState(GameState.PAUSED)}
+                    />
+                    <Stats
+                        time={this.state.stats.time || 0}
+                        score={this.state.stats.score || 0}
+                        clockTimeLeft={this.state.stats.clockTimeLeft || 0}
+                        hourglassTimeLeft={this.gameScene?.game.hourglassTimeLeft || 0}
+                        lives={this.state.stats.lives || 0}
+                        gun={this.state.stats.gun || 0}
+                        forceFields={this.state.stats.forceFields || 0}
+                        forceFieldsTimeLeft={this.state.stats.forceFieldsTimeLeft || 0}
+                    />
+                </div>
             </div>
 
             {
@@ -90,6 +115,20 @@ export class GameComponent extends React.Component<any, GameComponentState> {
             this.scenes.start('game')
             
             this.changeGameState(this.state.gameState)
+            this.app.ticker.add(() => {
+                this.setState({
+                    stats: {
+                        time: this.gameScene?.game.time || 0,
+                        score: this.gameScene?.game.score || 0,
+                        clockTimeLeft: this.gameScene?.game.clockTimeLeft || 0,
+                        hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft || 0,
+                        lives: this.gameScene?.game.players[0].lives || 0,
+                        gun: this.gameScene?.game.players[0].gun || 0,
+                        forceFields: this.gameScene?.game.players[0].forceFields || 0,
+                        forceFieldsTimeLeft: this.gameScene?.game.players[0].forceFieldsTimeLeft || 0
+                    }
+                })
+            })
         }
     }
 
