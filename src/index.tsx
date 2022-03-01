@@ -37,6 +37,8 @@ class UI extends React.Component<any, any> {
                     />,
                     <GameComponent
                         onFinish={() => this.changeScene(0)}
+                        mode={'easy'}
+                        levelName={'easy 0'}
                     />
                 ][this.state.scene]
             }

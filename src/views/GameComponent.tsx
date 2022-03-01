@@ -2,14 +2,16 @@ import { SceneManager } from 'pixi-scenes'
 import { Application } from 'pixi.js'
 import React from 'react'
 import { GameState, RENDERER_SIZE } from '../const'
-import { getLevel, getLevelsList, loadLevel } from '../levels-provider'
+import { getLevel, loadLevel } from '../levels-provider'
 import { Button } from './Button'
 import GameScene from './game-scene'
 import { Menu } from './Menu'
 import { Stats, StatsProps } from './Stats'
 
 interface GameComponentProps {
-    onFinish: () => void
+    onFinish: () => void,
+    mode: string,
+    levelName: string
 }
 
 interface GameComponentState {
@@ -109,7 +111,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         if(this.pixiCtx && this.pixiCtx.children.length <= 0) {
             this.pixiCtx.appendChild(this.app.view)
 
-            const rawLevel = await loadLevel('easy', getLevelsList('easy')[0].name)
+            const rawLevel = await loadLevel(this.props.mode, this.props.levelName)
             const level = getLevel(rawLevel)
 
             this.gameScene = new GameScene(
