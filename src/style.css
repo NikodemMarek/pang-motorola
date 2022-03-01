@@ -90,6 +90,19 @@
     font-family: sans-serif;
 }
 
+.game-over {
+    width: auto;
+    height: auto;
+
+    position: absolute;
+    
+    text-align: center;
+}
+.game-over span {
+    font-size: 30px;
+    font-family: sans-serif;
+}
+
 .ui {
     display: flex;
     justify-content: center;

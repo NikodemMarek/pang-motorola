@@ -14,18 +14,18 @@ export default class GameScene extends Scene {
 
     totalScore: number = 0
     
-    finish: (won?: boolean) => void
+    finish: (won: boolean) => void
     save: ((game: Game) => void) | undefined
 
     constructor(
-        onFinish: (won?: boolean) => void,
+        onFinish: (won: boolean) => void,
         onSave?: (game: Game) => void
     ) {
         super()
 
         this.sortableChildren = true
 
-        this.finish = (won?: boolean) => {
+        this.finish = (won: boolean) => {
             this.state = GameState.FINISHED
             onFinish(won)
         }

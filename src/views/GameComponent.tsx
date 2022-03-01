@@ -3,7 +3,7 @@ import { Application } from 'pixi.js'
 import React from 'react'
 import { GameState, RENDERER_SIZE } from '../const'
 import { getLevel, loadLevel } from '../levels-provider'
-import { Button } from './Button'
+import { Button, ButtonProps } from './Button'
 import GameScene from './game-scene'
 import { Menu } from './Menu'
 import { Stats, StatsProps } from './Stats'
@@ -24,6 +24,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
     app: Application
     scenes: SceneManager
     gameScene: GameScene | undefined
+    won: boolean | undefined
 
     constructor(props: any) {
         super(props)
@@ -86,18 +87,35 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                 : <div className='game-overlay'>
                     {
                         [
-                            <Button
-                                label={'Go!'}
-                                onClick={() => this.changeGameState(GameState.RUNNING)}
+                            <Menu
+                                buttons={[
+                                    { label: 'Go!', onClick: () => this.changeGameState(GameState.RUNNING) },
+                                    { label: 'Back', onClick: this.finish }
+                                ]}
                             />,
                             <div></div>,
                             <Menu
                                 buttons={[
                                     { label: 'Continue', onClick: () => this.changeGameState(GameState.RUNNING) },
                                     { label: 'Save', onClick: () => console.log('save') },
-                                    { label: 'Finish', onClick: this.finish }
+                                    { label: 'Finish', onClick: () => this.changeGameState(GameState.FINISHED) }
                                 ]}
-                            />
+                            />,
+                            <div className='game-over'>
+                                {
+                                    this.won != undefined
+                                    ? <span>{this.won? 'You Won!': 'You Lost'}<br /></span>
+                                    : null
+                                }
+                                <span>{this.state.stats.score} Points</span>
+                                <Menu
+                                    buttons={[
+                                        this.won == undefined? { label: 'Save Score', onClick: () => console.log('save score') }: null,
+                                        this.won? { label: 'Next Level', onClick: () => console.log('next level') }: null,
+                                        { label: 'Finish', onClick: this.finish }
+                                    ].filter(b => b != null) as Array<ButtonProps>}
+                                />
+                            </div>
                         ][this.state.gameState]
                     }
                 </div>
@@ -115,8 +133,9 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
             const level = getLevel(rawLevel)
 
             this.gameScene = new GameScene(
-                (won?: boolean) => {
-                    console.log(won)
+                (won: boolean) => {
+                    this.won = won
+                    this.changeGameState(GameState.FINISHED)
                 },
             )
             this.gameScene.setLevel(level)
