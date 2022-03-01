@@ -8,16 +8,11 @@ import { ImagesProvider } from './assets-provider'
 import './style.css'
 import { SceneManager } from 'pixi-scenes'
 import GameScene from './views/game-scene'
+import { Menu } from './views/Menu'
 
 // Inaczej dźwięk nie działa (czemu? pojęcia nie mam).
 import { Sound } from '@pixi/sound'
 Sound
-
-const Button = (props: any) => {
-    return <button className='button' onClick={props.onClick}>
-        {props.label}
-    </button>
-}
 
 class GameComponent extends React.Component<any, any> {
     pixiCtx: any
@@ -68,13 +63,17 @@ class GameComponent extends React.Component<any, any> {
 }
 
 class UI extends React.Component<any, any> {
-    override state = {
-        play: false,
-        set: 0
+    constructor(props: any) {
+        super(props)
+        this.state = {
+            play: false
+        }
+
+        this.switchPlay = this.switchPlay.bind(this)
     }
 
     override render = () => {
-        return <div>
+        return <div className='ui'>
             {
                 this.state.play
                 ? <GameComponent
@@ -89,10 +88,16 @@ class UI extends React.Component<any, any> {
                         })
                     }
                 />
-                : null
+                : <Menu
+                    buttons={[
+                        { label: 'Level Choice', onClick: this.switchPlay },
+                        { label: 'Campaign', onClick: this.switchPlay },
+                        { label: 'Bonus Levels', onClick: this.switchPlay },
+                        { label: 'Scoreboard', onClick: () => {  } },
+                        { label: 'Options', onClick: () => {  } }
+                    ]}
+                />
             }
-
-            <Button label={this.state.play? 'Exit': 'Play'} onClick={this.switchPlay}/>
         </div>
     }
 
