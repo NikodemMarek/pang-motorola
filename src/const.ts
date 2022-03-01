@@ -179,4 +179,9 @@ export enum Colors {
     MENU_BUTTON_HOVER = 0x111111
 }
 
+export enum Scenes {
+    GAME,
+    MAIN_MENU
+}
+
 export const VOLUME = 1

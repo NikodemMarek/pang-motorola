@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { BitmapFont, Loader } from 'pixi.js'
 import { clearTextureCache } from '@pixi/utils'
-import { SoundPath } from './const'
+import { Scenes, SoundPath } from './const'
 import { ImagesProvider } from './assets-provider'
 import { Menu } from './views/Menu'
 import { GameComponent } from './views/GameComponent'
@@ -26,26 +26,26 @@ class UI extends React.Component<any, any> {
         return <div className='ui'>
             {
                 [
+                    <GameComponent
+                        onFinish={() => this.changeScene(Scenes.MAIN_MENU)}
+                        mode={'easy'}
+                        levelName={'easy 0'}
+                    />,
                     <Menu
                         buttons={[
-                            { label: 'Level Choice', onClick: () => this.changeScene(1) },
-                            { label: 'Campaign', onClick: () => this.changeScene(1) },
-                            { label: 'Bonus Levels', onClick: () => this.changeScene(1) },
+                            { label: 'Level Choice', onClick: () => this.changeScene(Scenes.GAME) },
+                            { label: 'Campaign', onClick: () => this.changeScene(Scenes.GAME) },
+                            { label: 'Bonus Levels', onClick: () => this.changeScene(Scenes.GAME) },
                             { label: 'Scoreboard', onClick: () => {  } },
                             { label: 'Options', onClick: () => {  } }
                         ]}
-                    />,
-                    <GameComponent
-                        onFinish={() => this.changeScene(0)}
-                        mode={'easy'}
-                        levelName={'easy 0'}
                     />
                 ][this.state.scene]
             }
         </div>
     }
 
-    changeScene = (newScene: number) => {
+    changeScene = (newScene: Scenes) => {
         this.setState({
             scene: newScene
         })
