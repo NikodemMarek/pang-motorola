@@ -176,6 +176,6 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
     }
 
     saveScore = (nickname: string) => {
-        addToScoreboard('campaign', nickname, this.gameScene!.getScore())
+        addToScoreboard(this.props.mode, nickname, this.gameScene!.getScore())
     }
 }
