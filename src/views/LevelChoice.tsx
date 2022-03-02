@@ -48,15 +48,19 @@ export class LevelChoice extends React.Component<LevelChoiceProps, LevelChoiceSt
             <Menu
                 elements={[
                     this.props.saved? {
-                        label: 'Delete',
-                        onToggle: () => this.setState({remove: !this.state.remove}),
+                        label: 'Remove',
+                        onToggle: () => this.setState({ remove: !this.state.remove }),
                         toggled: this.state.remove
                     }: null,
                     this.props.mode.match('campaign|bonus') && this.props.onSaveAs != undefined? {
                         hint: 'Save Game',
                         onSubmit: (name: string) => this.props.onSaveAs!(name)
                     }: null,
-                    !this.props.saved && this.props.mode.match('campaign|bonus') && this.props.onSavedGamesClick != undefined? {
+                    !this.props.saved
+                    && this.props.mode.match('campaign|bonus')
+                    && this.props.onSavedGamesClick != undefined
+                    && savedGamesList(this.props.mode).length > 0
+                    ? {
                         label: 'Load Game',
                         onClick: this.props.onSavedGamesClick
                     }: null,

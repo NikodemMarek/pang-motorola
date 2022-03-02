@@ -174,6 +174,7 @@
     max-height: 700px;
 
     margin: 10px 0px;
+    margin-right: 50px;
 
     overflow-y: auto;
     overflow-x: hidden;
@@ -200,6 +201,8 @@
     width: 250px;
     max-height: 150px;
     height: auto;
+
+    margin-left: 50px;
 }
 .scoreboard-score div {
     width: 250px;
@@ -207,7 +210,6 @@
 
     box-sizing: border-box;
 
-    padding: 0px 20px;
     margin-bottom: 20px;
 
     font-family: sans-serif;
