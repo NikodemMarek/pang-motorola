@@ -2,11 +2,12 @@ import { SceneManager } from 'pixi-scenes'
 import { Application } from 'pixi.js'
 import React from 'react'
 import { GameState, RENDERER_SIZE } from '../const'
-import { getLevel, loadLevel, rawLevel, saveGame } from '../levels-provider'
+import { getLevel, loadLevel, rawLevel, readGame, saveGame } from '../levels-provider'
 import { addToScoreboard } from '../scoreboard'
 import { Level, LevelData } from '../types'
 import { Button, ButtonProps } from './Button'
 import GameScene from './game-scene'
+import { LevelChoice } from './LevelChoice'
 import { Menu } from './Menu'
 import { Stats, StatsProps } from './Stats'
 
@@ -104,10 +105,41 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                             <Menu
                                 elements={[
                                     { label: 'Continue', onClick: () => this.changeGameState(GameState.RUNNING) },
-                                    { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) },
-                                    { hint: 'Save Game', onSubmit: (saveName: string) => this.saveGameState(saveName) },
+                                    this.props.mode.endsWith('campaign')? { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) }: null,
+                                    this.props.mode != 'choice'? { label: 'Save Game', onClick: () => this.changeGameState(GameState.SAVING_GAME) }: null,
                                     { label: 'Finish', onClick: () => this.changeGameState(GameState.FINISHED) }
                                 ]}
+                            />,
+                            <LevelChoice
+                                mode={this.props.mode.startsWith('saved')? this.props.mode.slice(6, this.props.mode.length): this.props.mode}
+                                saved={true}
+                                onLevelClick={() => {  }}
+                                onExit={() => this.changeGameState(GameState.PAUSED)}
+                                onSaveAs={(name: string) => {
+                                    saveGame(
+                                        this.props.mode.startsWith('saved')? this.props.mode.slice(6, this.props.mode.length): this.props.mode,
+                                        name,
+                                        rawLevel({
+                                            level: {
+                                                players: this.gameScene?.game.players,
+                                                balls: this.gameScene?.game.balls,
+                                                bullets: this.gameScene?.game.bullets,
+                                                powerUps: this.gameScene?.game.powerUps,
+                                                points: this.gameScene?.game.points,
+                                                platforms: this.gameScene?.game.platforms,
+                                                ladders: this.gameScene?.game.ladders,
+                                                portals: this.gameScene?.game.portals
+                                            } as Level,
+                                            info: {
+                                                time: this.gameScene?.game.time,
+                                                score: this.gameScene?.game.score,
+                                                hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft,
+                                                clockTimeLeft: this.gameScene?.game.clockTimeLeft
+                                            },
+                                            name: this.props.levelName
+                                        } as LevelData)
+                                    )
+                                }}
                             />,
                             <div className='game-over'>
                                 {
@@ -137,7 +169,10 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         if(this.pixiCtx && this.pixiCtx.children.length <= 0) {
             this.pixiCtx.appendChild(this.app.view)
 
-            const rawLevel = await loadLevel(this.props.mode, this.props.levelName)
+            const rawLevel = this.props.mode.startsWith('saved')
+            ? readGame(this.props.mode.split('-')[1], this.props.levelName)
+            : await loadLevel(this.props.mode, this.props.levelName)
+
             const level = getLevel(rawLevel)
 
             this.gameScene = new GameScene(

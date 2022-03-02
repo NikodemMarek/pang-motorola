@@ -7,7 +7,8 @@ interface LevelChoiceProps {
     saved: boolean,
     onLevelClick: (levelName: string) => void,
     onExit: () => void,
-    onSavedGamesClick?: () => void
+    onSavedGamesClick?: () => void,
+    onSaveAs?: (name: string) => void
 }
 
 interface LevelChoiceState {
@@ -50,6 +51,10 @@ export class LevelChoice extends React.Component<LevelChoiceProps, LevelChoiceSt
                         label: 'Delete',
                         onToggle: () => this.setState({remove: !this.state.remove}),
                         toggled: this.state.remove
+                    }: null,
+                    this.props.mode.match('campaign|bonus') && this.props.onSaveAs != undefined? {
+                        hint: 'Save Game',
+                        onSubmit: (name: string) => this.props.onSaveAs!(name)
                     }: null,
                     !this.props.saved && this.props.mode.match('campaign|bonus') && this.props.onSavedGamesClick != undefined? {
                         label: 'Load Game',

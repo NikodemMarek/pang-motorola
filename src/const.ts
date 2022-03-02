@@ -80,6 +80,7 @@ export enum GameState {
     INIT,
     RUNNING,
     PAUSED,
+    SAVING_GAME,
     FINISHED
 }
 
