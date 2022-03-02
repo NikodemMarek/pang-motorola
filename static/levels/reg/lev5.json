@@ -6,7 +6,7 @@
                 {"name": "gravity", "vector": {"x": 0, "y": 100}}
             ],
             "position": {"x": 700, "y": 600},
-            "lives": 23,
+            "lives": 8,
             "shotTwoTimes": false,
             "forceFields": 0,
             "forceFieldsTimeLeft": 0,
@@ -61,5 +61,5 @@
         "hourglassTimeLeft": 0
     },
     "levelName": "Level Five",
-    "totalScore": 0
+    "totalScore": 3000
 }
