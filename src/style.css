@@ -179,6 +179,50 @@
     overflow-x: hidden;
 }
 
+.scoreboard {
+    width: auto;
+    height: 700px;
+
+    display: flex;
+    align-items: center;
+}
+.scoreboard-hall-of-fame {
+    width: 250px;
+    height: auto;
+    max-height: 700px;
+
+    margin: 10px 0px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.scoreboard-score {
+    width: 250px;
+    max-height: 150px;
+    height: auto;
+}
+.scoreboard-score div {
+    width: 250px;
+    max-height: 70px;
+
+    box-sizing: border-box;
+
+    padding: 0px 20px;
+    margin-bottom: 20px;
+
+    font-family: sans-serif;
+}
+.scoreboard-score div h1 {
+    height: 40px;
+    width: inherit;
+
+    margin-bottom: 5px;
+}
+.scoreboard-score div h3 {
+    height: 25px;
+    width: inherit;
+}
+
 .ui {
     display: flex;
     justify-content: center;

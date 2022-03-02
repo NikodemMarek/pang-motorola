@@ -193,3 +193,5 @@ export enum Scenes {
 }
 
 export const VOLUME = 1
+
+export const SCOREBOARD_SIZE = 10

@@ -7,6 +7,7 @@ import { ImagesProvider } from './assets-provider'
 import { Menu } from './views/Menu'
 import { GameComponent } from './views/GameComponent'
 import { LevelChoice } from './views/LevelChoice'
+import { Scoreboard } from './views/Scoreboard'
 import './style.css'
 
 // Inaczej dźwięk nie działa (czemu? pojęcia nie mam).
@@ -14,13 +15,13 @@ import { Sound } from '@pixi/sound'
 Sound
 
 class UI extends React.Component<any, any> {
-    chosenMode: string = 'easy'
+    chosenMode: string = 'choice'
     chosenLevelName: string = 'easy 0'
 
     constructor(props: any) {
         super(props)
         this.state = {
-            scene: 0
+            scene: Scenes.MAIN_MENU
         }
 
         this.changeScene = this.changeScene.bind(this)
@@ -96,7 +97,10 @@ class UI extends React.Component<any, any> {
                         }}
                         onExit={() => this.changeScene(Scenes.BONUS)}
                     />,
-                    <div></div>,
+                    <Scoreboard
+                        mode={'campaign'}
+                        onExit={() => this.changeScene(Scenes.MAIN_MENU)}
+                    />,
                     <div></div>,
                     <GameComponent
                         onFinish={() => this.changeScene(Scenes.MAIN_MENU)}
