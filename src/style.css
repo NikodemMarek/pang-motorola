@@ -170,9 +170,13 @@
 }
 .level-choice-menu {
     width: auto;
-    padding: 10px 0px;
+    height: auto;
+    max-height: 700px;
+
+    margin: 10px 0px;
 
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .ui {
