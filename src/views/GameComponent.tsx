@@ -34,6 +34,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         this.state = {
             gameState: GameState.INIT,
             stats: {
+                levelName: this.props.levelName,
                 time: this.gameScene?.game.time || 0,
                 score: this.gameScene?.game.score || 0,
                 clockTimeLeft: this.gameScene?.game.clockTimeLeft || 0,
@@ -74,6 +75,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                         onClick={() => this.changeGameState(GameState.PAUSED)}
                     />
                     <Stats
+                        levelName={this.props.levelName}
                         time={this.state.stats.time || 0}
                         score={this.state.stats.score || 0}
                         clockTimeLeft={this.state.stats.clockTimeLeft || 0}
@@ -152,6 +154,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
             this.app.ticker.add(() => {
                 this.setState({
                     stats: {
+                        levelName: this.props.levelName,
                         time: this.gameScene?.game.time || 0,
                         score: this.gameScene?.game.score || 0,
                         clockTimeLeft: this.gameScene?.game.clockTimeLeft || 0,

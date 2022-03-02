@@ -2,6 +2,7 @@ import React from 'react'
 import { Guns } from '../const'
 
 export interface StatsProps {
+    levelName: string,
     time: number,
     score: number,
     clockTimeLeft: number,
@@ -14,6 +15,9 @@ export interface StatsProps {
 
 export const Stats = (props: StatsProps) => {
     return <p className='stats'>
+        <span style={{fontSize: '30px'}}>{props.levelName}</span>
+        <br /><br />
+
         Lives: {props.lives > 0? props.lives: 0}<br />
         Gun: {[ 'Harpoon', 'Double Harpoon', 'Power Wire', 'Vulcan Missile' ][props.gun]}<br />
         Score: {props.score}<br />
