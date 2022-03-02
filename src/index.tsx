@@ -9,6 +9,7 @@ import { GameComponent } from './views/GameComponent'
 import { LevelChoice } from './views/LevelChoice'
 import { Scoreboard } from './views/Scoreboard'
 import { Options } from './views/Options'
+import { readScoreboard } from './scoreboard'
 import './style.css'
 
 // Inaczej dźwięk nie działa (czemu? pojęcia nie mam).
@@ -38,7 +39,7 @@ class UI extends React.Component<any, any> {
                             { label: 'Level Choice', onClick: () => this.changeScene(Scenes.LEVELS_CHOICE) },
                             { label: 'Campaign', onClick: () => this.changeScene(Scenes.CAMPAIGN) },
                             { label: 'Bonus Levels', onClick: () => this.changeScene(Scenes.BONUS) },
-                            { label: 'Scoreboard', onClick: () => this.changeScene(Scenes.SCOREBOARD) },
+                            readScoreboard('campaign').length > 0? { label: 'Scoreboard', onClick: () => this.changeScene(Scenes.SCOREBOARD) }: null,
                             { label: 'Options', onClick: () => this.changeScene(Scenes.OPTIONS) }
                         ]}
                     />,
