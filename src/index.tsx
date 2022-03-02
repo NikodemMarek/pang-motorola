@@ -14,6 +14,9 @@ import { Sound } from '@pixi/sound'
 Sound
 
 class UI extends React.Component<any, any> {
+    chosenMode: string = 'easy'
+    chosenLevelName: string = 'easy 0'
+
     constructor(props: any) {
         super(props)
         this.state = {
@@ -39,41 +42,66 @@ class UI extends React.Component<any, any> {
                     <LevelChoice
                         mode={'choice'}
                         saved={false}
-                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onLevelClick={(levelName) => {
+                            this.chosenMode = 'choice'
+                            this.chosenLevelName = levelName
+
+                            this.changeScene(Scenes.GAME)
+                        }}
                         onExit={() => this.changeScene(Scenes.MAIN_MENU)}
                     />,
                     <LevelChoice
                         mode={'campaign'}
                         saved={false}
-                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onLevelClick={(levelName) => {
+                            this.chosenMode = 'campaign'
+                            this.chosenLevelName = levelName
+
+                            this.changeScene(Scenes.GAME)
+                        }}
                         onExit={() => this.changeScene(Scenes.MAIN_MENU)}
                         onSavedGamesClick={() => this.changeScene(Scenes.CAMPAIGN_SAVED)}
                     />,
                     <LevelChoice
                         mode={'bonus'}
                         saved={false}
-                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onLevelClick={(levelName) => {
+                            this.chosenMode = 'bonus'
+                            this.chosenLevelName = levelName
+
+                            this.changeScene(Scenes.GAME)
+                        }}
                         onExit={() => this.changeScene(Scenes.MAIN_MENU)}
                         onSavedGamesClick={() => this.changeScene(Scenes.BONUS_SAVED)}
                     />,
                     <LevelChoice
                         mode={'campaign'}
                         saved={true}
-                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onLevelClick={(levelName) => {
+                            this.chosenMode = 'saved-campaign'
+                            this.chosenLevelName = levelName
+
+                            this.changeScene(Scenes.GAME)
+                        }}
                         onExit={() => this.changeScene(Scenes.CAMPAIGN)}
                     />,
                     <LevelChoice
                         mode={'bonus'}
                         saved={true}
-                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onLevelClick={(levelName) => {
+                            this.chosenMode = 'saved-bonus'
+                            this.chosenLevelName = levelName
+                            
+                            this.changeScene(Scenes.GAME)
+                        }}
                         onExit={() => this.changeScene(Scenes.BONUS)}
                     />,
                     <div></div>,
                     <div></div>,
                     <GameComponent
                         onFinish={() => this.changeScene(Scenes.MAIN_MENU)}
-                        mode={'easy'}
-                        levelName={'easy 0'}
+                        mode={this.chosenMode}
+                        levelName={this.chosenLevelName}
                     />
                 ][this.state.scene]
             }

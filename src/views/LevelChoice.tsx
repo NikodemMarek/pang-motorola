@@ -25,11 +25,7 @@ export class LevelChoice extends React.Component<LevelChoiceProps, LevelChoiceSt
     override render = () => {
         const levels = this.props.saved
         ? savedGamesList(this.props.mode)
-        : (
-            this.props.mode == 'choice'
-            ? getLevelsList('easy').concat(getLevelsList('medium'), getLevelsList('hard'))
-            : getLevelsList(this.props.mode)
-        ).map(level => level.name)
+        : getLevelsList(this.props.mode).map(level => level.name)
 
         return <div className='level-choice'>
             <div className='level-choice-menu'>
