@@ -21,7 +21,8 @@ interface GameComponentState {
     gameState: GameState,
     stats: StatsProps,
     levelName: string,
-    currentLevelId: string
+    currentLevelId: string,
+    scoreSaved: boolean
 }
 
 export class GameComponent extends React.Component<GameComponentProps, GameComponentState> {
@@ -49,7 +50,8 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                 forceFieldsTimeLeft: this.gameScene?.game.players[0].forceFieldsTimeLeft || 0
             },
             levelName: this.props.levelId,
-            currentLevelId: this.props.levelId
+            currentLevelId: this.props.levelId,
+            scoreSaved: false
         }
 
         this.changeGameState = this.changeGameState.bind(this)
@@ -132,7 +134,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                                 <span>{this.totalScore} Points</span>
                                 <Menu
                                     elements={[
-                                        this.props.mode.endsWith('campaign')? { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) }: null,
+                                        this.props.mode.endsWith('campaign') && !this.state.scoreSaved? { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) }: null,
                                         this.won && this.props.mode.endsWith('campaign') && Number(this.state.currentLevelId) < 15? { label: 'Next Level', onClick: () => this.nextLevel(Number(this.state.currentLevelId) + 1) }: null,
                                         { label: 'Finish', onClick: this.finish }
                                     ].filter(b => b != null) as Array<ButtonProps>}
@@ -198,13 +200,13 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
     }
 
     changeGameState = (gameState: GameState) => {
+        if(gameState == GameState.FINISHED) this.totalScore += this.gameScene!.getScore()
+
         this.setState({
             gameState: gameState
         })
 
         this.gameScene!.state = gameState
-
-        if(this.state.gameState == GameState.FINISHED) this.totalScore += this.gameScene!.getScore()
     }
 
     finish = () => {
@@ -214,6 +216,9 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
     saveScore = (nickname: string) => {
         addToScoreboard(this.props.mode, nickname, this.totalScore)
+        this.setState({
+            scoreSaved: true
+        })
     }
 
     saveGameState = (saveName: string) => {
@@ -246,7 +251,8 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
     nextLevel = async (nextLevelId: number) => {
         this.setState({
-            currentLevelId: `${nextLevelId}`
+            currentLevelId: `${nextLevelId}`,
+            scoreSaved: false
         })
         await this.refresh(`${nextLevelId}`)
     }
