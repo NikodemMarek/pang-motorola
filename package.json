@@ -17,8 +17,6 @@
         "docs": "typedoc"
     },
     "dependencies": {
-        "@types/clone": "^2.1.1",
-        "clone": "^2.1.2",
         "pixi-scenes": "^1.4.0",
         "pixi.js": "^6.2.0"
     },

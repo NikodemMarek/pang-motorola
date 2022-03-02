@@ -175,11 +175,6 @@ export enum ZIndex {
     PAUSE_MENU
 }
 
-export enum Colors {
-    MENU_BUTTON = 0x666666,
-    MENU_BUTTON_HOVER = 0x111111
-}
-
 export enum Scenes {
     MAIN_MENU,
     LEVELS_CHOICE,
