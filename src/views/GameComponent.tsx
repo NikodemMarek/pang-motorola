@@ -33,6 +33,8 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
     won: boolean | undefined
     totalScore: number = 0
 
+    firstGame: boolean = true
+
     constructor(props: any) {
         super(props)
 
@@ -176,9 +178,9 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
     }
 
     refresh = async (levelId: string) => {
-        const rawLevel = this.props.mode.startsWith('saved')
+        const rawLevel = this.props.mode.startsWith('saved') && this.firstGame
             ? readGame(this.props.mode.split('-')[1], levelId)
-            : await loadLevel(this.props.mode, levelId)
+            : await loadLevel(this.props.mode.replace('saved-', ''), levelId)
 
             const level = getLevel(rawLevel)
 
@@ -195,7 +197,8 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
             this.changeGameState(GameState.INIT)
             this.setState({
-                levelName: level.name
+                currentLevelId: this.props.mode == 'saved-campaign' && this.firstGame? `${Number(level.name.slice(0, 2))}`: this.state.currentLevelId,
+                levelName: this.props.mode == 'saved-campaign' && this.firstGame? level.name.slice(2, level.name.length): level.name
             })
     }
 
@@ -243,13 +246,14 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                         hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft,
                         clockTimeLeft: this.gameScene?.game.clockTimeLeft
                     },
-                    name: this.props.mode.endsWith('campaign')? this.state.currentLevelId + this.state.levelName: this.state.levelName
+                    name: this.props.mode.endsWith('campaign')? this.state.currentLevelId.padStart(2, '00') + this.state.levelName: this.state.levelName
                 } as LevelData
             )
         )
     }
 
     nextLevel = async (nextLevelId: number) => {
+        this.firstGame = false
         this.setState({
             currentLevelId: `${nextLevelId}`,
             scoreSaved: false
