@@ -180,8 +180,15 @@ export enum Colors {
 }
 
 export enum Scenes {
-    GAME,
-    MAIN_MENU
+    MAIN_MENU,
+    LEVELS_CHOICE,
+    CAMPAIGN,
+    BONUS,
+    CAMPAIGN_SAVED,
+    BONUS_SAVED,
+    SCOREBOARD,
+    OPTIONS,
+    GAME
 }
 
 export const VOLUME = 1

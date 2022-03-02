@@ -6,6 +6,7 @@ import { Scenes, SoundPath } from './const'
 import { ImagesProvider } from './assets-provider'
 import { Menu } from './views/Menu'
 import { GameComponent } from './views/GameComponent'
+import { LevelChoice } from './views/LevelChoice'
 import './style.css'
 
 // Inaczej dźwięk nie działa (czemu? pojęcia nie mam).
@@ -26,19 +27,53 @@ class UI extends React.Component<any, any> {
         return <div className='ui'>
             {
                 [
+                    <Menu
+                        elements={[
+                            { label: 'Level Choice', onClick: () => this.changeScene(Scenes.LEVELS_CHOICE) },
+                            { label: 'Campaign', onClick: () => this.changeScene(Scenes.CAMPAIGN) },
+                            { label: 'Bonus Levels', onClick: () => this.changeScene(Scenes.BONUS) },
+                            { label: 'Scoreboard', onClick: () => this.changeScene(Scenes.SCOREBOARD) },
+                            { label: 'Options', onClick: () => this.changeScene(Scenes.OPTIONS) }
+                        ]}
+                    />,
+                    <LevelChoice
+                        mode={'choice'}
+                        saved={false}
+                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onExit={() => this.changeScene(Scenes.MAIN_MENU)}
+                    />,
+                    <LevelChoice
+                        mode={'campaign'}
+                        saved={false}
+                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onExit={() => this.changeScene(Scenes.MAIN_MENU)}
+                        onSavedGamesClick={() => this.changeScene(Scenes.CAMPAIGN_SAVED)}
+                    />,
+                    <LevelChoice
+                        mode={'bonus'}
+                        saved={false}
+                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onExit={() => this.changeScene(Scenes.MAIN_MENU)}
+                        onSavedGamesClick={() => this.changeScene(Scenes.BONUS_SAVED)}
+                    />,
+                    <LevelChoice
+                        mode={'campaign'}
+                        saved={true}
+                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onExit={() => this.changeScene(Scenes.CAMPAIGN)}
+                    />,
+                    <LevelChoice
+                        mode={'bonus'}
+                        saved={true}
+                        onLevelClick={() => this.changeScene(Scenes.GAME)}
+                        onExit={() => this.changeScene(Scenes.BONUS)}
+                    />,
+                    <div></div>,
+                    <div></div>,
                     <GameComponent
                         onFinish={() => this.changeScene(Scenes.MAIN_MENU)}
                         mode={'easy'}
                         levelName={'easy 0'}
-                    />,
-                    <Menu
-                        elements={[
-                            { label: 'Level Choice', onClick: () => this.changeScene(Scenes.GAME) },
-                            { label: 'Campaign', onClick: () => this.changeScene(Scenes.GAME) },
-                            { label: 'Bonus Levels', onClick: () => this.changeScene(Scenes.GAME) },
-                            { label: 'Scoreboard', onClick: () => {  } },
-                            { label: 'Options', onClick: () => {  } }
-                        ]}
                     />
                 ][this.state.scene]
             }

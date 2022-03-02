@@ -25,3 +25,15 @@ export const Button = (props: ButtonProps) => {
         {props.label}
     </button>
 }
+
+export interface ToggleButtonProps {
+    label: string,
+    onToggle: () => void,
+    toggled: boolean
+}
+
+export const ToggleButton = (props: ToggleButtonProps) => {
+    return <button className={props.toggled? 'button-toggled': 'button'} onClick={props.onToggle}>
+        {props.label}
+    </button>
+}
