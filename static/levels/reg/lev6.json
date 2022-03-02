@@ -1,0 +1,75 @@
+{
+    "players": [
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 600, "y": 350},
+            "lives": 23,
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
+    ],
+    "platforms": [
+        {
+            "position": {"x": 220, "y": 240},
+            "size": {"x": 150, "y": 20},
+            "isBreakable": true,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 600, "y": 400},
+            "size": {"x": 300, "y": 20},
+            "isBreakable": false,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 750, "y": 300},
+            "size": {"x": 180, "y": 20},
+            "isBreakable": false,
+            "isIcy": false
+        }
+    ],
+    "bullets": [],
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 200, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 750, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        }
+    ],
+    "ladders": [
+        {
+            "position": {"x": 520, "y": 480},
+            "size": {"x": 80, "y": 180}
+        },
+        {
+            "position": {"x": 710, "y": 340},
+            "size": {"x": 80, "y": 100}
+        }
+    ],
+    "powerUps": [],
+    "points": [],
+    "portals": [],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    },
+    "levelName": "Level Six",
+    "totalScore": 0
+}

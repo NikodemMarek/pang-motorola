@@ -1,0 +1,85 @@
+{
+    "players": [
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 500, "y": 600},
+            "lives": 23,
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
+    ],
+    "platforms": [
+        {
+            "position": {"x": 250, "y": 450},
+            "size": {"x": 200, "y": 20},
+            "isBreakable": false,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 700, "y": 250},
+            "size": {"x": 100, "y": 20},
+            "isBreakable": true,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 800, "y": 350},
+            "size": {"x": 100, "y": 20},
+            "isBreakable": true,
+            "isIcy": false
+        }
+    ],
+    "bullets": [],
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 800, "y": 150},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 200, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 300, "y": 150},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 700, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        }
+    ],
+    "ladders": [
+        {
+            "position": {"x": 300, "y": 545},
+            "size": {"x": 20, "y": 210}
+        }
+    ],
+    "powerUps": [],
+    "points": [],
+    "portals": [],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    },
+    "levelName": "Level Eleven",
+    "totalScore": 0
+}
