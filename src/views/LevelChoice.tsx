@@ -36,7 +36,10 @@ export class LevelChoice extends React.Component<LevelChoiceProps, LevelChoiceSt
                             return {
                                 label: level,
                                 onClick: () => {
-                                    if(this.props.saved && this.state.remove) removeGame(this.props.mode, level)
+                                    if(this.props.saved && this.state.remove) {
+                                        removeGame(this.props.mode, level)
+                                        this.setState({  })
+                                    }
                                     else this.props.onLevelClick(level)
                                 }
                             }
