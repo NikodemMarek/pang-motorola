@@ -105,7 +105,7 @@ class UI extends React.Component<any, any> {
                     <GameComponent
                         onFinish={() => this.changeScene(Scenes.MAIN_MENU)}
                         mode={this.chosenMode}
-                        levelName={this.chosenLevelName}
+                        levelId={this.chosenLevelName}
                     />
                 ][this.state.scene]
             }

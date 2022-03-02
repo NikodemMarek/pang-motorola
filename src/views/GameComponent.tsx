@@ -1,4 +1,4 @@
-import { SceneManager } from 'pixi-scenes'
+import { Scene, SceneManager } from 'pixi-scenes'
 import { Application } from 'pixi.js'
 import React from 'react'
 import { GameState, RENDERER_SIZE } from '../const'
@@ -14,12 +14,14 @@ import { Stats, StatsProps } from './Stats'
 interface GameComponentProps {
     onFinish: () => void,
     mode: string,
-    levelName: string
+    levelId: string
 }
 
 interface GameComponentState {
     gameState: GameState,
-    stats: StatsProps
+    stats: StatsProps,
+    levelName: string,
+    currentLevelId: string
 }
 
 export class GameComponent extends React.Component<GameComponentProps, GameComponentState> {
@@ -35,7 +37,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         this.state = {
             gameState: GameState.INIT,
             stats: {
-                levelName: this.props.levelName,
+                levelName: this.props.levelId,
                 time: this.gameScene?.game.time || 0,
                 score: this.gameScene?.game.score || 0,
                 clockTimeLeft: this.gameScene?.game.clockTimeLeft || 0,
@@ -44,7 +46,9 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                 gun: this.gameScene?.game.players[0].gun || 0,
                 forceFields: this.gameScene?.game.players[0].forceFields || 0,
                 forceFieldsTimeLeft: this.gameScene?.game.players[0].forceFieldsTimeLeft || 0
-            }
+            },
+            levelName: this.props.levelId,
+            currentLevelId: this.props.levelId
         }
 
         this.changeGameState = this.changeGameState.bind(this)
@@ -52,6 +56,8 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
         this.saveScore = this.saveScore.bind(this)
         this.saveGameState = this.saveGameState.bind(this)
+
+        this.nextLevel = this.nextLevel.bind(this)
 
         this.pixiCtx = null
         this.app = new Application({
@@ -76,7 +82,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                         onClick={() => this.changeGameState(GameState.PAUSED)}
                     />
                     <Stats
-                        levelName={this.props.levelName}
+                        levelName={this.state.levelName}
                         time={this.state.stats.time || 0}
                         score={this.state.stats.score || 0}
                         clockTimeLeft={this.state.stats.clockTimeLeft || 0}
@@ -115,31 +121,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                                 saved={true}
                                 onLevelClick={() => {  }}
                                 onExit={() => this.changeGameState(GameState.PAUSED)}
-                                onSaveAs={(name: string) => {
-                                    saveGame(
-                                        this.props.mode.startsWith('saved')? this.props.mode.slice(6, this.props.mode.length): this.props.mode,
-                                        name,
-                                        rawLevel({
-                                            level: {
-                                                players: this.gameScene?.game.players,
-                                                balls: this.gameScene?.game.balls,
-                                                bullets: this.gameScene?.game.bullets,
-                                                powerUps: this.gameScene?.game.powerUps,
-                                                points: this.gameScene?.game.points,
-                                                platforms: this.gameScene?.game.platforms,
-                                                ladders: this.gameScene?.game.ladders,
-                                                portals: this.gameScene?.game.portals
-                                            } as Level,
-                                            info: {
-                                                time: this.gameScene?.game.time,
-                                                score: this.gameScene?.game.score,
-                                                hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft,
-                                                clockTimeLeft: this.gameScene?.game.clockTimeLeft
-                                            },
-                                            name: this.props.levelName
-                                        } as LevelData)
-                                    )
-                                }}
+                                onSaveAs={(name: string) => this.saveGameState(name)}
                             />,
                             <div className='game-over'>
                                 {
@@ -151,7 +133,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                                 <Menu
                                     elements={[
                                         { hint: 'Save Score', onSubmit: (nickname: string) => this.saveScore(nickname) },
-                                        this.won? { label: 'Next Level', onClick: () => console.log('next level') }: null,
+                                        this.won && this.props.mode.endsWith('campaign') && Number(this.state.currentLevelId) < 15? { label: 'Next Level', onClick: () => this.nextLevel(Number(this.state.currentLevelId) + 1) }: null,
                                         { label: 'Finish', onClick: this.finish }
                                     ].filter(b => b != null) as Array<ButtonProps>}
                                 />
@@ -169,27 +151,14 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         if(this.pixiCtx && this.pixiCtx.children.length <= 0) {
             this.pixiCtx.appendChild(this.app.view)
 
-            const rawLevel = this.props.mode.startsWith('saved')
-            ? readGame(this.props.mode.split('-')[1], this.props.levelName)
-            : await loadLevel(this.props.mode, this.props.levelName)
+            this.scenes.add('init', new Scene())
 
-            const level = getLevel(rawLevel)
+            await this.refresh(this.state.currentLevelId)
 
-            this.gameScene = new GameScene(
-                (won: boolean) => {
-                    this.won = won
-                    this.changeGameState(GameState.FINISHED)
-                },
-            )
-            this.gameScene.setLevel(level)
-            this.scenes.add('game', this.gameScene)
-            this.scenes.start('game')
-            
-            this.changeGameState(this.state.gameState)
             this.app.ticker.add(() => {
                 this.setState({
                     stats: {
-                        levelName: this.props.levelName,
+                        levelName: this.state.levelName,
                         time: this.gameScene?.game.time || 0,
                         score: this.gameScene?.game.score || 0,
                         clockTimeLeft: this.gameScene?.game.clockTimeLeft || 0,
@@ -202,6 +171,30 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                 })
             })
         }
+    }
+
+    refresh = async (levelId: string) => {
+        const rawLevel = this.props.mode.startsWith('saved')
+            ? readGame(this.props.mode.split('-')[1], levelId)
+            : await loadLevel(this.props.mode, levelId)
+
+            const level = getLevel(rawLevel)
+
+            this.scenes.remove('game')
+            this.gameScene = new GameScene(
+                (won: boolean) => {
+                    this.won = won
+                    this.changeGameState(GameState.FINISHED)
+                },
+            )
+            this.gameScene.setLevel(level)
+            this.scenes.add('game', this.gameScene)
+            this.scenes.start('game')
+
+            this.changeGameState(GameState.INIT)
+            this.setState({
+                levelName: level.name
+            })
     }
 
     changeGameState = (gameState: GameState) => {
@@ -223,7 +216,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
 
     saveGameState = (saveName: string) => {
         saveGame(
-            this.props.mode,
+            this.props.mode.startsWith('saved')? this.props.mode.slice(6, this.props.mode.length): this.props.mode,
             saveName,
             rawLevel(
                 {
@@ -243,9 +236,16 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                         hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft,
                         clockTimeLeft: this.gameScene?.game.clockTimeLeft
                     },
-                    name: this.props.levelName
+                    name: this.props.mode.endsWith('campaign')? this.state.currentLevelId + this.state.levelName: this.state.levelName
                 } as LevelData
             )
         )
+    }
+
+    nextLevel = async (nextLevelId: number) => {
+        this.setState({
+            currentLevelId: `${nextLevelId}`
+        })
+        await this.refresh(`${nextLevelId}`)
     }
 }
