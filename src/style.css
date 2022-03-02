@@ -223,6 +223,11 @@
     width: inherit;
 }
 
+.options {
+    width: auto;
+    height: auto;
+}
+
 .ui {
     display: flex;
     justify-content: center;
