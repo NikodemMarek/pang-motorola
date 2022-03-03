@@ -85,6 +85,24 @@ export class LevelChoice extends React.Component<LevelChoiceProps, LevelChoiceSt
 
             <Menu
                 elements={[
+                    ... (
+                        this.props.mode == 'choice' && !this.props.saved && this.props.onSaveAs == undefined
+                        ? [
+                            {
+                                label: 'Random Easy',
+                                onClick: () => this.props.onLevelClick(levels[Math.floor(Math.random() * 5)])
+                            },
+                            {
+                                label: 'Random Medium',
+                                onClick: () => this.props.onLevelClick(levels[Math.floor(Math.random() * 5) + 5])
+                            },
+                            {
+                                label: 'Random Hard',
+                                onClick: () => this.props.onLevelClick(levels[Math.floor(Math.random() * 5) + 10])
+                            }
+                        ]
+                        : [  ]
+                    ),
                     this.props.saved? {
                         label: 'Remove',
                         onToggle: () => this.setState({ remove: !this.state.remove }),
