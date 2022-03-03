@@ -148,7 +148,7 @@ export default class PlayerBody extends RectangularBody {
                         this.decelerate('movement')
 
                         if(isOnIce) this.accelerate('movement', { x: -PLAYER_SPEED.x / 2, y: 0 })
-                        else this.accelerate('movement', { x: -PLAYER_SPEED.x, y: 0 })
+                        else this.speed.x = -PLAYER_SPEED.x
                     }
                 break;
                 case 'RIGHT':
@@ -162,7 +162,7 @@ export default class PlayerBody extends RectangularBody {
                         this.decelerate('movement')
 
                         if(isOnIce) this.accelerate('movement', { x: PLAYER_SPEED.x / 2, y: 0 })
-                        else this.accelerate('movement', { x: PLAYER_SPEED.x, y: 0 })
+                        else this.speed.x = PLAYER_SPEED.x
                     }
                 break;
                 case 'SHOOT':
