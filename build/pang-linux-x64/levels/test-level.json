@@ -1,0 +1,79 @@
+{
+    "players": [
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 100, "y": 230},
+            "lives": 3,
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
+    ],
+    "platforms": [
+        {
+            "position": {"x": 150, "y": 300},
+            "size": {"x": 200, "y": 20},
+            "isBreakable": true
+        },
+        {
+            "position": {"x": 400, "y": 400},
+            "size": {"x": 120, "y": 15},
+            "isBreakable": false
+        }
+    ],
+    "bullets": [
+        {
+            "position": {"x": 500, "y": 460},
+            "size": {"x": 10, "y": 10},
+            "gun": 0
+        }
+    ],
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 500, "y": 200},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        }
+    ],
+    "ladders": [
+        {
+            "position": {"x": 100, "y": 390},
+            "size": {"x": 80, "y": 200}
+        }
+    ],
+    "powerUps": [
+        {
+            "position": {"x": 400, "y": 300},
+            "timeLeft": 15,
+            "type": 6
+        }
+    ],
+    "points": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 550, "y": 300},
+            "value": 1000
+        }
+    ],
+    "portals": [
+        {
+            "position": {"x": 100, "y": 600},
+            "destination": {"x": 500, "y": 500}
+        }
+    ],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    },
+    "levelName": "15",
+    "totalScore": 10000
+}

@@ -1,0 +1,54 @@
+{
+    "players": [
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 500, "y": 600},
+            "lives": 8,
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
+    ],
+    "platforms": [
+        {
+            "position": {"x": 500, "y": 350},
+            "size": {"x": 200, "y": 20},
+            "isBreakable": false,
+            "isIcy": false
+        }
+    ],
+    "bullets": [],
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 300, "y": 200},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 650, "y": 200},
+            "radius": 20,
+            "isFalling": true,
+            "lastHeight": 200
+        }
+    ],
+    "ladders": [],
+    "powerUps": [],
+    "points": [],
+    "portals": [],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    },
+    "levelName": "Level Two",
+    "totalScore": 1500
+}

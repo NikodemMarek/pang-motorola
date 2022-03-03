@@ -1,0 +1,108 @@
+{
+    "players": [
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 90, "y": 270},
+            "lives": 4,
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
+    ],
+    "platforms": [
+        {
+            "position": {"x": 830, "y": 250},
+            "size": {"x": 150, "y": 20},
+            "isBreakable": true,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 500, "y": 550},
+            "size": {"x": 190, "y": 20},
+            "isBreakable": true,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 130, "y": 400},
+            "size": {"x": 180, "y": 20},
+            "isBreakable": true,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 650, "y": 400},
+            "size": {"x": 250, "y": 20},
+            "isBreakable": false,
+            "isIcy": false
+        },
+        {
+            "position": {"x": 250, "y": 270},
+            "size": {"x": 220, "y": 20},
+            "isBreakable": false,
+            "isIcy": false
+        }
+    ],
+    "bullets": [],
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 700, "y": 420},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 550, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 280, "y": 450},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 280, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 880, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        }
+    ],
+    "ladders": [
+        {
+            "position": {"x": 180, "y": 325},
+            "size": {"x": 20, "y": 130}
+        },
+        {
+            "position": {"x": 560, "y": 465},
+            "size": {"x": 20, "y": 150}
+        }
+    ],
+    "powerUps": [],
+    "points": [],
+    "portals": [],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    },
+    "levelName": "Level Fifteen",
+    "totalScore": 30000
+}
