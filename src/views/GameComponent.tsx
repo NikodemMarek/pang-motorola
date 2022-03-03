@@ -14,7 +14,7 @@ import { Stats, StatsProps } from './Stats'
 /**
  * Właściwości komponentu z grą.
  */
-interface GameComponentProps {
+export interface GameComponentProps {
     /**
      * Funkcja wykonująca się na wyjściu.
      */
@@ -31,7 +31,7 @@ interface GameComponentProps {
 /**
  * Właściwości komponentu z grą.
  */
-interface GameComponentState {
+export interface GameComponentState {
     /**
      * Stan gry.
      */

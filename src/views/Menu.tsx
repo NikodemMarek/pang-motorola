@@ -8,7 +8,7 @@ import { InputField, InputFieldProps } from './InputField'
  * @param props - Właściwości elementu menu
  * @returns Element menu
  */
-const MenuElement = (props: { element: ButtonProps | ToggleButtonProps | InputFieldProps}) => {
+export const MenuElement = (props: { element: ButtonProps | ToggleButtonProps | InputFieldProps}) => {
     return <div className='menu-button'>
         {
         (props.element as ButtonProps).label != undefined

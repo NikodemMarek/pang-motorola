@@ -16,7 +16,7 @@ export interface InputFieldProps {
 /**
  * Stan pola tekstowego.
  */
-interface InputFieldState {
+export interface InputFieldState {
     /**
      * Wartość w polu tekstowym.
      */

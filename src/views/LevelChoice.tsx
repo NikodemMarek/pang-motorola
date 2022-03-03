@@ -5,7 +5,7 @@ import { Menu } from './Menu'
 /**
  * Właściwości wyboru poziomów.
  */
-interface LevelChoiceProps {
+export interface LevelChoiceProps {
     /**
      * Moduł rozgrywki z którego wybierane są poziomy.
      */
@@ -34,7 +34,7 @@ interface LevelChoiceProps {
 /**
  * Stan wyboru poziomów.
  */
-interface LevelChoiceState {
+export interface LevelChoiceState {
     /**
      * Czy włączone jest usuwanie.
      */

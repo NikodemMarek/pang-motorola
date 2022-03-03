@@ -6,7 +6,7 @@ import { Menu } from './Menu'
 /**
  * Właściwości tabeli wyników.
  */
-interface ScoreboardProps {
+export interface ScoreboardProps {
     /**
      * Tryb rozgrywki tabeli wyników.
      */
@@ -19,7 +19,7 @@ interface ScoreboardProps {
 /**
  * Stan tabeli wyników.
  */
-interface ScoreboardState {
+export interface ScoreboardState {
     /**
      * Obecnie wyświetlany wynik.
      */

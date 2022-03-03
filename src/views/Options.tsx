@@ -6,7 +6,7 @@ import { Menu } from './Menu'
 /**
  * Właściwości komponentu z opcjami gry.
  */
-interface OptionsProps {
+export interface OptionsProps {
     /**
      * Funkcja wykonująca się na wyjściu.
      */
