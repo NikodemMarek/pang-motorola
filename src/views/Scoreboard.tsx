@@ -3,16 +3,37 @@ import { readScoreboard } from '../scoreboard'
 import { Button } from './Button'
 import { Menu } from './Menu'
 
+/**
+ * Właściwości tabeli wyników.
+ */
 interface ScoreboardProps {
+    /**
+     * Tryb rozgrywki tabeli wyników.
+     */
     mode: string,
+    /**
+     * Funkcja wykonująca się po kliknięciu przycisku wyjścia.
+     */
     onExit: () => void
 }
- 
+/**
+ * Stan tabeli wyników.
+ */
 interface ScoreboardState {
+    /**
+     * Obecnie wyświetlany wynik.
+     */
     displayedScore: { name: string, score: number } | null
 }
- 
+/**
+ * Tabela wyników.
+ */
 export class Scoreboard extends React.Component<ScoreboardProps, ScoreboardState> {
+    /**
+     * Initializuje tabele wyników.
+     * 
+     * @param props - Właściwości tabeli wyników.
+     */
     constructor(props: ScoreboardProps) {
         super(props)
         this.state = {
@@ -22,6 +43,11 @@ export class Scoreboard extends React.Component<ScoreboardProps, ScoreboardState
         this.displayScore = this.displayScore.bind(this)
     }
 
+    /**
+     * Renderuje tabelę wyników.
+     * 
+     * @returns Tabela wyników
+     */
     override render = () => {
         const scores = readScoreboard(this.props.mode)
 
@@ -58,6 +84,11 @@ export class Scoreboard extends React.Component<ScoreboardProps, ScoreboardState
         </div>
     }
 
+    /**
+     * Zmienia wyswietlany wynik nad przyciskiem wyjścia.
+     * 
+     * @param score - Wynik do wyświetlenia
+     */
     displayScore = (score: { name: string, score: number }) => {
         this.setState({
             displayedScore: score

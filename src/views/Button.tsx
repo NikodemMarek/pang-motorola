@@ -1,7 +1,7 @@
 import React from 'react'
 
 /**
- * Włąściwości przcisku.
+ * Właściwości przcisku.
  */
 export interface ButtonProps {
     /**
@@ -13,7 +13,6 @@ export interface ButtonProps {
      */
     onClick: () => void
 }
-
 /**
  * Przycisk.
  * 
@@ -26,12 +25,29 @@ export const Button = (props: ButtonProps) => {
     </button>
 }
 
+/**
+ * Właściwości przełącznika.
+ */
 export interface ToggleButtonProps {
+    /**
+     * Podpis na przełączniku.
+     */
     label: string,
+    /**
+     * Funkcja wykonująca się po kliknięciu.
+     */
     onToggle: () => void,
+    /**
+     * Czy przełącznik jest przełączony.
+     */
     toggled: boolean
 }
-
+/**
+ * Przełącznik.
+ * 
+ * @param props - Właściwości przełącznika
+ * @returns Przełącznik
+ */
 export const ToggleButton = (props: ToggleButtonProps) => {
     return <button className={props.toggled? 'button-toggled': 'button'} onClick={props.onToggle}>
         {props.label}

@@ -8,10 +8,9 @@ import { BulletBody, HarpoonBody, PowerWireBody, VulcanMissile } from './physics
 import { getSound } from '../assets-provider'
 
 /**
- * Klasa odpowiedzialna za kontrolowanie prędkości gry i klatek.
+ * Klasa odpowiedzialna za odświeżanie stanu gry.
  * Przechowuje stan gry i wszystkie obiekty w grze.
  * Odświeża i wyświetla obiekty w grze.
- * 
  */
 export default class Game {
     /**
@@ -88,12 +87,9 @@ export default class Game {
     splitCooldown: number = 0
 
     /**
-     * Przypisuje pojemnik na grę, i dodaje postacie, oraz obiekty do gry.
-     * Przypisuje funkcje strzelania każdej postaci w grze.
-     * 
-     * @param container - Pojemnik na grę
-     * @param bodiesDrawer - Obiekt rysujący grę
-     * @param level - Dane poziomu
+     * Dodaje funkcję wykonującą się po przegranej lub wgranej.
+     *
+     * @param onFinish - Funkcja wykonująca sie po wygranej lub przegranej
      */
     constructor(onFinish: (won: boolean) => void) {
         this.finish = (won: boolean) => {
@@ -109,6 +105,13 @@ export default class Game {
         }
     }
 
+    /**
+     * Dodaje obiekty do gry.
+     * Dodaje granice gry.
+     * Dodaje funkcję strzału, dla wszystkich postaci.
+     *
+     * @param level - Dane poziomu
+     */
     setLevel(level: Level) {
         this.players = level.players
         this.balls = level.balls || [  ]
@@ -146,7 +149,7 @@ export default class Game {
      * 
      * @param delta - Czas który upłynął od ostatniego odświeżenia
      */
-    update(delta: number) {
+    update = (delta: number) => {
         // Zwiększa czas który upłynął w grze.
         this.time += delta
 

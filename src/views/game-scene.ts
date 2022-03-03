@@ -4,22 +4,41 @@ import BodiesDrawer from '../game/bodies-drawer'
 import Game from '../game/game'
 import { Level, LevelData } from '../types'
 
+/**
+ * Scena zawierająca grę.
+ */
 export default class GameScene extends Scene {
     /**
      * Klasa pozwalająca na wyświetlanie gry.
      */
     bodiesDrawer: BodiesDrawer
+    /**
+     * Stan gry.
+     */
     state: GameState = GameState.INIT
+    /**
+     * Gra.
+     */
     game: Game
 
+    /**
+     * Sumaryczny wynik zebrany w grze.
+     */
     totalScore: number = 0
-    
-    finish: (won: boolean) => void
-    save: ((game: Game) => void) | undefined
 
+    /**
+     * Funkja która wykona sie w przypadku przegranej lub wygranej.
+     */
+    finish: (won: boolean) => void
+
+    /**
+     * Initializuje obiekty odświeżające i rysujące grę.
+     * Dodaje funckcję wykonującą się po zakończeniu gry.
+     *
+     * @param onFinish - Funkja wykonująca się po zakończeniu gry
+     */
     constructor(
-        onFinish: (won: boolean) => void,
-        onSave?: (game: Game) => void
+        onFinish: (won: boolean) => void
     ) {
         super()
 
@@ -30,13 +49,16 @@ export default class GameScene extends Scene {
             onFinish(won)
         }
 
-        this.save = onSave
-    
         this.bodiesDrawer = new BodiesDrawer()
         this.game = new Game(won => this.finish(won))
     }
 
-    setLevel(levelData: LevelData) {
+    /**
+     * Dodaje poziom do gry.
+     *
+     * @param levelData - Informacje o poziomie
+     */
+    setLevel = (levelData: LevelData) => {
         this.game.setLevel(levelData.level)
         this.bodiesDrawer.setLevel(this, levelData.level)
 
@@ -48,10 +70,15 @@ export default class GameScene extends Scene {
         this.totalScore = levelData.totalScore || 0
     }
 
-    getScore() { return this.totalScore + this.game.score - Math.floor(this.game.time) }
+    /**
+     * Kalkuluje i zwraca wynik zebrany w grze i podany do niej.
+     *
+     * @returns Wynik
+     */
+    getScore = () => this.totalScore + this.game.score - Math.floor(this.game.time)
 
     /**
-     * Wyświetla grę i statystyki.
+     * Wyświetla grę.
      */
     draw() {
         this.bodiesDrawer.update(
@@ -71,16 +98,19 @@ export default class GameScene extends Scene {
     /**
      * Rozpoczyna grę.
      */
-    startGame() { this.state = GameState.RUNNING }
+    startGame = () => this.state = GameState.RUNNING
 
     /**
      * Zakańcza grę.
      */
-    override stop(): void {
-        this.state = GameState.FINISHED
-    }
+    override stop = () => this.state = GameState.FINISHED
 
-    override update(delta: number): void {
+    /**
+     * Odświeża obiekty w grze.
+     * 
+     * @param delta - Czas od ostatniego odświeżenia
+     */
+    override update = (delta: number): void => {
         this.game.state = GameState.RUNNING
 
         if(this.state == GameState.RUNNING && this.game.state == GameState.RUNNING) {

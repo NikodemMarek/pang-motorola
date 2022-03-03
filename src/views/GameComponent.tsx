@@ -11,33 +11,92 @@ import { LevelChoice } from './LevelChoice'
 import { Menu } from './Menu'
 import { Stats, StatsProps } from './Stats'
 
+/**
+ * Właściwości komponentu z grą.
+ */
 interface GameComponentProps {
+    /**
+     * Funkcja wykonująca się na wyjściu.
+     */
     onFinish: () => void,
+    /**
+     * Tryb rozgrywki.
+     */
     mode: string,
+    /**
+     * Id wybranego poziomu, podanego przy stworzeniu komponentu gry.
+     */
     levelId: string
 }
-
+/**
+ * Właściwości komponentu z grą.
+ */
 interface GameComponentState {
+    /**
+     * Stan gry.
+     */
     gameState: GameState,
+    /**
+     * Statystyki rozgrywki.
+     */
     stats: StatsProps,
+    /**
+     * Nazwa rozgrywanego poziomu.
+     */
     levelName: string,
+    /**
+     * Id rozgrywanego poziomu.
+     */
     currentLevelId: string,
+    /**
+     * Czy wynik został zapisany.
+     * Uniemożliwia wielokrotne zapisanie wyniku dla jednej rozgrywki.
+     */
     scoreSaved: boolean
 }
-
+/**
+ * Komponent z grą.
+ */
 export class GameComponent extends React.Component<GameComponentProps, GameComponentState> {
+    /**
+     * Element w którym będzie renderowana gra.
+     */
     pixiCtx: any
+    /**
+     * Aplikacja Pixi.js.
+     */
     app: Application
+    /**
+     * Menadżer scen Pixi.ja.
+     */
     scenes: SceneManager
+    /**
+     * Scena Pixi.js z grą.
+     */
     gameScene: GameScene | undefined
-    won: boolean | undefined
-    totalScore: number = 0
 
+    /**
+     * Czy poziom został wygrany.
+     */
+    won: boolean | undefined
+    /**
+     * Całkowity wynik zebrany podczas wszystkich rozegranych rozgrywek.
+     */
+    totalScore: number = 0
+    /**
+     * Czy rozgrywana jest pierwsza rozgrywka.
+     * Jeśli pierwszy poziom był wczytywany z zapisanych gier, informuje że następny ma być wczytany z zestawu przygotowanych poziomów.
+     */
     firstGame: boolean = true
 
-    constructor(props: any) {
+    /**
+     * Initializuje komponent z grą.
+     * Tworzy aplikację Pixi.js i dodaje menadżer scen.
+     * 
+     * @param props - Właściwości komponentu z grą
+     */
+    constructor(props: GameComponentProps) {
         super(props)
-
         this.state = {
             gameState: GameState.INIT,
             stats: {
@@ -76,6 +135,12 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         this.scenes = new SceneManager(this.app)
     }
 
+    /**
+     * Renderuje komponent z grą.
+     * {@link updatePixiCtx | Wyświetla} grę.
+     * 
+     * @returns Komponent z grą
+     */
     override render = () => { 
         return <div className='game'>
             <div className='game-running'>
@@ -149,6 +214,11 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         </div>
     }
 
+    /**
+     * Po wyrenderowaniu komponentów przez React, wyświetla grę.
+     * 
+     * @param element - Element w którym ma być wyświetlona gra
+     */
     updatePixiCtx = async (element: any) => {
         this.pixiCtx = element
 
@@ -177,6 +247,13 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         }
     }
 
+    /**
+     * Odświeża grę.
+     * Wczytuje poziom z podanym Id.
+     * Usuwa scenę Pixi.js z grą i dodaje na jej miejsce nową.
+     * 
+     * @param levelId - Id poziomu do wczytania
+     */
     refresh = async (levelId: string) => {
         const rawLevel = this.props.mode.startsWith('saved') && this.firstGame
             ? readGame(this.props.mode.split('-')[1], levelId)
@@ -202,6 +279,11 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
             })
     }
 
+    /**
+     * Zmienia stan gry.
+     * 
+     * @param gameState - Nowy stan gry
+     */
     changeGameState = (gameState: GameState) => {
         if(gameState == GameState.FINISHED) this.totalScore += this.gameScene!.getScore()
 
@@ -212,11 +294,20 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         this.gameScene!.state = gameState
     }
 
+    /**
+     * Zakańcza funkcję odświeżającą grę i grę.
+     * Wykonuje funkcję {@link onFinish}.
+     */
     finish = () => {
         this.app.ticker.destroy()
         this.props.onFinish()
     }
 
+    /**
+     * Zapisuje wynik rozgrywki do tabeli wyników.
+     * 
+     * @param nickname - Nickname gracza pod którym zostanie zapisany wynik
+     */
     saveScore = (nickname: string) => {
         addToScoreboard(this.props.mode, nickname, this.totalScore)
         this.setState({
@@ -224,6 +315,11 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         })
     }
 
+    /**
+     * Zapisuje stan rozgrywki.
+     * 
+     * @param saveName - Nazwa pod którą zostanie zapisana rozgrywka
+     */
     saveGameState = (saveName: string) => {
         saveGame(
             this.props.mode.startsWith('saved')? this.props.mode.slice(6, this.props.mode.length): this.props.mode,
@@ -252,6 +348,11 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         )
     }
 
+    /**
+     * {@link refresh | Wczytuje i wyświetla} następny poziom.
+     * 
+     * @param nextLevelId - Id następnego poziomu do wczytania
+     */
     nextLevel = async (nextLevelId: number) => {
         this.firstGame = false
         this.setState({

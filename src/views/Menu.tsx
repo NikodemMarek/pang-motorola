@@ -2,10 +2,12 @@ import React from 'react'
 import { Button, ButtonProps, ToggleButton, ToggleButtonProps } from './Button'
 import { InputField, InputFieldProps } from './InputField'
 
-export interface MenuProps {
-    elements: Array<ButtonProps | ToggleButtonProps | InputFieldProps | null>
-}
-
+/**
+ * Element menu.
+ * 
+ * @param props - Właściwości elementu menu
+ * @returns Element menu
+ */
 const MenuElement = (props: { element: ButtonProps | ToggleButtonProps | InputFieldProps}) => {
     return <div className='menu-button'>
         {
@@ -27,7 +29,23 @@ const MenuElement = (props: { element: ButtonProps | ToggleButtonProps | InputFi
         }
     </div>
 }
-  
+
+/**
+ * Właściwości menu.
+ */
+export interface MenuProps {
+    /**
+     * Elementy które znajdą się w menu.
+     * Jeśli podany zostanie null, nie zostanie wyświetlony.
+     */
+    elements: Array<ButtonProps | ToggleButtonProps | InputFieldProps | null>
+}
+/**
+ * Menu.
+ * 
+ * @param props - Właściwości menu
+ * @returns Menu
+ */
 export const Menu = (props: MenuProps) => {
     return <div className='menu'>
         {

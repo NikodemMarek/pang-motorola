@@ -16,10 +16,24 @@ import './style.css'
 import { Sound } from '@pixi/sound'
 Sound
 
+/**
+ * Główny ui aplikacji.
+ */
 class UI extends React.Component<any, any> {
+    /**
+     * Wybrany moduł rozgrywki.
+     */
     chosenMode: string = 'choice'
-    chosenLevelName: string = 'easy 0'
+    /**
+     * Id wybranego poziomu.
+     */
+    chosenLevelId: string = 'easy-0'
 
+    /**
+     * Initializuje ui.
+     * 
+     * @param props - Właściwości ui
+     */
     constructor(props: any) {
         super(props)
         this.state = {
@@ -30,6 +44,11 @@ class UI extends React.Component<any, any> {
         this.changeScene = this.changeScene.bind(this)
     }
 
+    /**
+     * Renderuje ui aplikacji.
+     * 
+     * @returns Ui
+     */
     override render = () => {
         return <div className='ui'>
             {
@@ -48,7 +67,7 @@ class UI extends React.Component<any, any> {
                         saved={false}
                         onLevelClick={(levelName) => {
                             this.chosenMode = 'choice'
-                            this.chosenLevelName = levelName
+                            this.chosenLevelId = levelName
 
                             this.changeScene(Scenes.GAME)
                         }}
@@ -59,7 +78,7 @@ class UI extends React.Component<any, any> {
                         saved={false}
                         onLevelClick={(levelName) => {
                             this.chosenMode = 'campaign'
-                            this.chosenLevelName = levelName
+                            this.chosenLevelId = levelName
 
                             this.changeScene(Scenes.GAME)
                         }}
@@ -71,7 +90,7 @@ class UI extends React.Component<any, any> {
                         saved={false}
                         onLevelClick={(levelName) => {
                             this.chosenMode = 'bonus'
-                            this.chosenLevelName = levelName
+                            this.chosenLevelId = levelName
 
                             this.changeScene(Scenes.GAME)
                         }}
@@ -83,7 +102,7 @@ class UI extends React.Component<any, any> {
                         saved={true}
                         onLevelClick={(levelName) => {
                             this.chosenMode = 'saved-campaign'
-                            this.chosenLevelName = levelName
+                            this.chosenLevelId = levelName
 
                             this.changeScene(Scenes.GAME)
                         }}
@@ -94,7 +113,7 @@ class UI extends React.Component<any, any> {
                         saved={true}
                         onLevelClick={(levelName) => {
                             this.chosenMode = 'saved-bonus'
-                            this.chosenLevelName = levelName
+                            this.chosenLevelId = levelName
                             
                             this.changeScene(Scenes.GAME)
                         }}
@@ -118,13 +137,18 @@ class UI extends React.Component<any, any> {
                     <GameComponent
                         onFinish={() => this.changeScene(Scenes.MAIN_MENU)}
                         mode={this.chosenMode}
-                        levelId={this.chosenLevelName}
+                        levelId={this.chosenLevelId}
                     />
                 ][this.state.scene]
             }
         </div>
     }
 
+    /**
+     * Zmienia wyświetlaną scenę.
+     * 
+     * @param newScene - Nowa scena
+     */
     changeScene = (newScene: Scenes) => {
         this.setState({
             scene: newScene
@@ -132,6 +156,13 @@ class UI extends React.Component<any, any> {
     }
 }
 
+/**
+ * Wczytuje zestaw grafik.
+ * Wczytuje dźwięki.
+ * 
+ * @param set - Zestaw grafik do wczytania
+ * @returns Promise wczytujący grę
+ */
 const setup = async (set: number) => {
     BitmapFont.from('buttonLabelFont', {
         fontFamily: 'Noto Sans',
@@ -165,6 +196,10 @@ const setup = async (set: number) => {
         loader.onError.once(() => reject(false))
     })
 }
+
+/**
+ * Uruchamia aplikację.
+ */
 setup(1).then(() => {
     ReactDOM.render(
         <UI />,

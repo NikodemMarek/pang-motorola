@@ -3,17 +3,32 @@ import { getImagesSetsList } from '../assets-provider'
 import { Button } from './Button'
 import { Menu } from './Menu'
 
+/**
+ * Właściwości komponentu z opcjami gry.
+ */
 interface OptionsProps {
+    /**
+     * Funkcja wykonująca się na wyjściu.
+     */
     onExit: () => void,
+    /**
+     * Funkcja ładująca zestaw grafik.
+     */
     onLoad: (set: number) => void,
+    /**
+     * Załadowany zestaw grafik.
+     */
     loadedSet: number
 }
- 
-interface OptionsState {
-    
-}
- 
-export class Options extends React.Component<OptionsProps, OptionsState> {
+/**
+ * Komponent z opcjami gry.
+ */
+export class Options extends React.Component<OptionsProps, any> {
+    /**
+     * Renderuje komponent z opcjami gry.
+     * 
+     * @returns Komponent z opcjami gry
+     */
     override render = () => { 
         return <div className='options'>
             <Menu

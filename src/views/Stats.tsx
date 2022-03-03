@@ -1,18 +1,53 @@
 import React from 'react'
 import { Guns } from '../const'
 
+/**
+ * Status rozgrywki.
+ */
 export interface StatsProps {
+    /**
+     * Nazwa poziomu.
+     */
     levelName: string,
+    /**
+     * Czas trwania rozgrywki.
+     */
     time: number,
+    /**
+     * Wynik uzyskany podczas rozgrywki.
+     */
     score: number,
+    /**
+     * Czas który pozostał do zakończenia się bonusu zatrzymania czasu.
+     */
     clockTimeLeft: number,
+    /**
+     * Czas który pozostał do zakończenia się bonusu spowolnienia czasu.
+     */
     hourglassTimeLeft: number,
+    /**
+     * Ilość żyć które pozostały postaci.
+     */
     lives: number,
+    /**
+     * Aktywna broń.
+     */
     gun: Guns,
+    /**
+     * Ilość tarczy ochronnych które podniósł gracz.
+     */
     forceFields: number,
+    /**
+     * Czas który pozostał do zniknięcia tarczy ochronnej.
+     */
     forceFieldsTimeLeft: number
 }
-
+/**
+ * Komponent ze statusem rozgrywki.
+ * 
+ * @param props - Status rozgrywki
+ * @returns Komponent ze statusem rozgrywki
+ */
 export const Stats = (props: StatsProps) => {
     return <p className='stats'>
         <span style={{fontSize: '30px'}}>{props.levelName}</span>

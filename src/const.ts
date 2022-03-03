@@ -175,6 +175,9 @@ export enum ZIndex {
     PAUSE_MENU
 }
 
+/**
+ * Identyfikatory scen w formie enuma, dla lepszej czytelności.
+ */
 export enum Scenes {
     MAIN_MENU,
     LEVELS_CHOICE,
@@ -187,6 +190,9 @@ export enum Scenes {
     GAME
 }
 
+/**
+ * Domyślna głośność dźwięków w grze.
+ */
 export const VOLUME = 1
 
 export const SCOREBOARD_SIZE = 10

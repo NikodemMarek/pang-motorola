@@ -93,7 +93,7 @@ export default class PlayerBody extends RectangularBody {
      * @param colliders - Tablica z ciałami które mogą kolidować z postacią
      * @param ladders - Tablica z drabinami na których może znajdować się postać
      */
-    override update(delta: number, colliders?: Body[], ladders?: LadderBody[]): void {
+    override update = (delta: number, colliders?: Body[], ladders?: LadderBody[]): void => {
         const isInsideLadder = (ladder: LadderBody) =>
             this.isColliding(ladder) &&
             this.position.x - this.size.x / 2 > ladder.position.x - ladder.size.x / 2 &&
@@ -214,7 +214,12 @@ export default class PlayerBody extends RectangularBody {
         else this.forceFields = 0
     }
 
-    powerUp(type: PowerUp) {
+    /**
+     * Aktywuje bonus.
+     *
+     * @param type - Typ bonusu do aktywowania
+     */
+    powerUp = (type: PowerUp) => {
         switch(type) {
             case PowerUp.HARPOON:
                 this.gun = Guns.HARPOON
