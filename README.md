@@ -1,0 +1,57 @@
+
+# Gra Pang na Motorola Science Cup 2022
+
+Implementacja gry Pang w TypeScript, stworzona na konkurs [Motorola Science Cup](https://science-cup.pl/) 2022.
+
+Gra wykorzystuje silnik graficzny [PixiJS](https://pixijs.com/).
+Interfejs graficzny jest zbudowany przy użyciu biblioteki [React](https://reactjs.org/).
+## Uruchamianie
+
+Sklonuj projekt i wejdź do folderu z projektem
+
+```bash
+  git clone https://github.com/NikodemMarek/pang-motorola.git
+  cd pang-motorola
+```
+
+Pobierz zależności
+
+```bash
+  npm install
+```
+
+Uruchom serwer
+
+```bash
+  npm run start
+```
+
+lub uruchom aplikację przez [NW.js](https://nwjs.io/)
+
+```bash
+  npm run run-nw
+```
+## Testy
+
+Testy są uruchamiane automatycznie podczas buildu.  
+Dodatkowo mogą zostać uruchomione za pomocą komendy
+
+```bash
+  npm run test
+```
+
+&nbsp;  
+Wykorzystanym frameworkiem testowym jest [Jest](https://jestjs.io/).  
+Ponieważ do renderowania gry wykorzystane są zewnętrzne biblioteki, testowana jest tylko fizyka w grze.
+## Dokumentacja
+
+Dokumentacja znajduje się [tutaj](https://github.com/NikodemMarek/pang-motorola/tree/main/docs).
+## Tech Stack
+
+- [TypeScript](https://www.typescriptlang.org/)
+- [PixiJS](https://pixijs.com/)
+- [React](https://reactjs.org/)
+- [NW.js](https://nwjs.io/)
+- [Jest](https://jestjs.io/)
+- [TypeDoc](https://typedoc.org/)
+- [webpack](https://webpack.js.org/)

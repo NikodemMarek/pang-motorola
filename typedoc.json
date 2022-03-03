@@ -2,5 +2,6 @@
     "entryPointStrategy": "expand",
     "entryPoints": "src/",
     "out": "docs/",
-    "name": "pang"
+    "name": "pang",
+    "readme": "README.md"
 }
