@@ -79,6 +79,12 @@ module.exports = (env, argv) => {
                     {
                         from: 'static/',
                         noErrorOnMissing: true 
+                    },
+                    {
+                        from: 'src/electron.js'
+                    },
+                    {
+                        from: 'src/package.json'
                     }
                 ],
             }),

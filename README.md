@@ -26,10 +26,10 @@ Uruchom serwer
   npm run start
 ```
 
-lub uruchom aplikację przez [NW.js](https://nwjs.io/)
+lub uruchom aplikację przez [Electron](https://www.electronjs.org/)
 
 ```bash
-  npm run run-nw
+  npm run electron-run
 ```
 ## Testy
 
@@ -51,7 +51,7 @@ Dokumentacja znajduje się [tutaj](https://github.com/NikodemMarek/pang-motorola
 - [TypeScript](https://www.typescriptlang.org/)
 - [PixiJS](https://pixijs.com/)
 - [React](https://reactjs.org/)
-- [NW.js](https://nwjs.io/)
+- [Electron](https://www.electronjs.org/)
 - [Jest](https://jestjs.io/)
 - [TypeDoc](https://typedoc.org/)
 - [webpack](https://webpack.js.org/)
