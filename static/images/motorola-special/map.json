@@ -82,11 +82,11 @@
 },
 "ladder.png":
 {
-	"frame": {"x":450,"y":100,"w":90,"h":90},
+	"frame": {"x":540,"y":100,"w":91,"h":91},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":90},
-	"sourceSize": {"w":90,"h":90}
+	"spriteSourceSize": {"x":0,"y":0,"w":91,"h":91},
+	"sourceSize": {"w":91,"h":91}
 },
 "missile.png":
 {
@@ -202,7 +202,7 @@
 },
 "portal.png":
 {
-	"frame": {"x":540,"y":100,"w":90,"h":110},
+	"frame": {"x":450,"y":100,"w":90,"h":110},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":90,"h":110},
@@ -236,6 +236,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1000,"h":910},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:cd5f0d399a0555cb83b244ee186c980c:9509a1d34e37e42cb4f69e2f2d5371b3:e6ff0330c654821f70d9e41932dc6729$"
+	"smartupdate": "$TexturePacker:SmartUpdate:57c74ab10dd2fdc92529c3065046510b:d974631a8ce3defa49df1f89ba384c1d:e6ff0330c654821f70d9e41932dc6729$"
 }
 }
