@@ -31,6 +31,7 @@ export enum ImagePath {
     MENU_BUTTON_HOVER = 'button-hover.png',
     PLATFORM = 'platform.png',
     PLATFORM_BREAKABLE = 'platform-break.png',
+    PLATFORM_ICY = 'button-hover.png',
     LADDER = 'ladder.png',
     PORTAL = 'button.png',
     BALL = 'ball.png',
