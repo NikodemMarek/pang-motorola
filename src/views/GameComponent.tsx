@@ -285,7 +285,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
      * @param gameState - Nowy stan gry
      */
     changeGameState = (gameState: GameState) => {
-        if(gameState == GameState.FINISHED) this.totalScore += this.gameScene!.getScore()
+        if(gameState == GameState.FINISHED) this.totalScore = this.getScore()
 
         this.setState({
             gameState: gameState
@@ -338,7 +338,7 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
                     } as Level,
                     info: {
                         time: this.gameScene?.game.time,
-                        score: this.gameScene?.game.score,
+                        score: this.getScore(),
                         hourglassTimeLeft: this.gameScene?.game.hourglassTimeLeft,
                         clockTimeLeft: this.gameScene?.game.clockTimeLeft
                     },
@@ -361,4 +361,11 @@ export class GameComponent extends React.Component<GameComponentProps, GameCompo
         })
         await this.refresh(`${nextLevelId}`)
     }
+
+    /**
+     * Kalkuluje sumaryczny, uzyskany wynik.
+     * 
+     * @returns Obecny wynik
+     */
+    getScore = () => this.totalScore + this.gameScene!.getScore()
 }
