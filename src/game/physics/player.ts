@@ -102,10 +102,19 @@ export default class PlayerBody extends RectangularBody {
         let collidingLadder = ladders?.find(ladder => isInsideLadder(ladder))
         let isOnLadder = collidingLadder != undefined && this.speed.x == 0
 
-        this.position.y += 1
-        const isOnIce = colliders?.some(collider => collider instanceof PlatformBody && collider.isIcy && this.isColliding(collider))
-        const isOnGround = colliders?.some(collider => this.isColliding(collider))
-        this.position.y -= 1
+        const belowFeet = new RectangularBody(
+            {
+                x: this.position.x,
+                y: this.position.y + this.size.y / 2
+            },
+            {
+                x: this.size.x,
+                y: 1
+            },
+            true
+        )
+        const isOnIce = colliders?.some(collider => collider instanceof PlatformBody && collider.isIcy && belowFeet.isColliding(collider))
+        const isOnGround = colliders?.some(collider => belowFeet.isColliding(collider))
 
         if(isOnLadder) this.speed.y = 0
         if(!this.moves.has('RIGHT') && !this.moves.has('LEFT')) {
@@ -125,7 +134,7 @@ export default class PlayerBody extends RectangularBody {
                     }
                 break;
                 case 'DOWN':
-                    if(isOnLadder) this.speed.y = PLAYER_SPEED.y
+                    if(isOnLadder && !isOnGround) this.speed.y = PLAYER_SPEED.y
                     else if(Math.abs(this.speed.x) < PLAYER_SPEED.x / 10) {
                         this.speed.x = 0
                         this.position.y += 1
@@ -143,7 +152,11 @@ export default class PlayerBody extends RectangularBody {
                         && (
                             !this.accelerators.some(acc => acc.name == 'movement')
                             || this.accelerators.some(acc => acc.name == 'movement' && acc.vector.x > 0)
-                        ) && (!isOnLadder || isOnGround)
+                        ) && (
+                            !isOnLadder
+                            || isOnGround
+                            || !colliders?.some(collider => this.isColliding(collider))
+                        )
                     ) {
                         this.decelerate('movement')
 
@@ -157,7 +170,11 @@ export default class PlayerBody extends RectangularBody {
                         && (
                             !this.accelerators.some(acc => acc.name == 'movement')
                             || this.accelerators.some(acc => acc.name == 'movement' && acc.vector.x < 0)
-                        ) && (!isOnLadder || isOnGround)
+                        ) && (
+                            !isOnLadder
+                            || isOnGround
+                            || !colliders?.some(collider => this.isColliding(collider))
+                        )
                     ) {
                         this.decelerate('movement')
 
@@ -188,7 +205,7 @@ export default class PlayerBody extends RectangularBody {
         })
 
         if(!this.moves.has('RIGHT') && !this.moves.has('LEFT')) {
-            if(!isOnIce && isOnGround) this.speed.x = 0
+            if(!isOnIce) this.speed.x = 0
             else if(!this.accelerators.some(acc => acc.name == 'break')) this.accelerate('break', { x: Math.sign(this.speed.x) * -PLAYER_SPEED.x / 4, y: 0 })
         }
         if(Math.abs(this.speed.x) < 5 && !this.accelerators.some(acc => acc.name == 'movement')) {
