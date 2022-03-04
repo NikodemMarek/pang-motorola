@@ -1,0 +1,85 @@
+{
+    "players": [
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 70, "y": 430},
+            "lives": 3,
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
+    ],
+    "platforms": [
+        {
+            "position": {"x": 150, "y": 500},
+            "size": {"x": 230, "y": 20},
+            "isBreakable": false
+        },
+        {
+            "position": {"x": 800, "y": 300},
+            "size": {"x": 280, "y": 15},
+            "isBreakable": false,
+            "isIcy": true
+        },
+        {
+            "position": {"x": 580, "y": 200},
+            "size": {"x": 200, "y": 15},
+            "isBreakable": false
+        }
+    ],
+    "bullets": [],
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 150, "y": 100},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 900, "y": 200},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        }
+    ],
+    "ladders": [
+        {
+            "position": {"x": 700, "y": 395},
+            "size": {"x": 80, "y": 205}
+        }
+    ],
+    "powerUps": [
+        {
+            "position": {"x": 800, "y": 600},
+            "timeLeft": 15,
+            "type": 7
+        },
+        {
+            "position": {"x": 600, "y": 170},
+            "timeLeft": 15,
+            "type": 5
+        }
+    ],
+    "points": [],
+    "portals": [
+        {
+            "position": {"x": 220, "y": 435},
+            "destination": {"x": 600, "y": 150}
+        }
+    ],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    },
+    "levelName": "Bonus Level Four",
+    "totalScore": 10000
+}

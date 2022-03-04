@@ -1,0 +1,81 @@
+{
+    "players": [
+        {
+            "accelerators": [
+                {"name": "initial", "vector": {"x": 0, "y": 0}},
+                {"name": "gravity", "vector": {"x": 0, "y": 100}}
+            ],
+            "position": {"x": 900, "y": 230},
+            "lives": 3,
+            "shotTwoTimes": false,
+            "forceFields": 0,
+            "forceFieldsTimeLeft": 0,
+            "gun": 2,
+            "cooldown": 0
+        }
+    ],
+    "platforms": [
+        {
+            "position": {"x": 150, "y": 300},
+            "size": {"x": 200, "y": 20},
+            "isBreakable": false
+        },
+        {
+            "position": {"x": 400, "y": 400},
+            "size": {"x": 120, "y": 15},
+            "isBreakable": false,
+            "isIcy": true
+        },
+        {
+            "position": {"x": 800, "y": 300},
+            "size": {"x": 420, "y": 15},
+            "isBreakable": false,
+            "isIcy": true
+        }
+    ],
+    "bullets": [],
+    "balls": [
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 400, "y": 200},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        },
+        {
+            "speed": {"x": 0, "y": 0},
+            "position": {"x": 700, "y": 200},
+            "radius": 40,
+            "isFalling": true,
+            "lastHeight": 200
+        }
+    ],
+    "ladders": [
+        {
+            "position": {"x": 400, "y": 520},
+            "size": {"x": 80, "y": 260}
+        }
+    ],
+    "powerUps": [
+        {
+            "position": {"x": 400, "y": 300},
+            "timeLeft": 15,
+            "type": 6
+        }
+    ],
+    "points": [],
+    "portals": [
+        {
+            "position": {"x": 800, "y": 235},
+            "destination": {"x": 150, "y": 250}
+        }
+    ],
+    "info": {
+        "time": 0,
+        "score": 0,
+        "clockTimeLeft": 0,
+        "hourglassTimeLeft": 0
+    },
+    "levelName": "Bonus Level Two",
+    "totalScore": 10000
+}
