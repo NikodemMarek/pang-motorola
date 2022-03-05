@@ -31,6 +31,7 @@ lub uruchom aplikację przez [Electron](https://www.electronjs.org/)
 ```bash
   npm run electron-run
 ```
+
 ## Testy
 
 Testy są uruchamiane automatycznie podczas buildu.  
@@ -45,7 +46,7 @@ Wykorzystanym frameworkiem testowym jest [Jest](https://jestjs.io/).
 Ponieważ do renderowania gry wykorzystane są zewnętrzne biblioteki, testowana jest tylko fizyka w grze.
 ## Dokumentacja
 
-Dokumentacja znajduje się [tutaj](https://github.com/NikodemMarek/pang-motorola/tree/main/docs).
+Dokumentacja znajduje się [tutaj](https://nikodemmarek.github.io/pang-motorola/).
 ## Tech Stack
 
 - [TypeScript](https://www.typescriptlang.org/)
