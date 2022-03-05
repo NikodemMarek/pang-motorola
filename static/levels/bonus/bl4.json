@@ -27,7 +27,7 @@
             "isIcy": true
         },
         {
-            "position": {"x": 580, "y": 200},
+            "position": {"x": 580, "y": 180},
             "size": {"x": 200, "y": 15},
             "isBreakable": false
         }
