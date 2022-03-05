@@ -27,7 +27,8 @@
         },
         "directories": {
             "output": "../build"
-        }
+        },
+        "icon": "images/icon.png"
     },
     "devDependencies": {
         "electron": "^17.1.0",
