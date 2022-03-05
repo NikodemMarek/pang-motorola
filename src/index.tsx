@@ -22,12 +22,13 @@ Sound
 class UI extends React.Component<any, any> {
     /**
      * Wybrany moduł rozgrywki.
+     * Dostępne: choice - moduł 1, campaign - moduł 2, bonus - moduł 3.
      */
     chosenMode: string = 'choice'
     /**
      * Id wybranego poziomu.
      */
-    chosenLevelId: string = 'easy-0'
+    chosenLevelId: string = 'Easy 1'
 
     /**
      * Initializuje ui.

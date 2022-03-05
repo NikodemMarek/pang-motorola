@@ -5,6 +5,7 @@ Implementacja gry Pang w TypeScript, stworzona na konkurs [Motorola Science Cup]
 
 Gra wykorzystuje silnik graficzny [PixiJS](https://pixijs.com/).
 Interfejs graficzny jest zbudowany przy użyciu biblioteki [React](https://reactjs.org/).
+
 ## Uruchamianie
 
 Sklonuj projekt i wejdź do folderu z projektem
@@ -31,6 +32,9 @@ lub uruchom aplikację przez [Electron](https://www.electronjs.org/)
 ```bash
   npm run electron-run
 ```
+
+Gotowa do uruchomienia gra znajduje się [tutaj](https://github.com/NikodemMarek/pang-motorola/tree/build/build).
+
 ## Testy
 
 Testy są uruchamiane automatycznie podczas buildu.  
@@ -43,9 +47,10 @@ Dodatkowo mogą zostać uruchomione za pomocą komendy
 &nbsp;  
 Wykorzystanym frameworkiem testowym jest [Jest](https://jestjs.io/).  
 Ponieważ do renderowania gry wykorzystane są zewnętrzne biblioteki, testowana jest tylko fizyka w grze.
+
 ## Dokumentacja
 
-Dokumentacja znajduje się [tutaj](https://github.com/NikodemMarek/pang-motorola/tree/main/docs).
+Dokumentacja znajduje się [tutaj](https://nikodemmarek.github.io/pang-motorola/).
 ## Tech Stack
 
 - [TypeScript](https://www.typescriptlang.org/)

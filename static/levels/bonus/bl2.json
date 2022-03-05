@@ -5,7 +5,7 @@
                 {"name": "initial", "vector": {"x": 0, "y": 0}},
                 {"name": "gravity", "vector": {"x": 0, "y": 100}}
             ],
-            "position": {"x": 900, "y": 230},
+            "position": {"x": 800, "y": 230},
             "lives": 3,
             "shotTwoTimes": false,
             "forceFields": 0,
@@ -37,14 +37,14 @@
     "balls": [
         {
             "speed": {"x": 0, "y": 0},
-            "position": {"x": 400, "y": 200},
+            "position": {"x": 400, "y": 100},
             "radius": 40,
             "isFalling": true,
             "lastHeight": 200
         },
         {
             "speed": {"x": 0, "y": 0},
-            "position": {"x": 700, "y": 200},
+            "position": {"x": 700, "y": 100},
             "radius": 40,
             "isFalling": true,
             "lastHeight": 200
@@ -66,7 +66,7 @@
     "points": [],
     "portals": [
         {
-            "position": {"x": 800, "y": 235},
+            "position": {"x": 900, "y": 235},
             "destination": {"x": 150, "y": 250}
         }
     ],

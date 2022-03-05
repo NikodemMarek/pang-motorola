@@ -28,7 +28,7 @@
             "isIcy": false
         },
         {
-            "position": {"x": 400, "y": 350},
+            "position": {"x": 400, "y": 330},
             "size": {"x": 250, "y": 20},
             "isBreakable": false,
             "isIcy": false
@@ -81,8 +81,8 @@
             "size": {"x": 20, "y": 210}
         },
         {
-            "position": {"x": 310, "y": 390},
-            "size": {"x": 20, "y": 100}
+            "position": {"x": 310, "y": 380},
+            "size": {"x": 20, "y": 120}
         }
     ],
     "powerUps": [],

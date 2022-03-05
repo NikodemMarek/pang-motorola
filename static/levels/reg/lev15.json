@@ -5,7 +5,7 @@
                 {"name": "initial", "vector": {"x": 0, "y": 0}},
                 {"name": "gravity", "vector": {"x": 0, "y": 100}}
             ],
-            "position": {"x": 90, "y": 270},
+            "position": {"x": 90, "y": 340},
             "lives": 4,
             "shotTwoTimes": false,
             "forceFields": 0,
@@ -22,7 +22,7 @@
             "isIcy": false
         },
         {
-            "position": {"x": 500, "y": 550},
+            "position": {"x": 500, "y": 540},
             "size": {"x": 190, "y": 20},
             "isBreakable": true,
             "isIcy": false
@@ -90,8 +90,8 @@
             "size": {"x": 20, "y": 130}
         },
         {
-            "position": {"x": 560, "y": 465},
-            "size": {"x": 20, "y": 150}
+            "position": {"x": 560, "y": 460},
+            "size": {"x": 20, "y": 140}
         }
     ],
     "powerUps": [],
