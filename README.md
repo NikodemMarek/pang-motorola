@@ -50,7 +50,10 @@ Ponieważ do renderowania gry wykorzystane są zewnętrzne biblioteki, testowana
 
 ## Dokumentacja
 
-Dokumentacja znajduje się [tutaj](https://nikodemmarek.github.io/pang-motorola/).
+Dokumentacja została wykonana przy użyciu generatora dokumentacji [TypeDoc](https://typedoc.org/).
+
+Dokumentacja znajduje się [tutaj](https://nikodemmarek.github.io/pang-motorola/).  
+Wykaz zrealizowanych założeń zadania konkursowego, znajduje się [tutaj](https://github.com/NikodemMarek/pang-motorola/wiki/Za%C5%82o%C5%BCenia-konkursowe).
 ## Tech Stack
 
 - [TypeScript](https://www.typescriptlang.org/)
