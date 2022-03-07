@@ -47,7 +47,7 @@ export class BallBody extends CircularBody {
     override update(delta: number, colliders?: Body[]): void {
         super.update(delta, colliders)
 
-        if(this.isFalling && this.position.y < this.lastHeight || this.position.y >= GAME_SIZE.y - this.radius) this.speed.y = -PLAYER_SIZE.y * 2
+        if(this.isFalling && this.position.y < this.lastHeight || this.position.y >= GAME_SIZE.y - this.radius) this.speed.y = -PLAYER_SIZE.y * 3
 
         if(this.position.y > this.lastHeight) this.isFalling = true
         else this.isFalling = false

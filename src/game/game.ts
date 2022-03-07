@@ -135,7 +135,9 @@ export default class Game {
             sound!.volume = VOLUME
             sound?.play()
 
-            if(player.gun == Guns.POWER_WIRE) this.bullets.push(new PowerWireBody({ x: player.position.x, y: player.position.y }))
+            if(player.gun == Guns.POWER_WIRE) {
+                if(player.speed.y == 0) this.bullets.push(new PowerWireBody({ x: player.position.x, y: player.position.y }))
+            }
             else if(player.gun == Guns.VULCAN_MISSILE) this.bullets.push(new VulcanMissile({ x: player.position.x, y: player.position.y }))
             else this.bullets.push(new HarpoonBody({ x: player.position.x, y: player.position.y }))
         })
