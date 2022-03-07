@@ -6,7 +6,7 @@
                 {"name": "gravity", "vector": {"x": 0, "y": 100}}
             ],
             "position": {"x": 700, "y": 600},
-            "lives": 8,
+            "lives": 6,
             "shotTwoTimes": false,
             "forceFields": 0,
             "forceFieldsTimeLeft": 0,

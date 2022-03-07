@@ -95,8 +95,8 @@ export const PLAYER_SIZE: XYVar = {
  * Prędkość postaci w poziomie i podczas chodzenia po drabinie.
  */
 export const PLAYER_SPEED: XYVar = {
-    x: 100,
-    y: 75
+    x: 240,
+    y: 100
 }
 
 /**
@@ -109,7 +109,7 @@ export const BULLET_SPEED = -400
  */
 export const GRAVITY: XYVar = {
     x: 0,
-    y: 100
+    y: 200
 }
 
 /**
