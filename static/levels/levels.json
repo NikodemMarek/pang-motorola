@@ -1,20 +1,20 @@
 {
     "choice": [
-        { "name": "easy 0", "path": "reg/lev1.json" },
-        { "name": "easy 1", "path": "reg/lev2.json" },
-        { "name": "easy 2", "path": "reg/lev3.json" },
-        { "name": "easy 3", "path": "reg/lev4.json" },
-        { "name": "easy 4", "path": "reg/lev5.json" },
-        { "name": "medium 0", "path": "reg/lev6.json" },
-        { "name": "medium 1", "path": "reg/lev7.json" },
-        { "name": "medium 2", "path": "reg/lev8.json" },
-        { "name": "medium 3", "path": "reg/le9.json" },
-        { "name": "medium 4", "path": "reg/lev10.json" },
-        { "name": "hard 0", "path": "reg/lev11.json" },
-        { "name": "hard 1", "path": "reg/lev12.json" },
-        { "name": "hard 2", "path": "reg/lev13.json" },
-        { "name": "hard 3", "path": "reg/lev14.json" },
-        { "name": "hard 4", "path": "reg/lev15.json" }
+        { "name": "Easy 0", "path": "reg/lev1.json" },
+        { "name": "Easy 1", "path": "reg/lev2.json" },
+        { "name": "Easy 2", "path": "reg/lev3.json" },
+        { "name": "Easy 3", "path": "reg/lev4.json" },
+        { "name": "Easy 4", "path": "reg/lev5.json" },
+        { "name": "Medium 0", "path": "reg/lev6.json" },
+        { "name": "Medium 1", "path": "reg/lev7.json" },
+        { "name": "Medium 2", "path": "reg/lev8.json" },
+        { "name": "Medium 3", "path": "reg/lev9.json" },
+        { "name": "Medium 4", "path": "reg/lev10.json" },
+        { "name": "Hard 0", "path": "reg/lev11.json" },
+        { "name": "Hard 1", "path": "reg/lev12.json" },
+        { "name": "Hard 2", "path": "reg/lev13.json" },
+        { "name": "Hard 3", "path": "reg/lev14.json" },
+        { "name": "Hard 4", "path": "reg/lev15.json" }
     ],
     "campaign": [
         { "name": "1", "path": "reg/lev1.json" },
@@ -34,10 +34,10 @@
         { "name": "15", "path": "reg/lev15.json" }
     ],
     "bonus": [
-        { "name": "bonus level 1", "path": "test-level.json" },
-        { "name": "bonus level 2", "path": "test-level.json" },
-        { "name": "bonus level 3", "path": "test-level.json" },
-        { "name": "bonus level 4", "path": "test-level.json" },
-        { "name": "bonus level 5", "path": "test-level.json" }
+        { "name": "Bonus Level 1", "path": "bonus/bl1.json" },
+        { "name": "Bonus Level 2", "path": "bonus/bl2.json" },
+        { "name": "Bonus Level 3", "path": "bonus/bl3.json" },
+        { "name": "Bonus Level 4", "path": "bonus/bl4.json" },
+        { "name": "Bonus Level 5", "path": "bonus/bl5.json" }
     ]
 }

@@ -1,0 +1,37 @@
+{
+    "name": "pang",
+    "version": "1.0.0",
+    "author": "Dream Team 2.0 <dreamteam2@email.fake>",
+    "license": "ISC",
+    "homepage": "http://dreamteam2.homepage.fake",
+    "main": "electron.js",
+    "scripts": {
+        "build": "electron-builder build"
+    },
+    "build": {
+        "productName": "Pang",
+        "win": {
+            "target": [
+                "portable"
+            ]
+        },
+        "portable": {
+            "artifactName": "pang.exe"
+        },
+        "linux": {
+            "target": [
+                "AppImage",
+                "rpm",
+                "deb"
+            ]
+        },
+        "directories": {
+            "output": "../build"
+        },
+        "icon": "images/icon.png"
+    },
+    "devDependencies": {
+        "electron": "^17.1.0",
+        "electron-builder": "^22.14.13"
+    }
+}

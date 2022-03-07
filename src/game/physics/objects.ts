@@ -139,6 +139,10 @@ export class PointBody extends RectangularBody {
 
 /**
  * Klasa opisująca zachowanie portalu.
+ * 
+ * Portale to dodatkowe elemeny, stworzone na potrzeby bonusowych poziomów w 3 module gry.
+ * Portale, natychmiastowo po wejściu postaci w nie, przenoszą postać w punkt z którym łączą.
+ * Nie posiadają żadnego opóźnienia ani cooldownu.
  */
 export class PortalBody extends RectangularBody {
     /**

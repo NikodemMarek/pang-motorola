@@ -1,4 +1,7 @@
 [
-    { "name": "modern", "path": "modern/" },
-    { "name": "Motorola Special", "path": "motorola-special/" }
+    { "name": "Modern", "path": "modern/" },
+    { "name": "Motorola Special", "path": "motorola-special/" },
+    { "name": "Underwater", "path": "underwater/" },
+    { "name": "Sweet Candy", "path": "sweet/" },
+    { "name": "Medieval", "path": "medieval/" }
 ]

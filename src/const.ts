@@ -27,12 +27,11 @@ export enum BasePath {
  * Nazwy grafik w formie enuma, dla poprawy czytelności.
  */
 export enum ImagePath {
-    MENU_BUTTON = 'button.png',
-    MENU_BUTTON_HOVER = 'button-hover.png',
     PLATFORM = 'platform.png',
     PLATFORM_BREAKABLE = 'platform-break.png',
+    PLATFORM_ICY = 'ice.png',
     LADDER = 'ladder.png',
-    PORTAL = 'button.png',
+    PORTAL = 'portal.png',
     BALL = 'ball.png',
     PLAYER = 'player-still.png',
     HARPOON = 'harpoon.png',
@@ -195,4 +194,7 @@ export enum Scenes {
  */
 export const VOLUME = 1
 
+/**
+ * Rozmiar tabeli wyników.
+ */
 export const SCOREBOARD_SIZE = 10

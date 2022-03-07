@@ -240,7 +240,7 @@ export default class BodiesDrawer {
     addPlatforms(container: Container, platforms: Array<PlatformBody>) {
         this.platforms.push(... platforms.map(platform => {
             const newPlatform = new TilingSprite(
-                ImagesProvider.Instance().getTexture(platform.isBreakable? ImagePath.PLATFORM_BREAKABLE: ImagePath.PLATFORM)!,
+                ImagesProvider.Instance().getTexture(platform.isIcy ? ImagePath.PLATFORM_ICY: platform.isBreakable? ImagePath.PLATFORM_BREAKABLE: ImagePath.PLATFORM)!,
                 platform.size.x, platform.size.y
             )
             newPlatform.tileScale.set(Math.min(platform.size.x / newPlatform.texture.width, platform.size.y / newPlatform.texture.height))
@@ -372,7 +372,7 @@ export default class BodiesDrawer {
         else if(difference < 0) this.removeSprite(container, this.platforms, -difference)
 
         if(difference != 0) platforms.forEach((platform, i) => {
-            this.platforms[i].texture = ImagesProvider.Instance().getTexture(platform.isBreakable ? ImagePath.PLATFORM_BREAKABLE : ImagePath.PLATFORM)!
+            this.platforms[i].texture = ImagesProvider.Instance().getTexture(platform.isIcy ? ImagePath.PLATFORM_ICY: platform.isBreakable? ImagePath.PLATFORM_BREAKABLE: ImagePath.PLATFORM)!
             this.platforms[i].tileScale.set(Math.min(platform.size.x / this.platforms[i].texture.width, platform.size.y / this.platforms[i].texture.height))
 
             this.platforms[i].position.set(platform.position.x, platform.position.y)
